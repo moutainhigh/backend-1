@@ -1,5 +1,6 @@
 package com.fb.user.service.impl;
 
+import com.fb.user.domin.AbstractUser;
 import com.fb.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,5 +15,9 @@ public class UserServiceImpl implements IUserService {
     public String testUser() {
         System.out.println(string);
         return string;
+    }
+
+    public AbstractUser checkAndRefresh(String token) {
+        return null;
     }
 }

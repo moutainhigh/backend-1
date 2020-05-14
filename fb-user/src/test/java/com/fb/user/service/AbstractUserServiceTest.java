@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import javax.annotation.Resource;
 
-public class UserServiceTest extends BaseTest {
+public class AbstractUserServiceTest extends BaseTest {
 
     @Resource
     private IUserService userService;
