@@ -1,4 +1,5 @@
 package com.fb.web.controller;
+import com.fb.activty.service.DeptService;
 import com.fb.user.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ public class TestController {
 
     @Resource
     private IUserService userService;
+    @Resource
+    private DeptService deptservice;
 
     @GetMapping("/hello")
     @ApiOperation(value = "探熊", notes = "探熊api文档")
@@ -28,5 +31,10 @@ public class TestController {
     @GetMapping("/testUser")
     public String testUser() {
         return userService.testUser();
+    }
+
+    @GetMapping("/testActivty")
+    public String testActivty() {
+        return deptservice.selectByPage().toString();
     }
 }

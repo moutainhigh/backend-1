@@ -1,0 +1,1 @@
+CREATE TABLE dept(id bigint(20) PRIMARY KEY  AUTO_INCREMENT , name varchar(20)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='activty';
