@@ -7,6 +7,11 @@ public interface IUserService {
     String testUser();
 
     /**
+     *
+     */
+    boolean setUser(String token, AbstractUser user);
+
+    /**
      * 检查并刷新用户token
      * @param token
      * @return 返回当前用户
