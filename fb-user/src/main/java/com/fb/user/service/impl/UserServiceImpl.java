@@ -30,8 +30,15 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+
+
     public AbstractUser checkAndRefresh(String token) {
         return null;
     }
 
+    @Override
+    public String getUserNameByToken(String token) {
+        AbstractUser user = (AbstractUser) redisUtils.getCacheObject(token);
+        return user.getName();
+    }
 }

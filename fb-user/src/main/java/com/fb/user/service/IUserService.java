@@ -17,4 +17,6 @@ public interface IUserService {
      * @return 返回当前用户
      */
     AbstractUser checkAndRefresh(String token);
+
+    String getUserNameByToken(String token);
 }

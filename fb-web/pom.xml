@@ -24,6 +24,11 @@
             <artifactId>fb-user</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.fb</groupId>
+            <artifactId>fb-im-message</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
 
 
@@ -87,6 +92,7 @@
                 <configuration>
                     <resourceBundles>
                         <resourceBundle>com.fb:fb-user:1.0.0</resourceBundle>
+                        <resourceBundle>com.fb:fb-im-message:1.0.0</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>

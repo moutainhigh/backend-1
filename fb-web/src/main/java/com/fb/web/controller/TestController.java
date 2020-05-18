@@ -1,4 +1,5 @@
 package com.fb.web.controller;
+import com.fb.message.MessageHandler;
 import com.fb.user.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,9 @@ public class TestController {
     @Resource
     private IUserService userService;
 
+    @Resource
+    private MessageHandler messageHandler;
+
     @GetMapping("/hello")
     @ApiOperation(value = "探熊", notes = "探熊api文档")
     public String hello(@ApiParam(name = "say", value = "说点啥吧") @RequestParam("say") String say) {
@@ -28,5 +32,15 @@ public class TestController {
     @GetMapping("/testUser")
     public String testUser() {
         return userService.testUser();
+    }
+
+    @GetMapping("/getUserNameByToken/{token}")
+    public String getNameByToken(@PathVariable("token") String token) {
+        return userService.getUserNameByToken(token);
+    }
+
+    @GetMapping("/message/redis")
+    public String getMessage() {
+        return messageHandler.testMessage();
     }
 }
