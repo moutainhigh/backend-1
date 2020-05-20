@@ -27,7 +27,13 @@
 
         <dependency>
             <groupId>com.fb</groupId>
-            <artifactId>fb-activty</artifactId>
+            <artifactId>fb-activity</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fb</groupId>
+            <artifactId>fb-feed</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -59,7 +65,7 @@
         </dependency>
     </dependencies>
 
-  <!--  <repositories>
+    <repositories>
         <repository>
             <snapshots>
                 <enabled>false</enabled>
@@ -68,7 +74,7 @@
             <name>jcenter</name>
             <url>http://jcenter.bintray.com</url>
         </repository>
-    </repositories>-->
+    </repositories>
 
     <build>
         <plugins>
@@ -85,6 +91,7 @@
                 </executions>
             </plugin>
 
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-remote-resources-plugin</artifactId>
@@ -92,7 +99,8 @@
                 <configuration>
                     <resourceBundles>
                         <resourceBundle>com.fb:fb-user:1.0.0-SNAPSHOT</resourceBundle>
-                        <resourceBundle>com.fb:fb-activty:1.0.0-SNAPSHOT</resourceBundle>
+                        <resourceBundle>com.fb:fb-activity:1.0.0-SNAPSHOT</resourceBundle>
+                        <resourceBundle>com.fb:fb-feed:1.0.0-SNAPSHOT</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>
@@ -142,6 +150,7 @@
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
 
 
