@@ -33,7 +33,7 @@ public class UserServiceImpl implements IUserService {
 
 
     public AbstractUser checkAndRefresh(String token) {
-        return null;
+        return (AbstractUser) redisUtils.getCacheObject(token);
     }
 
     @Override

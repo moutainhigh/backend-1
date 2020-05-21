@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 @Configuration
-@ImportResource(locations = {"classpath:user-application.xml","classpath:message-application.xml"})
+@ImportResource(locations = {"classpath:user-application.xml","classpath:application-activty.xml", "classpath:message-application.xml"})
 public class XmlBean {
 
 }

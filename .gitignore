@@ -1,2 +1,7 @@
+# IntelliJ project files
+*.iml
+logs/
+*.adoc
+
 .idea/
 target/

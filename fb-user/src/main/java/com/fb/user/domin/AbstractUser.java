@@ -10,34 +10,22 @@ public abstract class AbstractUser {
 
 
     /**
-     * 判断用户登录
+     *
      * @return
      */
-    public boolean login() {
-        return false;
+    public boolean isMerchant() {
+        return this instanceof MerchantUser;
     }
 
     public Long getUid() {
         return uid;
     }
 
-    public void setUid(Long uid) {
-        this.uid = uid;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Integer getCount() {
         return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
     }
 }

@@ -1,5 +1,8 @@
 package com.fb.web.controller;
 import com.fb.message.MessageHandler;
+import com.fb.activty.service.DeptService;
+import com.fb.user.domin.AbstractUser;
+import com.fb.user.domin.CommonUser;
 import com.fb.user.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,8 @@ public class TestController {
 
     @Resource
     private IUserService userService;
+    @Resource
+    private DeptService deptservice;
 
     @Resource
     private MessageHandler messageHandler;
@@ -39,8 +44,20 @@ public class TestController {
         return userService.getUserNameByToken(token);
     }
 
+    @GetMapping("/userLogin")
+    public String getCurrentUserName(@RequestAttribute(name = "user")AbstractUser user) {
+        //是否入驻用户的判断
+        System.out.println(user.isMerchant());
+        System.out.println(user instanceof CommonUser);
+        return user.getName();
+    }
+
     @GetMapping("/message/redis")
     public String getMessage() {
         return messageHandler.testMessage();
+    }
+    @GetMapping("/testActivty")
+    public String testActivty() {
+        return deptservice.selectByPage().toString();
     }
 }

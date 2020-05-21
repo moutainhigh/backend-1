@@ -14,6 +14,8 @@
         <module>fb-im-message</module>
         <module>fb-user</module>
         <module>fb-user-relation</module>
+        <module>fb-activty</module>
+        <module>fb-feed</module>
         <module>fb-common</module>
     </modules>
 

@@ -26,8 +26,6 @@ public class AbstractUserServiceTest extends BaseTest {
     @Test
     public void testRedis() {
         CommonUser user = new CommonUser();
-        user.setUid(1000L);
-        user.setName("pangminpeng");
         String token = "oneToken";
         userService.setUser(token, user);
 
