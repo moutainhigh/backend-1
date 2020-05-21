@@ -1,6 +1,5 @@
 package com.fb.web.controller;
 import com.fb.message.MessageHandler;
-import com.fb.activty.service.DeptService;
 import com.fb.user.domin.AbstractUser;
 import com.fb.user.domin.CommonUser;
 import com.fb.user.service.IUserService;
@@ -21,8 +20,6 @@ public class TestController {
 
     @Resource
     private IUserService userService;
-    @Resource
-    private DeptService deptservice;
 
     @Resource
     private MessageHandler messageHandler;
@@ -56,8 +53,5 @@ public class TestController {
     public String getMessage() {
         return messageHandler.testMessage();
     }
-    @GetMapping("/testActivty")
-    public String testActivty() {
-        return deptservice.selectByPage().toString();
-    }
+
 }
