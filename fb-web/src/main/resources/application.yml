@@ -5,3 +5,12 @@ swagger:
 spring:
   main:
     allow-bean-definition-overriding: true
+logging:
+  level:
+    root: info
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+  path: "./logs/"
+  file: "./logs/web.log"
+

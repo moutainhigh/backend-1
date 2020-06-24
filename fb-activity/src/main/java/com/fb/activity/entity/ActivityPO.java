@@ -1,13 +1,12 @@
 package com.fb.activity.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -54,11 +53,23 @@ public class ActivityPO {
 
     /*城市码*/
     @TableField("city_code")
-    private Integer cityCode;
+    private String cityCode;
+
+    /*城市码中文*/
+    @TableField("city_name")
+    private String cityName;
 
     /*市区码*/
     @TableField("ad_code")
-    private Integer adCode;
+    private String adCode;
+
+    /*市区码中文*/
+    @TableField("ad_name")
+    private String adName;
+
+    /*定位*/
+    @TableField("location")
+    private String location;
 
     /*活动类型 可配置见同名枚举*/
     @TableField("activity_type")
@@ -93,10 +104,10 @@ public class ActivityPO {
     private String activityContent;
 
     /*创建时间*/
-    @TableField("create_time")
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     /*更新时间*/
-    @TableField("update_time")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 }

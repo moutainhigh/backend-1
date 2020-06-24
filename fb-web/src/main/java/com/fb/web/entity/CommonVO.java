@@ -4,8 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 public class CommonVO {
-    @ApiModelProperty(value = "经纬度坐标")
+    @NotNull(message = "location is not null")
+    @ApiModelProperty(value = "经纬度坐标", required = true)
     private String location;
 }

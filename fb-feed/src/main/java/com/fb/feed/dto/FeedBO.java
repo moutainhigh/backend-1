@@ -2,17 +2,21 @@ package com.fb.feed.dto;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Data
 public class FeedBO {
+    private Long id;
 
     /*用户id*/
     private Long userId;
 
     /*打卡 0 否 1 是 默认0*/
-    private Integer clockin;
+    private Integer clockIn;
 
     /*打卡标签*/
-    private String clockinTag;
+    private String clockInTag;
 
     /*发布到同城 0 否 1 是 默认0*/
     private Integer displayCity;
@@ -24,10 +28,19 @@ public class FeedBO {
     private String feedAddress;
 
     /*城市码*/
-    private Integer cityCode;
+    private String cityCode;
 
     /*市区码*/
-    private Integer adCode;
+    private String adCode;
+
+    /*城市码*/
+    private String cityName;
+
+    /*市区码*/
+    private String adName;
+
+    /*定位*/
+    private String location;
 
     /*图片url*/
     private String picUrl;
@@ -36,7 +49,10 @@ public class FeedBO {
     private String videoUrl;
 
     /*视频url*/
-    private String content;
+    private String feedContent;
+
+    /*发布时间*/
+    private Date createTime;
 
 
 }

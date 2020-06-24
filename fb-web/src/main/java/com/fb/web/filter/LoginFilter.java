@@ -1,3 +1,4 @@
+/*
 package com.fb.web.filter;
 
 import com.fb.common.util.JsonUtils;
@@ -31,7 +32,8 @@ public class LoginFilter implements Filter {
         String token = httpServletRequest.getHeader("token");
         AbstractUser user;
         if (StringUtils.isBlank(token) || Objects.isNull(user = userService.checkAndRefresh(token))) {
-            responseError(servletResponse);
+            //TODO LX
+//            responseError(servletResponse);
         } else {
             Map<String, Object> map = new HashMap<>();
             map.put("user", user);
@@ -48,3 +50,4 @@ public class LoginFilter implements Filter {
         out.append(JsonUtils.object2Json(jsonObject));
     }
 }
+*/

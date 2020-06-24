@@ -10,12 +10,15 @@ import java.util.Date;
 
 @Slf4j
 public class DateUtils {
+    public static final DateTimeFormatter dateTimeFormatterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public static final DateTimeFormatter dateTimeFormatterMin = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public static final DateTimeFormatter dateTimeFormatterSed = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public static final ZoneId zoneId = ZoneId.systemDefault();
 
     /**
      * 字符转日期
+     *
      * @param dateTime
      * @param dateTimeFormatter
      * @return
@@ -29,6 +32,7 @@ public class DateUtils {
 
     /**
      * 日期转字符
+     *
      * @param dateTime
      * @param formatter
      * @return

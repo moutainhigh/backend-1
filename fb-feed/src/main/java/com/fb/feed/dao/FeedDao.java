@@ -5,5 +5,5 @@ import com.fb.feed.entity.FeedPO;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FeedDao extends BaseMapper<FeedPO> {
+public interface FeedDAO extends BaseMapper<FeedPO> {
 }

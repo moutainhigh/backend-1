@@ -21,13 +21,13 @@ import javax.validation.ConstraintViolationException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
-    public JsonObject handleBusinessException(BusinessException e){
+    public JsonObject handleBusinessException(BusinessException e) {
         log.error("BusinessException", e);
         return JsonObject.newErrorJsonObject(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public JsonObject handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+    public JsonObject handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException", e);
         return JsonObject.newErrorJsonObject(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    public JsonObject handleException(Exception e){
+    public JsonObject handleException(Exception e) {
         log.error("Exception", e);
         return JsonObject.newErrorJsonObject("哇哦~这个异常我不知道，请联系后端小伙伴解决");
     }

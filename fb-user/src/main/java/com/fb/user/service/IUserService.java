@@ -13,11 +13,11 @@ public interface IUserService {
 
     /**
      * 检查并刷新用户token
+     *
      * @param token
      * @return 返回当前用户
      */
     AbstractUser checkAndRefresh(String token);
-
 
 
     String getUserNameByToken(String token);
