@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cache="http://www.springframework.org/schema/cache" xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+    <context:annotation-config />
+    <context:component-scan base-package="com.fb.user.relation" />
+    <!-- 引入配置文件 -->
+    <context:property-placeholder location="classpath:user-relation-jdbc.properties" ignore-unresolvable="true"/>
+
+
+    <bean id="userRelationDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${datasource.url}"/>
+        <property name="username" value="${datasource.username}"/>
+        <property name="password" value="${datasource.password}"/>
+        <property name="minIdle" value="${datasource.minIdle}"/>
+        <property name="maxActive" value="${datasource.maxActive}"/>
+        <property name="minEvictableIdleTimeMillis" value="${datasource.minEvictableIdleTimeMillis}"/>
+        <property name="queryTimeout" value="${datasource.queryTimeout}"/>
+        <property name="validationQuery" value="${datasource.validationQuery}"/>
+        <property name="testOnBorrow" value="${datasource.testOnBorrow}"/>
+        <property name="testWhileIdle" value="${datasource.testWhileIdle}"/>
+    </bean>
+
+    <bean id="userRelationSqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+        <property name="dataSource" ref="userRelationDataSource"/>
+        <property name="mapperLocations" value="classpath:/mapper/*.xml"/>
+    </bean>
+    <bean id="userRelationMapperConfig" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.fb.user.relation.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="userRelationSqlSessionFactory"/>
+    </bean>
+</beans>

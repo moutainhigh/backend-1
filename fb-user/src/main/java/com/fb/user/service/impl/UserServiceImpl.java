@@ -1,10 +1,9 @@
 package com.fb.user.service.impl;
 
 import com.fb.common.util.RedisUtils;
-import com.fb.user.domin.AbstractUser;
+import com.fb.user.domain.AbstractUser;
 import com.fb.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,7 +11,7 @@ import javax.annotation.Resource;
 @Service
 public class UserServiceImpl implements IUserService {
 
-    @Value("${key1}")
+
     public String string;
 
     @Resource
@@ -40,5 +39,10 @@ public class UserServiceImpl implements IUserService {
     public String getUserNameByToken(String token) {
         AbstractUser user = (AbstractUser) redisUtils.getCacheObject(token);
         return user.getName();
+    }
+
+    @Override
+    public AbstractUser createUser(AbstractUser user) {
+        return null;
     }
 }

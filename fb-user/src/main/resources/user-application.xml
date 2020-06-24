@@ -44,4 +44,26 @@
         <property name="valueSerializer" ref="userJacksonValueSerializer"/>
         <property name="hashKeySerializer" ref="userStringRedisSerializer" />
     </bean>
+
+    <bean id="userDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${datasource.url}"/>
+        <property name="username" value="${datasource.username}"/>
+        <property name="password" value="${datasource.password}"/>
+        <property name="minIdle" value="${datasource.minIdle}"/>
+        <property name="maxActive" value="${datasource.maxActive}"/>
+        <property name="minEvictableIdleTimeMillis" value="${datasource.minEvictableIdleTimeMillis}"/>
+        <property name="queryTimeout" value="${datasource.queryTimeout}"/>
+        <property name="validationQuery" value="${datasource.validationQuery}"/>
+        <property name="testOnBorrow" value="${datasource.testOnBorrow}"/>
+        <property name="testWhileIdle" value="${datasource.testWhileIdle}"/>
+    </bean>
+
+    <bean id="userSqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+        <property name="dataSource" ref="userDataSource"/>
+        <property name="mapperLocations" value="classpath:/mapper/*.xml"/>
+    </bean>
+    <bean id="userMapperConfig" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.fb.user.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="userSqlSessionFactory"/>
+    </bean>
 </beans>

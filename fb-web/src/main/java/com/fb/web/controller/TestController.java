@@ -1,7 +1,7 @@
 package com.fb.web.controller;
 import com.fb.message.MessageHandler;
-import com.fb.user.domin.AbstractUser;
-import com.fb.user.domin.CommonUser;
+import com.fb.user.domain.AbstractUser;
+import com.fb.user.domain.CommonUser;
 import com.fb.user.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,11 +30,6 @@ public class TestController {
         return say;
     }
 
-
-    @GetMapping("/testUser")
-    public String testUser() {
-        return userService.testUser();
-    }
 
     @GetMapping("/getUserNameByToken/{token}")
     public String getNameByToken(@PathVariable("token") String token) {

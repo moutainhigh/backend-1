@@ -2,7 +2,7 @@ package com.fb.user.service;
 
 import com.fb.common.util.RedisUtils;
 import com.fb.user.BaseTest;
-import com.fb.user.domin.CommonUser;
+import com.fb.user.domain.CommonUser;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -20,14 +20,12 @@ public class AbstractUserServiceTest extends BaseTest {
 
     @Test
     public void testUser() {
-        System.out.println(userService.testUser());
     }
 
     @Test
     public void testRedis() {
         CommonUser user = new CommonUser();
         String token = "oneToken";
-        userService.setUser(token, user);
 
         CommonUser selectUser = (CommonUser) redisUtils.getCacheObject(token);
         System.out.println(selectUser.getName());

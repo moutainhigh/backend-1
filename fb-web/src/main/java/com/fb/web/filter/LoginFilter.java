@@ -1,8 +1,7 @@
 package com.fb.web.filter;
 
 import com.fb.common.util.JsonUtils;
-import com.fb.user.domin.AbstractUser;
-import com.fb.user.domin.CommonUser;
+import com.fb.user.domain.AbstractUser;
 import com.fb.user.service.IUserService;
 import com.fb.web.utils.JsonObject;
 import org.apache.commons.lang3.StringUtils;
