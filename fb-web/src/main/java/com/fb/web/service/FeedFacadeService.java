@@ -12,13 +12,11 @@ import com.fb.feed.service.IFeedService;
 import com.fb.web.entity.FeedVO;
 import com.fb.web.entity.output.FeedDetailVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,15 +41,14 @@ public class FeedFacadeService {
      */
     public Optional<Long> publishFeed(FeedVO feedVO, Long userId) {
 
-        Optional<LbsMapBo> lbsMapBo = lbsMapService.getLbsInfoByLocation(feedVO.getLocation());
-        if (!lbsMapBo.isPresent()) {
-            return Optional.empty();
-        }
         FeedBO feedBO = voToConvertBO(feedVO, userId);
-        feedBO.setCityCode(lbsMapBo.get().getCityCode());
-        feedBO.setCityName(lbsMapBo.get().getCityName());
-        feedBO.setAdName(lbsMapBo.get().getAdName());
-        feedBO.setAdCode(lbsMapBo.get().getAdCode());
+        if (StringUtils.isNotEmpty(feedVO.getLocation())) {
+            Optional<LbsMapBo> lbsMapBo = lbsMapService.getLbsInfoByLocation(feedVO.getLocation());
+            feedBO.setCityCode(lbsMapBo.get().getCityCode());
+            feedBO.setCityName(lbsMapBo.get().getCityName());
+            feedBO.setAdName(lbsMapBo.get().getAdName());
+            feedBO.setAdCode(lbsMapBo.get().getAdCode());
+        }
         return feedService.publishFeed(feedBO);
     }
 
@@ -61,12 +58,12 @@ public class FeedFacadeService {
      * @param feedId
      * @return
      */
-    public Optional<FeedDetailVO> getFeedDetailById(Long feedId) {
+    public Optional<FeedDetailVO> getFeedDetailById(Long feedId, Long uid) {
         Optional<FeedBO> feedBO = feedService.getFeedById(feedId);
         if (feedBO.isPresent()) {
             Optional<List<LikeBO>> likeList = likeService.getLikeList(feedId, InfoTypeEnum.FEED);
             int commentCount = commentService.getCommentCount(feedId, InfoTypeEnum.FEED);
-            return Optional.ofNullable(boToConvertVO(feedBO.get(), likeList, commentCount));
+            return Optional.ofNullable(boToConvertVO(feedBO.get(), likeList, commentCount, uid));
         }
         return Optional.empty();
     }
@@ -79,9 +76,9 @@ public class FeedFacadeService {
      * @param offsetId
      * @return
      */
-    public Optional<List<FeedDetailVO>> queryActivityListFollow(List<Long> userIdList, int limit, Long offsetId) {
+    public Optional<List<FeedDetailVO>> queryActivityListFollow(List<Long> userIdList, int limit, Long offsetId, Long uid) {
         Optional<List<FeedBO>> feedDetailVOS = feedService.queryFeedListByUid(userIdList, limit, offsetId);
-        return getFeedAndAddition(feedDetailVOS);
+        return getFeedAndAddition(feedDetailVOS, uid);
     }
 
     /**
@@ -93,13 +90,13 @@ public class FeedFacadeService {
      * @param random
      * @return
      */
-    public Optional<List<FeedDetailVO>> getLocationFeedList(String cityCode, int limit, Long offsetId, Integer random) {
+    public Optional<List<FeedDetailVO>> getLocationFeedList(String cityCode, int limit, Long offsetId, Integer random, Long uid) {
         Optional<List<FeedBO>> feedDetailVOS = feedService.queryLocationFeedList(cityCode, limit, offsetId, random);
 
-        return getFeedAndAddition(feedDetailVOS);
+        return getFeedAndAddition(feedDetailVOS, uid);
     }
 
-    private Optional<List<FeedDetailVO>> getFeedAndAddition(Optional<List<FeedBO>> feedDetailVOS) {
+    private Optional<List<FeedDetailVO>> getFeedAndAddition(Optional<List<FeedBO>> feedDetailVOS, Long uid) {
 
         if (feedDetailVOS.isPresent()) {
             List<Long> infoIdList = feedDetailVOS.get().stream().map(FeedBO::getId).collect(Collectors.toList());
@@ -120,7 +117,7 @@ public class FeedFacadeService {
                     Long count = commentMapResult.get().get(feedBO.getId());
                     commentCount = count == null ? 0 : count.intValue();
                 }
-                return boToConvertVO(feedBO, Optional.ofNullable(finalLikeMap.get(feedBO.getId())), commentCount);
+                return boToConvertVO(feedBO, Optional.ofNullable(finalLikeMap.get(feedBO.getId())), commentCount, uid);
             }).collect(Collectors.toList()));
         }
 
@@ -128,7 +125,7 @@ public class FeedFacadeService {
     }
 
 
-    private FeedDetailVO boToConvertVO(FeedBO feedBO, Optional<List<LikeBO>> likeList, int commentNum) {
+    private FeedDetailVO boToConvertVO(FeedBO feedBO, Optional<List<LikeBO>> likeList, int commentNum, Long uid) {
         FeedDetailVO feedDetailVO = new FeedDetailVO();
 //        feedDetailVO.setUserVO();
         feedDetailVO.setPublishTime(feedBO.getCreateTime().getTime());
@@ -142,6 +139,10 @@ public class FeedFacadeService {
         feedDetailVO.setId(feedBO.getId());
 
         feedDetailVO.setLikeNum(likeList.isPresent() ? likeList.get().size() : 0);
+        feedDetailVO.setLike(false);
+        if (likeList.isPresent() && Objects.nonNull(uid)) {
+            feedDetailVO.setLike(likeList.get().stream().anyMatch(likeBO -> likeBO.getUserId().equals(uid)));
+        }
         feedDetailVO.setCommentNum(commentNum);
         return feedDetailVO;
 

@@ -41,6 +41,7 @@ public class FeedServiceImpl implements IFeedService {
         return Optional.ofNullable(pOToConvertBO(feedPO));
     }
 
+    @Override
     public Optional<List<FeedBO>> queryFeedListByUid(List<Long> userIdList, int limit, Long offsetId) {
         List<FeedBO> feedBOS = new ArrayList<>(limit);
         QueryWrapper<FeedPO> queryWrapper = new QueryWrapper<>();
@@ -93,6 +94,9 @@ public class FeedServiceImpl implements IFeedService {
 
     private FeedBO pOToConvertBO(FeedPO feedPO) {
         FeedBO feedBO = new FeedBO();
+        if (Objects.isNull(feedPO)) {
+            return null;
+        }
         BeanUtils.copyProperties(feedPO, feedBO);
         return feedBO;
 
@@ -100,6 +104,9 @@ public class FeedServiceImpl implements IFeedService {
 
 
     private FeedPO bOToConvertPO(FeedBO feedBO) {
+        if (Objects.isNull(feedBO)) {
+            return null;
+        }
         FeedPO feedPO = new FeedPO();
         BeanUtils.copyProperties(feedBO, feedPO);
         return feedPO;

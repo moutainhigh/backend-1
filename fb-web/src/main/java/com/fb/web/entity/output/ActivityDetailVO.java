@@ -80,5 +80,6 @@ public class ActivityDetailVO extends CommonVO {
 
     @ApiModelProperty(value = "参加活动后群聊")
     private Long payGroupId;
+
 }
 

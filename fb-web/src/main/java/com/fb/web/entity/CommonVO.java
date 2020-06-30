@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class CommonVO {
-    @NotNull(message = "location is not null")
+//    @NotNull(message = "location is not null")
     @ApiModelProperty(value = "经纬度坐标", required = true)
     private String location;
 }

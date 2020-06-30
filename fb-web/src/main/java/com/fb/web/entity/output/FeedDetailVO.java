@@ -43,4 +43,7 @@ public class FeedDetailVO extends CommonVO {
 
     @ApiModelProperty(value = "已评论")
     private int commentNum;
+
+    @ApiModelProperty(value = "当前用户是否点赞")
+    private boolean like;
 }

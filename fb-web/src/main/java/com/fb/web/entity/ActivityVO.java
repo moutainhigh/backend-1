@@ -31,10 +31,10 @@ public class ActivityVO extends CommonVO {
     @ApiModelProperty(value = "报名结束时间，格式yyyy-MM-dd HH:mm")
     private String enrollEndTime;
     @NotNull(message = "activityAddress is not null")
-    @ApiModelProperty(value = "活动地址")
+    @ApiModelProperty(value = "活动地址", required = true)
     private String activityAddress;
-    @NotNull(message = "activityAddress is not null")
-    @ApiModelProperty(value = "活动类型")
+    @NotNull(message = "activityType is not null")
+    @ApiModelProperty(value = "活动类型", required = true)
     private Integer activityType;
     @ApiModelProperty(value = "活动类型中文")
     private String activityTypeName;

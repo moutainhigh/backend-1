@@ -46,7 +46,9 @@ public class FeedController {
     @ApiOperation(value = "动态详情(二期)", notes = "")
     @RequestMapping(value = "/detail", method = {RequestMethod.GET})
     public JsonObject<FeedDetailVO> getFeedInfo(@ApiParam(name = "id", value = "动态id") @RequestParam("id") Long id) {
-        Optional<FeedDetailVO> feedDetailVO = feedFacadeService.getFeedDetailById(id);
+        Long userId = 123456L;
+
+        Optional<FeedDetailVO> feedDetailVO = feedFacadeService.getFeedDetailById(id, userId);
         if (feedDetailVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(feedDetailVO.get());
         }
@@ -58,6 +60,8 @@ public class FeedController {
     public JsonObject<LocationFeedVO> getFeedList(@ApiParam(name = "random", value = "随机数") @RequestParam("random") Integer random,
                                                   @ApiParam(name = "limit", value = "条数") @RequestParam("limit") Integer limit,
                                                   @ApiParam(name = "offsetId", value = "偏移量") @RequestParam("offsetId") Long offsetId) {
+        Long userId = 123456L;
+
         /*TODO LX 传入经纬度或者直接是cityCode*/
         String cityCode = "";
 
@@ -74,7 +78,7 @@ public class FeedController {
             limit = 10;
         }
         boolean hasNext = false;
-        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.getLocationFeedList(cityCode, limit, offsetId, random);
+        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.getLocationFeedList(cityCode, limit, offsetId, random, userId);
         locationFeedVO.setFeedDetailVOList(feedDetailVOList.get());
         if (feedDetailVOList.isPresent()) {
             hasNext = limit == feedDetailVOList.get().size() ? true : false;

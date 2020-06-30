@@ -25,10 +25,10 @@ public class LikeFacadeService {
         LikeBO likeBO = new LikeBO();
         likeBO.setInfoId(likeVO.getInfoId());
         likeBO.setInfoType(likeVO.getInfoType());
-//        likeBO.setUserId(userId);
+        likeBO.setUserId(123456L);
         likeBO.setLikeState(likeVO.getState());
 //        likeBO.setAvatar();
-//        likeBO.setNickname();
+        likeBO.setNickname("测试用户");
         return likeBO;
 
     }

@@ -69,7 +69,7 @@ public class UserController {
             limit = 10;
         }
 
-        Long userId = 123L;
+        Long userId = 123456L;
         //TODO LX 查好友
         List<Long> userIdList = null;
         FocusVO focusVO = new FocusVO();
@@ -78,7 +78,7 @@ public class UserController {
 
         Optional<List<ActivityDetailVO>> activityListVOList = activityFacadeService.queryActivityListFollow(userIdList, limit, activityOffsetId);
 
-        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryActivityListFollow(userIdList, limit, feedOffsetId);
+        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryActivityListFollow(userIdList, limit, feedOffsetId, userId);
 
         if (activityListVOList.isPresent()) {
             activityListVOList.get().forEach(activityDetailVO -> {
