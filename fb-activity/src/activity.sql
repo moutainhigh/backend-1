@@ -7,7 +7,7 @@ CREATE TABLE `tb_activity` (
   `member_count` int(5) COMMENT '活动人数',
   `activity_time` datetime DEFAULT NULL COMMENT '活动时间',
   `enroll_end_time` datetime DEFAULT NULL COMMENT '报名结束时间',
-  `activity_address` varchar(10) DEFAULT NULL COMMENT '活动地址',
+  `activity_address` varchar(100) DEFAULT NULL COMMENT '活动地址',
   `city_code` varchar(10) DEFAULT NULL COMMENT '城市码',
   `city_name` varchar(10) DEFAULT NULL COMMENT '城市名',
   `ad_code` varchar(15) DEFAULT NULL COMMENT '市区码',

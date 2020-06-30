@@ -223,8 +223,8 @@ public class ActivityFacadeService {
         activityBO.setActivityValid(activityVO.getActivityValid());
         activityBO.setActivityTitle(activityVO.getActivityTitle());
         activityBO.setMemberCount(activityVO.getMemberCount());
-        activityBO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityVO.getActivityTime(), DateUtils.dateTimeFormatterSed));
-        activityBO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityVO.getEnrollEndTime(), DateUtils.dateTimeFormatterSed));
+        activityBO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityVO.getActivityTime(), DateUtils.dateTimeFormatterMin));
+        activityBO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityVO.getEnrollEndTime(), DateUtils.dateTimeFormatterMin));
         activityBO.setActivityAddress(activityVO.getActivityAddress());
         activityBO.setActivityType(activityVO.getActivityType());
         activityBO.setNeedInfo(activityVO.getNeedInfo());

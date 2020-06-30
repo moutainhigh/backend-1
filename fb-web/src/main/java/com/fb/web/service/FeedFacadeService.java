@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -98,7 +99,7 @@ public class FeedFacadeService {
 
     private Optional<List<FeedDetailVO>> getFeedAndAddition(Optional<List<FeedBO>> feedDetailVOS, Long uid) {
 
-        if (feedDetailVOS.isPresent()) {
+        if (feedDetailVOS.isPresent() && !CollectionUtils.isEmpty(feedDetailVOS.get())) {
             List<Long> infoIdList = feedDetailVOS.get().stream().map(FeedBO::getId).collect(Collectors.toList());
 
             Optional<List<LikeBO>> likeList = likeService.getLikeListByInfoList(infoIdList, InfoTypeEnum.FEED);

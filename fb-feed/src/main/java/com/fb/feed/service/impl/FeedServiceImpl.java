@@ -67,6 +67,7 @@ public class FeedServiceImpl implements IFeedService {
     @Override
     public Optional<List<FeedBO>> queryLocationFeedList(String cityCode, int limit, Long offsetId, Integer random) {
 
+        //TODO LX cityCode要加入查询条件
         List<FeedBO> feedBOS = new ArrayList<>(limit);
         QueryWrapper<FeedPO> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(obj -> {
