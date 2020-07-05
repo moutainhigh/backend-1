@@ -184,8 +184,8 @@ public class ActivityFacadeService {
         activityVO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityBO.getEnrollEndTime(), DateUtils.dateTimeFormatterMin));
         activityVO.setActivityAddress(activityBO.getActivityAddress());
         activityVO.setActivityType(activityBO.getActivityType());
-        activityVO.setActivityTypeName(ActivityTypeEnum.getValueByCode(activityBO.getActivityType()));
         activityVO.setNeedInfo(activityBO.getNeedInfo());
+        activityVO.setActivityTypeName(ActivityTypeEnum.getValueByCode(activityBO.getActivityType()));
         activityVO.setRefundFlag(activityBO.getRefundFlag());
         activityVO.setState(activityBO.getActivityState());
         activityVO.setFrontMoney(activityBO.getFrontMoney());

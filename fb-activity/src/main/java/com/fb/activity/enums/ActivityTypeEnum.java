@@ -41,7 +41,7 @@ public enum ActivityTypeEnum {
                 getActivityTypeEnumByCode(code).getValue() : "";
     }
 
-    public static String getNameByActivityValid(int code) {
-        return code == 1?"短期":"长期";
+    public String getNameByActivityValid(int code) {
+        return code == 1 ? "短期" : "长期";
     }
 }

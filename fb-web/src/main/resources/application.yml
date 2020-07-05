@@ -3,8 +3,14 @@ server:
 swagger:
   enable: true
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 1000MB
   main:
     allow-bean-definition-overriding: true
+
 logging:
   level:
     root: info
