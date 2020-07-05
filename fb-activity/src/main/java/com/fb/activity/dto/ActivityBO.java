@@ -35,10 +35,19 @@ public class ActivityBO {
     private String activityAddress;
 
     /*城市码*/
-    private Integer cityCode;
+    private String cityCode;
 
     /*市区码*/
-    private Integer adCode;
+    private String adCode;
+
+    /*城市码*/
+    private String cityName;
+
+    /*市区码*/
+    private String adName;
+
+    /*定位*/
+    private String location;
 
     /*活动类型 可配置见同名枚举*/
     private Integer activityType;
@@ -64,7 +73,11 @@ public class ActivityBO {
     /*活动内容*/
     private String activityContent;
 
+    /*发布时间*/
+    private Date updateTime;
+
 
     private List<TicketBO> ticketBOList;
+
 
 }

@@ -1,12 +1,10 @@
 package com.fb.feed.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -24,12 +22,12 @@ public class FeedPO {
     private Long userId;
 
     /*打卡 0 否 1 是 默认0*/
-    @TableField("clockin")
-    private Integer clockin;
+    @TableField("clock_in")
+    private Integer clockIn;
 
     /*打卡标签*/
-    @TableField("clockin_tag")
-    private String clockinTag;
+    @TableField("clock_in_tag")
+    private String clockInTag;
 
     /*发布到同城 0 否 1 是 默认0*/
     @TableField("display_city")
@@ -45,11 +43,23 @@ public class FeedPO {
 
     /*城市码*/
     @TableField("city_code")
-    private Integer cityCode;
+    private String cityCode;
+
+    /*城市名*/
+    @TableField("city_name")
+    private String cityName;
 
     /*市区码*/
     @TableField("ad_code")
-    private Integer adCode;
+    private String adCode;
+
+    /*市区名*/
+    @TableField("ad_name")
+    private String adName;
+
+    /*市区码*/
+    @TableField("location")
+    private String location;
 
     /*图片url*/
     @TableField("pic_url")
@@ -64,11 +74,11 @@ public class FeedPO {
     private String feedContent;
 
     /*创建时间*/
-    @TableField("create_time")
+    @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
     /*更新时间*/
-    @TableField("update_time")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
 

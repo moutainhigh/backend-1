@@ -23,10 +23,8 @@ public class RedisUtils {
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
-     * @param key
-     *            缓存的键值
-     * @param value
-     *            缓存的值
+     * @param key   缓存的键值
+     * @param value 缓存的值
      * @return 缓存的对象
      */
     public void setCacheObject(String key, Object value) {
@@ -40,8 +38,7 @@ public class RedisUtils {
     /**
      * 获得缓存的基本对象。
      *
-     * @param key
-     *            缓存键值
+     * @param key       缓存键值
      * @param operation
      * @return 缓存键值对应的数据
      */
@@ -52,10 +49,8 @@ public class RedisUtils {
     /**
      * 缓存List数据
      *
-     * @param key
-     *            缓存的键值
-     * @param dataList
-     *            待缓存的List数据
+     * @param key      缓存的键值
+     * @param dataList 待缓存的List数据
      * @return 缓存的对象
      */
     public Object setCacheList(String key, List<Object> dataList) {
@@ -72,8 +67,7 @@ public class RedisUtils {
     /**
      * 获得缓存的list对象
      *
-     * @param key
-     *            缓存的键值
+     * @param key 缓存的键值
      * @return 缓存键值对应的数据
      */
     public List<Object> getCacheList(String key) {
@@ -110,10 +104,8 @@ public class RedisUtils {
      * 覆盖操作,将覆盖List中指定位置的值
      *
      * @param key
-     * @param index
-     *            index 位置
-     * @param obj
-     *            value 值
+     * @param index index 位置
+     * @param obj   value 值
      * @return 状态码
      */
     public void listSet(String key, int index, Object obj) {
@@ -123,10 +115,8 @@ public class RedisUtils {
     /**
      * 向List尾部追加记录
      *
-     * @param key
-     *            key
-     * @param obj
-     *            value
+     * @param key key
+     * @param obj value
      * @return 记录总数
      */
     public long leftPush(String key, Object obj) {
@@ -136,10 +126,8 @@ public class RedisUtils {
     /**
      * 向List头部追加记录
      *
-     * @param key
-     *            key
-     * @param obj
-     *            value
+     * @param key key
+     * @param obj value
      * @return 记录总数
      */
     public long rightPush(String key, Object obj) {
@@ -149,12 +137,9 @@ public class RedisUtils {
     /**
      * 算是删除吧，只保留start与end之间的记录
      *
-     * @param key
-     *            key
-     * @param start
-     *            start 记录的开始位置(0表示第一条记录)
-     * @param end
-     *            end 记录的结束位置（如果为-1则表示最后一个，-2，-3以此类推）
+     * @param key   key
+     * @param start start 记录的开始位置(0表示第一条记录)
+     * @param end   end 记录的结束位置（如果为-1则表示最后一个，-2，-3以此类推）
      * @return 执行状态码
      */
     public void trim(String key, int start, int end) {
@@ -164,12 +149,9 @@ public class RedisUtils {
     /**
      * 删除List中c条记录，被删除的记录值为value
      *
-     * @param key
-     *            key
-     * @param i
-     *            c 要删除的数量，如果为负数则从List的尾部检查并删除符合的记录
-     * @param obj
-     *            obj 要匹配的值
+     * @param key key
+     * @param i   c 要删除的数量，如果为负数则从List的尾部检查并删除符合的记录
+     * @param obj obj 要匹配的值
      * @return 删除后的List中的记录数
      */
     public long remove(String key, long i, Object obj) {
@@ -179,10 +161,8 @@ public class RedisUtils {
     /**
      * 缓存Set
      *
-     * @param key
-     *            缓存键值
-     * @param dataSet
-     *            缓存的数据
+     * @param key     缓存键值
+     * @param dataSet 缓存的数据
      * @return 缓存数据的对象
      */
     public BoundSetOperations<String, Object> setCacheSet(String key, Set<Object> dataSet) {
@@ -335,7 +315,6 @@ public class RedisUtils {
      * doInRedis(RedisConnection connection) throws DataAccessException {
      * connection.flushDb(); return "ok"; } }); }
      */
-
     public long del(final byte[] key) {
         return (Long) redisTemplateSerializable.execute(new RedisCallback<Object>() {
             public Long doInRedis(RedisConnection connection) {
@@ -344,7 +323,7 @@ public class RedisUtils {
         });
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public byte[] get(final byte[] key) {
         return (byte[]) redisTemplateSerializable.execute(new RedisCallback() {
             public byte[] doInRedis(RedisConnection connection) throws DataAccessException {

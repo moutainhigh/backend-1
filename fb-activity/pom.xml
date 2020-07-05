@@ -33,9 +33,9 @@
             <artifactId>spring-context</artifactId>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.mybatis.spring.boot</groupId>-->
-            <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
-            <!--<version>${mybatis-spring-boot-starter.version}</version>-->
+        <!--<groupId>org.mybatis.spring.boot</groupId>-->
+        <!--<artifactId>mybatis-spring-boot-starter</artifactId>-->
+        <!--<version>${mybatis-spring-boot-starter.version}</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -51,9 +51,9 @@
             <version>${druid.version}</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>com.alibaba</groupId>-->
-            <!--<artifactId>druid-spring-boot-starter</artifactId>-->
-            <!--<version>${druid.spring.boot.version}</version>-->
+        <!--<groupId>com.alibaba</groupId>-->
+        <!--<artifactId>druid-spring-boot-starter</artifactId>-->
+        <!--<version>${druid.spring.boot.version}</version>-->
         <!--</dependency>-->
 
         <!-- 提供mysql驱动 -->

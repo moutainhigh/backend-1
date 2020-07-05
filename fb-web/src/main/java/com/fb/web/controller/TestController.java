@@ -1,4 +1,5 @@
 package com.fb.web.controller;
+
 import com.fb.message.MessageHandler;
 import com.fb.user.domain.AbstractUser;
 import com.fb.user.domain.CommonUser;
@@ -37,7 +38,7 @@ public class TestController {
     }
 
     @GetMapping("/userLogin")
-    public String getCurrentUserName(@RequestAttribute(name = "user")AbstractUser user) {
+    public String getCurrentUserName(@RequestAttribute(name = "user") AbstractUser user) {
         //是否入驻用户的判断
         System.out.println(user.isMerchant());
         System.out.println(user instanceof CommonUser);

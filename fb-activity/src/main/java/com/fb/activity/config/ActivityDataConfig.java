@@ -3,10 +3,13 @@ package com.fb.activity.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.annotation.MapperScan;
@@ -18,16 +21,18 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Date;
 
 
 @Configuration
 @Slf4j
-@MapperScan(value = "com.fb.activity.dao.mapper", sqlSessionFactoryRef = "activitySqlSessionFactory")
+@MapperScan(value = "com.fb.activity.dao", sqlSessionFactoryRef = "activitySqlSessionFactory")
 public class ActivityDataConfig {
 
     @Value("${activity.datasource.url}")
     private String url;
-
+    @Value("${activity.datasource.url.test}")
+    private String testUrl;
     @Value("${activity.datasource.driverClass}")
     private String driverClass;
 
@@ -58,12 +63,14 @@ public class ActivityDataConfig {
     @Value("${activity.datasource.minEvictableIdleTimeMillis}")
     private Long minEvictableIdleTimeMillis;
 
+
 //    @Value("${activity.datasource.mapperLocations}")
 //    private String mapperLocations;
 
     @Bean(name = "activityDataSource", destroyMethod = "close")
     public DataSource getDataSource() {
         DruidDataSource dataSource = new DruidDataSource();
+
         dataSource.setUrl(url);
         dataSource.setDriverClassName(driverClass);
         dataSource.setPassword(password);
@@ -80,10 +87,10 @@ public class ActivityDataConfig {
 
 
     @Bean("activitySqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("activityDataSource") DataSource dataSource/*, @Qualifier("activityGlobalConfiguration") GlobalConfiguration globalConfiguration*/) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("activityDataSource") DataSource dataSource, @Qualifier("activityGlobalConfig") GlobalConfig globalConfig) throws Exception {
         MybatisSqlSessionFactoryBean sqlSessionFactory = new MybatisSqlSessionFactoryBean();
         sqlSessionFactory.setDataSource(dataSource);
-//        sqlSessionFactory.setGlobalConfig(globalConfiguration);
+        sqlSessionFactory.setGlobalConfig(globalConfig);
 //        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 //        Resource[] resources = resolver.getResources(mapperLocations);
 //        sqlSessionFactory.setMapperLocations(resources);
@@ -104,11 +111,26 @@ public class ActivityDataConfig {
         return new DataSourceTransactionManager(dataSource);
     }
 
-//    @Bean("activityGlobalConfig")
-//    public GlobalConfig globalConfiguration() {
-//        // 全局配置文件
-//        GlobalConfig globalConfig = new GlobalConfig();
-//        return globalConfig;
-//    }
+
+    @Bean("activityGlobalConfig")
+    public GlobalConfig globalConfiguration() {
+        // 全局配置文件
+        GlobalConfig globalConfig = new GlobalConfig();
+        globalConfig.setMetaObjectHandler(new MetaObjectHandler() {
+            @Override
+            public void insertFill(MetaObject metaObject) {
+                setFieldValByName("createTime", new Date(), metaObject);
+                setFieldValByName("updateTime", new Date(), metaObject);
+            }
+
+            @Override
+            public void updateFill(MetaObject metaObject) {
+                setFieldValByName("updateTime", new Date(), metaObject);
+
+            }
+        });
+
+        return globalConfig;
+    }
 
 }

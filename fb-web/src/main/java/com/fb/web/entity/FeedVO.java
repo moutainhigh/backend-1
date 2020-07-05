@@ -18,12 +18,13 @@ public class FeedVO extends CommonVO {
     private String videoUrl;
     @NotNull(message = "clockin is not null")
     @ApiModelProperty(value = "打卡", required = true, allowableValues = "0 否 1 是")
-    private Integer clockin;
+    private Integer clockIn;
     @ApiModelProperty(value = "打卡标签")
-    private String clockinTag;
+    private String clockInTag;
+    @NotNull(message = "displayCity is not null")
     @ApiModelProperty(value = "发布到同城", required = true, allowableValues = "0 否 1 是")
     private int displayCity;
-    @ApiModelProperty(value = "内容")
+    @ApiModelProperty(value = "地址")
     private String address;
 
 }

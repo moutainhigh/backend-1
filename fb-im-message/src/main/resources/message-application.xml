@@ -9,10 +9,11 @@
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/context    
                         http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
-    <context:annotation-config />
-    <context:component-scan base-package="com.fb.message" />
+    <context:annotation-config/>
+    <context:component-scan base-package="com.fb.message"/>
     <!-- 引入配置文件 -->
-    <context:property-placeholder location="classpath:message-jdbc.properties,message-redis.properties" ignore-unresolvable="true"/>
+    <context:property-placeholder location="classpath:message-jdbc.properties,message-redis.properties"
+                                  ignore-unresolvable="true"/>
 
     <cache:annotation-driven cache-manager="messageRedisCacheManager"/>
     <bean id="messageRedis" class="com.fb.common.util.RedisUtils">
@@ -20,25 +21,27 @@
         <constructor-arg index="1" ref="messageRedisTemplate"/>
     </bean>
 
-    <bean id="messageJedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <bean id="messageJedisConnectionFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <constructor-arg>
             <bean class="org.springframework.data.redis.connection.RedisStandaloneConfiguration"
-                  c:host-name="${redis.hostname}" c:port="${redis.port}" />
+                  c:host-name="${redis.hostname}" c:port="${redis.port}"/>
         </constructor-arg>
     </bean>
 
     <bean id="messageRedisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
-          factory-method="create" c:connection-factory-ref="messageJedisConnectionFactory" />
+          factory-method="create" c:connection-factory-ref="messageJedisConnectionFactory"/>
 
-    <bean id="messageStringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer" />
-    <bean id="messageJacksonValueSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer">
+    <bean id="messageStringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+    <bean id="messageJacksonValueSerializer"
+          class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer">
         <constructor-arg ref="objectMapper"/>
     </bean>
     <bean id="objectMapper" class="com.fb.common.util.RedisValueObjectMapper"/>
     <bean id="messageRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-        <property name="connectionFactory" ref="messageJedisConnectionFactory" />
-        <property name="keySerializer" ref="messageStringRedisSerializer" />
+        <property name="connectionFactory" ref="messageJedisConnectionFactory"/>
+        <property name="keySerializer" ref="messageStringRedisSerializer"/>
         <property name="valueSerializer" ref="messageJacksonValueSerializer"/>
-        <property name="hashKeySerializer" ref="messageStringRedisSerializer" />
+        <property name="hashKeySerializer" ref="messageStringRedisSerializer"/>
     </bean>
 </beans>

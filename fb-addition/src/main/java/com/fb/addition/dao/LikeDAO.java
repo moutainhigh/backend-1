@@ -1,9 +1,9 @@
-package com.fb.feed.dao;
+package com.fb.addition.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.fb.feed.entity.FeedPO;
+import com.fb.addition.entity.LikePO;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface FeedDao extends BaseMapper<FeedPO> {
+public interface LikeDAO extends BaseMapper<LikePO> {
 }

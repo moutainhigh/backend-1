@@ -3,5 +3,20 @@ server:
 swagger:
   enable: true
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 1000MB
   main:
     allow-bean-definition-overriding: true
+
+logging:
+  level:
+    root: info
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+  path: "./logs/"
+  file: "./logs/web.log"
+

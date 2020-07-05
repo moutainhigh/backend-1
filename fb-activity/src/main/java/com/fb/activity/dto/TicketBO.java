@@ -3,6 +3,7 @@ package com.fb.activity.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 public class TicketBO {
@@ -29,5 +30,9 @@ public class TicketBO {
 
     /*说明*/
     private String illustration;
+
+    /*说明*/
+    private Date createTime;
+
 
 }

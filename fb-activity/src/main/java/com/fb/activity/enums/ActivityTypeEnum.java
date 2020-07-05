@@ -3,6 +3,9 @@ package com.fb.activity.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Objects;
+import java.util.Optional;
+
 @Getter
 @AllArgsConstructor
 public enum ActivityTypeEnum {
@@ -24,4 +27,21 @@ public enum ActivityTypeEnum {
     private int activityValid;
 
 
+    public static ActivityTypeEnum getActivityTypeEnumByCode(int code) {
+        for (ActivityTypeEnum activityTypeEnum : ActivityTypeEnum.values()) {
+            if (activityTypeEnum.getCode() == code) {
+                return activityTypeEnum;
+            }
+        }
+        return null;
+    }
+
+    public static String getValueByCode(int code) {
+        return Objects.nonNull(getActivityTypeEnumByCode(code)) ?
+                getActivityTypeEnumByCode(code).getValue() : "";
+    }
+
+    public String getNameByActivityValid(int code) {
+        return code == 1 ? "短期" : "长期";
+    }
 }

@@ -15,8 +15,8 @@ public interface IUserService {
      */
     AbstractUser checkAndRefresh(String token);
 
+
     /**
-     * 用户注册，创建用户，新创建的用户只能是普通用户，返回普通用户
      * @param token
      * @return
      */
@@ -38,12 +38,6 @@ public interface IUserService {
 
     /**
      * 普通用户升级入驻
-     * @param token
-     * @return
-     */
-
-    /**
-     *
      * @param token
      * @return
      */
