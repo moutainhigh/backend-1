@@ -65,6 +65,7 @@ public class UserController {
     }
 
     //获取爱好标签接口
+    @GetMapping("/listHobbyTagName")
     public JsonObject<List<HobbyTagPO>> listHobbyTag() {
         return new JsonObject<>(hobbyTagService.listAllHobbyTag());
     }

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-@Component
 public class LoginFilter implements Filter {
 
     @Autowired
