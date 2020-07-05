@@ -13,4 +13,19 @@ public enum  UserTypeEnum {
     private byte code;
 
     private String desc;
+
+    public byte getCode() {
+        return code;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public static UserTypeEnum getUserTypeEnumByCode(byte code) {
+        for (UserTypeEnum enumConstant : UserTypeEnum.class.getEnumConstants()) {
+            if (enumConstant.code == code) return enumConstant;
+        }
+        return null;
+    }
 }

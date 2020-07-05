@@ -1,5 +1,6 @@
 package com.fb.web.utils;
 
+import com.fb.web.exception.BaseResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -36,13 +37,13 @@ public class JsonObject<T> implements Serializable {
      * 调用结果代码 0代表成功 反之代表失败
      */
     @ApiModelProperty(value = "调用结果代码 0代表成功 反之代表失败", required = true)
-    private Integer code;
+    private Integer code = 0;
 
     /**
      * 出错信息， 输出出错码对应的出错信息
      */
     @ApiModelProperty(value = "调用结果代码 0代表成功 反之代表失败")
-    private String msg;
+    private String msg = "成功";
 
 
     /**
@@ -96,6 +97,10 @@ public class JsonObject<T> implements Serializable {
      */
     public static JsonObject newErrorJsonObject(String msg) {
         return JsonObject.newErrorJsonObject(JsonObject.DEFAULT_ERR_CODE, msg);
+    }
+
+    public static JsonObject newErrorJsonObject(BaseResponse baseResponse) {
+        return JsonObject.newErrorJsonObject(baseResponse.getCode(), baseResponse.getDesc());
     }
 
     /**

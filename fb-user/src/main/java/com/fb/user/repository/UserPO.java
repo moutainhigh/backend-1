@@ -43,7 +43,7 @@ public class UserPO {
     private LocalDate birthday;
 
     @TableField("sex")
-    private Byte sex;
+    private byte sex;
 
     @TableField("introduction")
     private String introduction;
@@ -52,7 +52,10 @@ public class UserPO {
     private String headPicUrl;
 
     @TableField("user_type")
-    private Byte userType;
+    private byte userType;
+
+    @TableField("hobby_tag_list")
+    private String hobbyTagNameList;
 
     @TableField("create_time")
     private LocalDateTime createTime;

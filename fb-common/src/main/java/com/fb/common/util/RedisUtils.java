@@ -33,6 +33,10 @@ public class RedisUtils {
         redisTemplate.opsForValue().set(key, value);
     }
 
+    public void setCacheObject(String key, Object value, long timeout, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
+    }
+
     /**
      * 获得缓存的基本对象。
      *

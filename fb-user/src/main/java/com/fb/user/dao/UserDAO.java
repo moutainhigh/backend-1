@@ -11,7 +11,5 @@ import java.util.List;
  */
 
 @Repository
-public interface UserDao extends BaseMapper<UserPO> {
-
-    List<UserPO> getUserByIdList();
+public interface UserDAO extends BaseMapper<UserPO> {
 }

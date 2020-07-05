@@ -44,6 +44,8 @@ public interface IUserRelationService {
     //获取用户通讯录
     List<DirectFriendRelation> listDirectFriendRelation(Long userId);
 
+    int countFriends(Long userId);
+
 
     /**
      * 可以先获取直接好友的动态和活动，1级 + 2级 + 3级。这边的分页是怎么做的呢

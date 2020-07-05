@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class UserDaoTest extends BaseTest {
 
     @Resource
-    private UserDao userDao;
+    private UserDAO userDao;
 
     @Test
     public void testInsertUser() {
@@ -23,10 +23,5 @@ public class UserDaoTest extends BaseTest {
         System.out.println(userDao.selectById(1));
         System.out.println(userPO.getId());
         System.out.println(userDao.selectById(1));
-    }
-
-    @Test
-    public void testGet() {
-        System.out.println(userDao.getUserByIdList().size());
     }
 }
