@@ -64,9 +64,9 @@ public class CommonController {
     }
 
     @ResponseBody
-    @ApiOperation(value = "图片删除", notes = "图片删除")
-    @RequestMapping(value = "/deleteImage", method = {RequestMethod.POST})
-    public JsonObject<Boolean> deleteImage(@RequestParam @ApiParam("图片") String url) {
+    @ApiOperation(value = "文件删除", notes = "图片删除")
+    @RequestMapping(value = "/deleteFile", method = {RequestMethod.POST})
+    public JsonObject<Boolean> deleteImage(@RequestParam @ApiParam("文件路径") String url) {
 
         long uid = 123456L;
         boolean deletePictureResult = aliyunOssServiceImpl.deleteFile(url, uid);
