@@ -14,7 +14,8 @@ public class ActivityVO extends CommonVO {
 
     @ApiModelProperty(value = "主键")
     private Long id;
-    @ApiModelProperty(value = "发布人类型")
+    @NotNull(message = "userType is not null")
+    @ApiModelProperty(value = "发布人类型", allowableValues = "0 普通 1 入驻",  required = true)
     private Integer userType;
     @ApiModelProperty(value = "发布人类型")
     private Long userId;
@@ -23,7 +24,8 @@ public class ActivityVO extends CommonVO {
     private String activityTitle;
     @ApiModelProperty(value = "活动人数")
     private Integer memberCount;
-    @ApiModelProperty(value = "有效期", allowableValues = "0 长期 1 短期")
+    @NotNull(message = "activityValid is not null")
+    @ApiModelProperty(value = "有效期", allowableValues = "0 长期 1 短期", required = true)
     private Integer activityValid;
     @NotNull(message = "activityTime is not null")
     @ApiModelProperty(value = "活动时间，格式yyyy-MM-dd HH:mm", required = true)

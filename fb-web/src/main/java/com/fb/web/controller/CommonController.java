@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import javaslang.Tuple;
 import javaslang.Tuple3;
+import javaslang.Tuple4;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,10 @@ public class CommonController {
     @ResponseBody
     @ApiOperation(value = "所有活动类型", notes = "字典")
     @RequestMapping(value = "/activitytype", method = {RequestMethod.GET})
-    public JsonObject<List<Tuple3<Integer, String, String>>> getActivityType() {
+    public JsonObject<List<Tuple4<Integer, String, Integer, String>>> getActivityType() {
         List list = new ArrayList();
         for (ActivityTypeEnum activityTypeEnum : ActivityTypeEnum.values()) {
-            list.add(Tuple.of(activityTypeEnum.getCode(), activityTypeEnum.getValue(), activityTypeEnum.getNameByActivityValid(activityTypeEnum.getActivityValid())));
+            list.add(Tuple.of(activityTypeEnum.getCode(), activityTypeEnum.getValue(), activityTypeEnum.getActivityValid(), activityTypeEnum.getNameByActivityValid(activityTypeEnum.getActivityValid())));
         }
         return JsonObject.newCorrectJsonObject(list);
     }
