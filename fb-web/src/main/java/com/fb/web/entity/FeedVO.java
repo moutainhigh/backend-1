@@ -8,8 +8,9 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Api(value = "动态模型")
-public class FeedVO extends CommonVO {
-
+public class FeedVO {
+    @ApiModelProperty(value = "经纬度坐标")
+    private String location;
     @ApiModelProperty(value = "内容", notes = "长度100字")
     private String content;
     @ApiModelProperty(value = "图片url", notes = "多个用,分割（图片6张）")

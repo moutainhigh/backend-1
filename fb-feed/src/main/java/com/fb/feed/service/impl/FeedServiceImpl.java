@@ -67,13 +67,14 @@ public class FeedServiceImpl implements IFeedService {
     @Override
     public Optional<List<FeedBO>> queryLocationFeedList(String cityCode, int limit, Long offsetId, Integer random) {
 
-        //TODO LX cityCode要加入查询条件
         List<FeedBO> feedBOS = new ArrayList<>(limit);
         QueryWrapper<FeedPO> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(obj -> {
             if (Objects.nonNull(offsetId) && offsetId > 0) {
                 obj.lt(FeedPO::getId, offsetId);
             }
+            //TODO LX
+//            obj.eq(FeedPO::getCityCode, cityCode);
             obj.eq(FeedPO::getFeedState, FeedStateEnum.PUBLISH.getCode());
             obj.eq(FeedPO::getDisplayCity, 1);
 
@@ -82,14 +83,52 @@ public class FeedServiceImpl implements IFeedService {
         IPage<FeedPO> feedList = feedDao.selectPage(new Page(1, 1000), queryWrapper);
 
         if (!CollectionUtils.isEmpty(feedList.getRecords())) {
-             List<FeedPO> feedPOList = feedList.getRecords().stream().filter(feedPO -> feedPO.getId() % GROUP == random).limit(limit).collect(Collectors.toList());
+            List<FeedPO> feedPOList = feedList.getRecords().stream().filter(feedPO -> feedPO.getId() % GROUP == random).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(feedPOList)) {
-                feedList.getRecords().forEach(feedPO -> {
-                    feedBOS.add(pOToConvertBO(feedPO));
-                });
+                limit = Math.min(feedPOList.size(), limit);
+
+                for (int i = 0; i < limit; i++) {
+
+                    feedBOS.add(pOToConvertBO(feedPOList.get(i)));
+                }
+
             }
         }
         return Optional.ofNullable(feedBOS);
+    }
+
+    @Override
+    public Optional<List<FeedBO>> queryFeedListByUserId(Long userId, int pageSize, int pageNum) {
+        List<FeedBO> feedBOS = new ArrayList<>(pageSize);
+        QueryWrapper<FeedPO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(obj -> {
+            obj.eq(FeedPO::getUserId, userId);
+            obj.eq(FeedPO::getFeedState, FeedStateEnum.PUBLISH.getCode());
+        }).orderByDesc(FeedPO::getUpdateTime);
+
+        IPage<FeedPO> feedList = feedDao.selectPage(new Page(pageNum, pageSize), queryWrapper);
+        if (!CollectionUtils.isEmpty(feedList.getRecords())) {
+            feedList.getRecords().forEach(feedPO -> {
+                feedBOS.add(pOToConvertBO(feedPO));
+            });
+        }
+        return Optional.ofNullable(feedBOS);
+    }
+
+    @Override
+    public boolean deleteFeed(Long feedId, Long userId) {
+
+        QueryWrapper<FeedPO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(obj -> {
+            obj.eq(FeedPO::getId, feedId);
+        });
+
+        FeedPO feedPO = feedDao.selectOne(queryWrapper);
+        if (Objects.nonNull(feedPO) && feedPO.getUserId().equals(userId)) {
+            feedPO.setFeedState(FeedStateEnum.DELETE.getCode());
+            feedDao.updateById(feedPO);
+        }
+        return true;
     }
 
 

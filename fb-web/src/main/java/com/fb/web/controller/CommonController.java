@@ -3,6 +3,7 @@ package com.fb.web.controller;
 import com.fb.activity.enums.ActivityTypeEnum;
 import com.fb.common.model.UploadResult;
 import com.fb.common.service.OssService;
+import com.fb.common.util.JsonUtils;
 import com.fb.web.entity.output.UploadVo;
 import com.fb.web.utils.JsonObject;
 import io.swagger.annotations.Api;
@@ -12,6 +13,7 @@ import javaslang.Tuple;
 import javaslang.Tuple3;
 import javaslang.Tuple4;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,8 @@ import java.util.Optional;
 @RequestMapping(value = "/common", produces = "application/json;charset=UTF-8")
 @Api(value = "通用", description = "通用接口")
 @Slf4j
-public class CommonController {
 
+public class CommonController {
     @Autowired
     private OssService aliyunOssServiceImpl;
 
@@ -73,4 +75,34 @@ public class CommonController {
         boolean deletePictureResult = aliyunOssServiceImpl.deleteFile(url, uid);
         return JsonObject.newCorrectJsonObject(deletePictureResult);
     }
+    public static void sortColors(int[] nums) {
+
+        int p = -1;
+        int q = nums.length;
+        int i = 0;
+        while(i < q) {
+
+             if (nums[i] == 0 ) {
+                swap(nums, i,  ++ p);
+            } if (nums[i] == 2) {
+                swap(nums, i,   -- q);
+            } if (nums[i] == 1 ) {
+                i ++;
+            }
+
+        }
+    }
+    public static void swap(int[] nums, int p, int q) {
+        int tmp=nums[p];
+        nums[p]= nums[q];
+        nums[q]= tmp;
+    }
+
+    public static void main(String[] args) {
+//        int[] nums = {1,2,0};
+        int[] nums = {2,0,2,1,1,0};
+        sortColors(nums);
+        System.out.println(JsonUtils.object2Json(nums));
+    }
+
 }

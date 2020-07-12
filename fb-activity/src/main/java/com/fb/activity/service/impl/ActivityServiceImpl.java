@@ -42,6 +42,7 @@ public class ActivityServiceImpl implements IActivityService {
 
     /**
      * 发布活动
+     *
      * @param activityBO
      * @return
      */
@@ -61,6 +62,7 @@ public class ActivityServiceImpl implements IActivityService {
 
     /**
      * 查询草稿
+     *
      * @param userId
      * @return
      */
@@ -76,6 +78,7 @@ public class ActivityServiceImpl implements IActivityService {
 
     /**
      * 查询活动详情
+     *
      * @param activityId
      * @return
      */
@@ -91,6 +94,7 @@ public class ActivityServiceImpl implements IActivityService {
 
     /**
      * 按照活动类型分页查询
+     *
      * @param activityType
      * @param pageSize
      * @param pageNum
@@ -119,6 +123,7 @@ public class ActivityServiceImpl implements IActivityService {
 
     /**
      * 按照日期和人分页查询
+     *
      * @param limit
      * @param offsetId
      * @return
@@ -131,7 +136,8 @@ public class ActivityServiceImpl implements IActivityService {
 //            obj.apply("date_format(gmt_creat,'%Y-%m-%d') = '"+date+"'");
             if (Objects.nonNull(offsetId) && offsetId > 0) {
                 obj.lt(ActivityPO::getId, offsetId);
-            } if (!CollectionUtils.isEmpty(userIdList)) {
+            }
+            if (!CollectionUtils.isEmpty(userIdList)) {
                 obj.in(ActivityPO::getUserId, userIdList);
             }
             obj.eq(ActivityPO::getActivityState, ActivityStateEnum.PUBLISH.getCode());
@@ -144,6 +150,49 @@ public class ActivityServiceImpl implements IActivityService {
             });
         }
         return Optional.ofNullable(activityBOS);
+    }
+
+    /**
+     * 根据用户id查询用户发布的活动列表
+     *
+     * @param userId
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    @Override
+    public Optional<List<ActivityBO>> queryActivityListByUserId(Long userId, int pageSize, int pageNum) {
+        List<ActivityBO> activityBOS = new ArrayList<>(pageSize);
+        QueryWrapper<ActivityPO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(obj -> {
+            obj.eq(ActivityPO::getUserId, userId);
+            obj.in(ActivityPO::getActivityState, Arrays.asList(ActivityStateEnum.DRAFT.getCode(), ActivityStateEnum.PUBLISH.getCode()));
+        }).orderByDesc(ActivityPO::getUpdateTime);
+
+        IPage<ActivityPO> activityList = activityDao.selectPage(new Page(pageNum, pageSize), queryWrapper);
+        if (!CollectionUtils.isEmpty(activityList.getRecords())) {
+            Map<Long, List<TicketPO>> activityMap = getTicketByActivityIds(activityList.getRecords().stream().map(ActivityPO::getId).collect(Collectors.toList()));
+            activityList.getRecords().forEach(activityPO -> {
+                activityBOS.add(activityPOToBO(activityPO, activityMap.get(activityPO.getId())));
+            });
+        }
+        return Optional.ofNullable(activityBOS);
+    }
+
+    @Override
+    public boolean deleteActivity(Long activityId, Long userId) {
+
+        QueryWrapper<ActivityPO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(obj -> {
+            obj.eq(ActivityPO::getId, activityId);
+        });
+
+        ActivityPO activityPO = activityDao.selectOne(queryWrapper);
+        if (Objects.nonNull(activityPO) && activityPO.getUserId().equals(userId)) {
+            activityPO.setActivityState(ActivityStateEnum.DELETE.getCode());
+            activityDao.updateById(activityPO);
+        }
+        return true;
     }
 
 

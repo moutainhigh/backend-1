@@ -35,4 +35,23 @@ public interface IFeedService {
 
     Optional<List<FeedBO>> queryLocationFeedList(String cityCode, int limit, Long offsetId, Integer random);
 
+    /**
+     * 查询用户动态列表
+     * @param userId
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    Optional<List<FeedBO>> queryFeedListByUserId(Long userId, int pageSize, int pageNum);
+
+
+    /**
+     * 删除动态
+     * @param userId
+     * @param feedId
+     * @return
+     */
+    boolean deleteFeed(Long feedId, Long userId);
+
+
 }

@@ -51,5 +51,23 @@ public interface IActivityService {
      */
     Optional<List<ActivityBO>> queryActivityListByUid(List<Long> userIdList, int limit, Long offsetId);
 
+    /**
+     * 根据用户id查询活动列表
+     * @param userId
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    Optional<List<ActivityBO>> queryActivityListByUserId(Long userId, int pageSize, int pageNum);
+
+
+    /**
+     * 删除活动
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    boolean deleteActivity(Long activityId, Long userId);
+
 
 }

@@ -10,12 +10,14 @@ import java.util.List;
 
 @Data
 @Api(value = "活动模型")
-public class ActivityVO extends CommonVO {
-
+public class ActivityVO {
+    @NotNull(message = "location is not null")
+    @ApiModelProperty(value = "经纬度坐标", required = true)
+    private String location;
     @ApiModelProperty(value = "主键")
     private Long id;
     @NotNull(message = "userType is not null")
-    @ApiModelProperty(value = "发布人类型", allowableValues = "0 普通 1 入驻",  required = true)
+    @ApiModelProperty(value = "发布人类型", allowableValues = "0 普通 1 入驻", required = true)
     private Integer userType;
     @ApiModelProperty(value = "发布人类型")
     private Long userId;
