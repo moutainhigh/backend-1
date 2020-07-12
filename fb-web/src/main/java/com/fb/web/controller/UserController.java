@@ -186,10 +186,11 @@ public class UserController {
         if (!CollectionUtils.isEmpty(relationDetails)) {
             relationDetails.sort((a, b) -> b.getTime().compareTo(a.getTime()));
             //遍历找到offset
-            int length = Math.max(relationDetails.size(), limit);
-            if (length > limit) {
+            if (relationDetails.size() > limit) {
                 hasNext = true;
             }
+            int length = Math.min(relationDetails.size(), limit);
+
             for (int i = 0; i < length; i++) {
                 RelationDetail relationDetail = relationDetails.get(i);
                 relationDetailResult.add(relationDetail);
