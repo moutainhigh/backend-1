@@ -85,7 +85,7 @@ public class RedisUtils {
      * 获得缓存的list对象 @Title: range @param @param key @param @param start @param @param
      * end @param @return @return List<T> 返回类型 @throws
      */
-    public List<Object> range(String key, long start, long end) {
+    public List range(String key, long start, long end) {
         ListOperations<String, Object> listOperation = redisTemplate.opsForList();
         return listOperation.range(key, start, end);
     }
@@ -348,4 +348,27 @@ public class RedisUtils {
             }
         });
     }
+
+    /**
+     * 缓存set集合
+     * @param key
+     * @param object
+     */
+    public void addSetsCache(String key, Object object) {
+        redisTemplate.opsForSet().add(key, object);
+    }
+    /**
+     *获取set集合
+     * @param key
+     * @return
+     */
+    public Set getSetsCache(String key) {
+        return redisTemplate.opsForSet().members(key);
+    }
+
+    public void delSetsCache(String key, Object obj) {
+        redisTemplate.opsForSet().remove(key, obj);
+    }
+
+
 }
