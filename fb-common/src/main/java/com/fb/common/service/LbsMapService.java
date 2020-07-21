@@ -17,11 +17,11 @@ public interface LbsMapService {
     /**
      * 获取地域信息根据经纬度
      *
-     * @param lon
+     * @param lng
      * @param lat
      * @return
      */
-    public Optional<LbsMapBo> getLbsInfoByLonAndLat(String lon, String lat);
+    public Optional<LbsMapBo> getLbsInfoByLonAndLat(String lng, String lat);
 
 
 }

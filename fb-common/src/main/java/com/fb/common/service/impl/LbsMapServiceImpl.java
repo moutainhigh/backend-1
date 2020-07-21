@@ -34,9 +34,9 @@ public class LbsMapServiceImpl implements LbsMapService {
     private String lbsUrl;
 
     @Override
-    public Optional<LbsMapBo> getLbsInfoByLonAndLat(String lon, String lat) {
-        if (StringUtils.isNotEmpty(lon) && StringUtils.isNotEmpty(lat)) {
-            StringBuffer sb = new StringBuffer(lon).append(",").append(lat);
+    public Optional<LbsMapBo> getLbsInfoByLonAndLat(String lng, String lat) {
+        if (StringUtils.isNotEmpty(lng) && StringUtils.isNotEmpty(lat)) {
+            StringBuffer sb = new StringBuffer(lng).append(",").append(lat);
             return getLbsInfoByLocation(sb.toString());
         }
         return Optional.empty();
