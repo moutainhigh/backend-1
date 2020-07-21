@@ -6,6 +6,7 @@ import com.fb.user.domain.AbstractUser;
 import com.fb.user.domain.CommonUser;
 import com.fb.user.domain.MerchantUser;
 import com.fb.user.enums.UserTypeEnum;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,6 +37,9 @@ public class UserRepository {
             userDAO.updateById(userPO);
         } else {
             userDAO.insert(userPO);
+        }
+        if (CollectionUtils.isNotEmpty(user.getHobbyTagList())) {
+            hobbyTagRepository.insertIgnore(user.getHobbyTagList());
         }
         user.setUid(userPO.getId());
         return user;

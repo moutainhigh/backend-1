@@ -1,5 +1,8 @@
 package com.fb.user.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fb.common.util.LocalDateConvert;
+import com.fb.common.util.LocalDateTimeConvert;
 import com.fb.user.enums.SexEnum;
 import com.fb.user.enums.UserTypeEnum;
 import com.fb.user.repository.HobbyTagPO;
@@ -7,6 +10,7 @@ import com.fb.user.repository.UserPO;
 import com.fb.user.request.UserReq;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.convert.ThreeTenBackPortConverters;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,6 +25,7 @@ public abstract class AbstractUser {
 
 
     public AbstractUser(UserPO userPO) {
+        this.uid = userPO.getId();
         this.name = userPO.getName();
         this.phoneNumber = userPO.getPhoneNumber();
         this.lat = userPO.getLat();
@@ -52,6 +57,7 @@ public abstract class AbstractUser {
 
     protected String locationStr;
 
+    @JsonSerialize(using = LocalDateConvert.class)
     protected LocalDate birthday;
 
     protected SexEnum sex;
@@ -62,6 +68,7 @@ public abstract class AbstractUser {
 
     protected List<String> hobbyTagList;
 
+    @JsonSerialize(using = LocalDateTimeConvert.class)
     protected LocalDateTime createTime;
 
     private String loginToken;

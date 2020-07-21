@@ -1,0 +1,15 @@
+
+{
+  "dataDesc": "添加用户请求体",
+  "birthday": "1996-12-16",
+  "headPicUrl": "string",
+  "hobbyTagNameList": [
+    "骑车","跑步"
+  ],
+  "introduction": "我是马甲行的爸爸",
+  "lat": 40.005258,
+  "lng": 116.462595,
+  "name": "pangminpeng",
+  "phoneNumber": "13520053770",
+  "sex": 2
+}

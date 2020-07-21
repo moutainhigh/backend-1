@@ -12,7 +12,11 @@ import com.fb.web.entity.BasicUserVO;
 import com.fb.web.entity.UserVO;
 import com.fb.web.exception.UserResponse;
 import com.fb.web.utils.JsonObject;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +28,12 @@ import com.fb.web.entity.UserVO;
 import com.fb.web.service.ActivityFacadeService;
 import com.fb.web.service.FeedFacadeService;
 import com.fb.web.utils.JsonObject;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Info;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -48,12 +49,13 @@ import static com.fb.common.util.DateUtils.dateTimeFormatterMin;
 import static com.fb.common.util.DateUtils.zoneId;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping(value = "/user", produces = "application/json;charset=UTF-8")
 @Api(value = "用户", description = "用户相关接口")
-@ResponseBody
 @Slf4j
+@Validated
 public class UserController {
     @Resource
     private IUserService userService;
@@ -63,19 +65,25 @@ public class UserController {
     @Qualifier("userRedis")
     private RedisUtils redisUtils;
 
-    private CmsUtils cmsUtils = new CmsUtils(redisUtils);
+
+
     //请求验证码接口, todo 验证手机号是否有效
-    public JsonObject getVerifyCode(String phoneNumber) {
-        if (cmsUtils.sendVerifyCode(phoneNumber)){
+    @GetMapping("/getVerifyCode/{phoneNumber}")
+    @ApiOperation(value = "获取手机验证码")
+    public JsonObject getVerifyCode(@NotBlank @ApiParam(name = "phoneNumber", value = "手机号", required = true) @PathVariable String phoneNumber) {
+        if (CmsUtils.sendVerifyCode(redisUtils, phoneNumber)){
             return new JsonObject();
         }
         return JsonObject.newErrorJsonObject(UserResponse.SEND_VERIFYCODE_ERROR);
     }
 
     //验证码 + 手机号进行验证：登录成功，返回token值；用户未注册，前端进入注册页面
-    public JsonObject<BasicUserVO> verify(String phoneNumber, String verifyCode) {
+    @GetMapping("/login")
+    @ApiOperation(value = "用户登录", notes = "0:登录成功；10002：验证码失败；10001：手机号不存在，请注册")
+    public JsonObject<BasicUserVO> verify(@NotBlank @ApiParam(name = "phoneNumber", value = "手机号", required = true)  @RequestParam("phoneNumber") String phoneNumber,
+                                          @NotBlank @ApiParam(name = "verifyCode", value = "验证码", required = true) @RequestParam("verifyCode") String verifyCode) {
         //todo 手机验证码的校验
-        boolean checkResult = cmsUtils.checkVerifyCode(phoneNumber, verifyCode);
+        boolean checkResult = CmsUtils.checkVerifyCode(redisUtils, phoneNumber, verifyCode);
         if (checkResult) {
             AbstractUser user = userService.login(phoneNumber);
             if (Objects.isNull(user)) {
@@ -89,28 +97,37 @@ public class UserController {
     }
 
     //注册，注册之后也应该把详细信息返回到设备端
+    @PostMapping("/signUp")
+    @ApiOperation("新用户注册")
     public JsonObject<BasicUserVO> signUp(@RequestBody UserReq userReq) {
         CommonUser user = userService.createUser(userReq);
         BasicUserVO userVO = new BasicUserVO(user);
         return new JsonObject<>(userVO);
     }
 
-    //获取爱好标签接口
     @GetMapping("/listHobbyTagName")
-    public JsonObject<List<HobbyTagPO>> listHobbyTag() {
-        return new JsonObject<>(hobbyTagService.listAllHobbyTag());
+    @ApiOperation("获取所有爱好标签")
+    public JsonObject<List<String>> listHobbyTag() {
+        return new JsonObject<>(hobbyTagService.listAllHobbyTag().stream().map(HobbyTagPO::getName).collect(Collectors.toList()));
     }
 
 
-    //修改用户基本信息接口，是否
-    public JsonObject<BasicUserVO> modifyUser(@RequestBody UserReq userReq) {
+    @PutMapping("/modifyUser")
+    @ApiOperation("修改用户信息")
+    public JsonObject<BasicUserVO> modifyUser(@RequestBody UserReq userReq,
+                                              @ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser, @RequestHeader("token") String token) {
+        userReq.setUid(sessionUser.getUid());
+        userReq.setLoginToken(token);
         AbstractUser user = userService.modifyUser(userReq);
         return new JsonObject<>(new BasicUserVO(user));
     }
 
 
     //用户的基本信息获取
-    public JsonObject<BasicUserVO> getBasicInfoByToken(@RequestAttribute(name = "user")AbstractUser user) {
+    @GetMapping("/detail")
+    @ApiOperation("通过token获取用户详细信息")
+    @ApiImplicitParam(name = "token", value = "token",required = true, dataType = "String",paramType="header")
+    public JsonObject<BasicUserVO> getBasicInfoByToken(@RequestAttribute(name = "user") @ApiIgnore AbstractUser user) {
         // 通过token获取用户的详细基本信息
         BasicUserVO userVO = new BasicUserVO(user);
         userVO.setAllFriendsCount(0);
@@ -128,14 +145,14 @@ public class UserController {
     //    TODO LX 二期
     @ApiOperation(value = "人脉关系(二期)", notes = "查询人脉关系，3级")
     @RequestMapping(value =
-            "/user/relation", method = {RequestMethod.GET})
+            "/relation", method = {RequestMethod.GET})
     public JsonObject<List<UserVO>> getUserRelation() {
         return JsonObject.newCorrectJsonObject("");
     }
 
     //    TODO LX 二期
     @ApiOperation(value = "关系网(二期)", notes = "")
-    @RequestMapping(value = "/user/relationfeed", method = {RequestMethod.GET})
+    @RequestMapping(value = "/relationfeed", method = {RequestMethod.GET})
     public JsonObject<FocusVO> getUserFocusList(@ApiParam(name = "limit", value = "展示条数") @RequestParam("limit") Integer limit,
                                                 @ApiParam(name = "feedOffsetId", value = "动态偏移量 ") @RequestParam("feedOffsetId") Long feedOffsetId,
                                                 @ApiParam(name = "activityOffsetId", value = "活动偏移量 ") @RequestParam("activityOffsetId") Long activityOffsetId) {

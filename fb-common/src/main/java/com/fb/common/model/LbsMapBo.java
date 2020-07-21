@@ -12,6 +12,4 @@ public class LbsMapBo {
     private String cityName;
     /*行政区名字*/
     private String adName;
-
-
 }

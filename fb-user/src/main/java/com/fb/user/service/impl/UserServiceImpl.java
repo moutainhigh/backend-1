@@ -4,6 +4,7 @@ import com.fb.common.util.RedisUtils;
 import com.fb.user.domain.AbstractUser;
 import com.fb.user.domain.CommonUser;
 import com.fb.user.enums.SexEnum;
+import com.fb.user.enums.UserTypeEnum;
 import com.fb.user.repository.UserRepository;
 import com.fb.user.request.HobbyTagReq;
 import com.fb.user.request.UserReq;
@@ -52,7 +53,12 @@ public class UserServiceImpl implements IUserService {
     public CommonUser createUser(UserReq userReq) {
         CommonUser commonUser = new CommonUser();
         buildUserByReq(userReq, commonUser);
-        return (CommonUser) userRepository.save(commonUser);
+        CommonUser result =  (CommonUser) userRepository.save(commonUser);
+        result.setUserTypeEnum(UserTypeEnum.COMMON_USER);
+        String token = result.getUid().toString() + "_" +  System.currentTimeMillis();
+        redisUtils.setCacheObject(token, result, TOKEN_TIMEOUT, TimeUnit.DAYS);
+        result.setLoginToken(token);
+        return result;
     }
 
     @Override
@@ -60,7 +66,7 @@ public class UserServiceImpl implements IUserService {
         AbstractUser user = userRepository.getOneUserByPhoneNumber(phoneNumber);
         if (Objects.isNull(user))
             return null;
-        String token = user.getUid().toString() + System.currentTimeMillis();
+        String token = user.getUid().toString() +  "_" + System.currentTimeMillis();
         redisUtils.setCacheObject(token, user, TOKEN_TIMEOUT, TimeUnit.DAYS);
         user.setLoginToken(token);
         return user;

@@ -18,22 +18,23 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class CmsUtils {
 
-    private RedisUtils redisUtils;
-    private IAcsClient client;
+    private static IAcsClient client;
+
+    private static final String CMS_CACHE_CATEGORY = "cms_";
 
 
-    public CmsUtils(RedisUtils redisUtils) {
-        this.redisUtils = redisUtils;
-        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4GAm98peeHMNaHDnsqWu", "gYEwNu1tAhfNfywPJCNxSLIPyANAgh");
-        this.client = new DefaultAcsClient(profile);
+    static {
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", "LTAI4G3wcPmt6XVkHRNPnVPE", "xs3JA7OzkS6z0pMTf3eqZXJWfiY3wN");
+        client = new DefaultAcsClient(profile);
     }
+
 
     private final static int TIME_OUT = 5;
 
-    public boolean sendVerifyCode(String phoneNumber) {
+    public static boolean sendVerifyCode( RedisUtils redisUtils, String phoneNumber) {
         //有短信验证码，则返回；无短信验证码，则返回
         try {
-            if (Objects.nonNull(redisUtils.getCacheObject(phoneNumber))) {
+            if (Objects.nonNull(redisUtils.getCacheObject(CMS_CACHE_CATEGORY + phoneNumber))) {
                 return false;
             }
             String verifyCode = getRandomVerifyCode(6);
@@ -44,20 +45,20 @@ public class CmsUtils {
             // 接收短信的手机号码
             request.putQueryParameter("PhoneNumbers", phoneNumber);
             // 短信签名名称。请在控制台签名管理页面签名名称一列查看（必须是已添加、并通过审核的短信签名）。
-            request.putQueryParameter("SignName", "find_beer");
+            request.putQueryParameter("SignName", "findbeer");
             // 短信模板ID
-            request.putQueryParameter("TemplateCode", "SMS_195261216");
+            request.putQueryParameter("TemplateCode", "SMS_196147415");
             // 短信模板变量对应的实际值，JSON格式。
             request.putQueryParameter("TemplateParam", "{\"code\":\"" + verifyCode + "\"}");
-            client.getCommonResponse(request);
-            redisUtils.setCacheObject(phoneNumber, verifyCode, TIME_OUT, TimeUnit.MINUTES);
+            log.info("aliyun response:{}", client.getCommonResponse(request).getData());
+            redisUtils.setCacheObject(CMS_CACHE_CATEGORY + phoneNumber, verifyCode, TIME_OUT, TimeUnit.MINUTES);
         } catch (Exception e) {
             log.error("send verifyCode to phoneNumber:{} exception", phoneNumber,  e);
         }
-        return false;
+        return true;
     }
 
-    private String getRandomVerifyCode(int length) {
+    private static String getRandomVerifyCode(int length) {
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {
@@ -67,8 +68,8 @@ public class CmsUtils {
     }
 
     //检查是否在有效期内
-    public boolean checkVerifyCode(String phoneNumber, String verifyCode) {
-        String exist = (String) redisUtils.getCacheObject(phoneNumber);
+    public static boolean checkVerifyCode(RedisUtils redisUtils, String phoneNumber, String verifyCode) {
+        String exist = (String) redisUtils.getCacheObject(CMS_CACHE_CATEGORY + phoneNumber);
         return Objects.equals(verifyCode, exist);
     }
 }

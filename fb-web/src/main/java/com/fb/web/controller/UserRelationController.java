@@ -9,4 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserRelationController {
 
+    //获取用户联系人
+
+    //通过关系id获取关系属性
 }
