@@ -77,22 +77,49 @@ public class FeedFacadeService {
      * @param offsetId
      * @return
      */
-    public Optional<List<FeedDetailVO>> queryActivityListFollow(List<Long> userIdList, int limit, Long offsetId, Long uid) {
+    public Optional<List<FeedDetailVO>> queryFeedListFollow(List<Long> userIdList, int limit, Long offsetId, Long uid) {
         Optional<List<FeedBO>> feedDetailVOS = feedService.queryFeedListByUid(userIdList, limit, offsetId);
         return getFeedAndAddition(feedDetailVOS, uid);
     }
 
     /**
+     * 获取用户动态列表
+     *
+     * @param userId
+     * @param pageSize
+     * @param pageNum
+     * @return
+     */
+    public Optional<List<FeedDetailVO>> queryFeedListByUserId(Long userId, int pageSize, int pageNum) {
+        Optional<List<FeedBO>> feedDetailVOS = feedService.queryFeedListByUserId(userId, pageSize, pageNum);
+        return getFeedAndAddition(feedDetailVOS, userId);
+    }
+
+    /**
+     * 删除动态
+     *
+     * @param userId
+     * @param feedId
+     * @return
+     */
+    public boolean deleteFeed(Long feedId, Long userId) {
+        boolean result = feedService.deleteFeed(feedId, userId);
+        return result;
+    }
+
+    /**
      * 获取同城动态（分组乱序）
      *
-     * @param cityCode
+     * @param location
      * @param limit
      * @param offsetId
      * @param random
      * @return
      */
-    public Optional<List<FeedDetailVO>> getLocationFeedList(String cityCode, int limit, Long offsetId, Integer random, Long uid) {
-        Optional<List<FeedBO>> feedDetailVOS = feedService.queryLocationFeedList(cityCode, limit, offsetId, random);
+    public Optional<List<FeedDetailVO>> getLocationFeedList(String location, int limit, Long offsetId, Integer random, Long uid) {
+//        Optional<LbsMapBo> lbsMapBo = lbsMapService.getLbsInfoByLocation(location);
+
+        Optional<List<FeedBO>> feedDetailVOS = feedService.queryLocationFeedList(/*lbsMapBo.get().getCityCode()*/location, limit, offsetId, random);
 
         return getFeedAndAddition(feedDetailVOS, uid);
     }

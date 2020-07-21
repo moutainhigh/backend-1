@@ -74,12 +74,20 @@ public class ActivityDetailVO extends CommonVO {
     @ApiModelProperty(value = "设置票种")
     private List<TicketVO> ticketVoList;
 
+    @ApiModelProperty(value = "点赞数")
+    private int likeNum;
 
-    @ApiModelProperty(value = "参加活动前群聊")
-    private Long groupId;
+    @ApiModelProperty(value = "评论数")
+    private int commentNum;
 
-    @ApiModelProperty(value = "参加活动后群聊")
-    private Long payGroupId;
+    @ApiModelProperty(value = "当前用户是否点赞")
+    private boolean like;
+
+//    @ApiModelProperty(value = "参加活动前群聊")
+//    private Long groupId;
+//
+//    @ApiModelProperty(value = "参加活动后群聊")
+//    private Long payGroupId;
 
 }
 

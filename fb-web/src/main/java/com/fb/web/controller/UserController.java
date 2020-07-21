@@ -150,6 +150,7 @@ public class UserController {
         return JsonObject.newCorrectJsonObject("");
     }
 
+
     //    TODO LX 二期
     @ApiOperation(value = "关系网(二期)", notes = "")
     @RequestMapping(value = "/relationfeed", method = {RequestMethod.GET})
@@ -174,9 +175,9 @@ public class UserController {
         List<RelationDetail> relationDetails = new ArrayList<>(2 * limit);
         List<RelationDetail> relationDetailResult = new ArrayList<>(limit);
 
-        Optional<List<ActivityDetailVO>> activityListVOList = activityFacadeService.queryActivityListFollow(userIdList, limit, activityOffsetId);
+        Optional<List<ActivityDetailVO>> activityListVOList = activityFacadeService.queryActivityListFollow(userIdList, limit, activityOffsetId, userId);
 
-        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryActivityListFollow(userIdList, limit, feedOffsetId, userId);
+        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryFeedListFollow(userIdList, limit, feedOffsetId, userId);
 
         if (activityListVOList.isPresent()) {
             activityListVOList.get().forEach(activityDetailVO -> {
@@ -203,11 +204,12 @@ public class UserController {
         if (!CollectionUtils.isEmpty(relationDetails)) {
             relationDetails.sort((a, b) -> b.getTime().compareTo(a.getTime()));
             //遍历找到offset
-            int length = Math.max(relationDetails.size(), limit);
-            if (length == limit) {
+            if (relationDetails.size() > limit) {
                 hasNext = true;
             }
-            for (int i = 0; i < relationDetails.size(); i++) {
+            int length = Math.min(relationDetails.size(), limit);
+
+            for (int i = 0; i < length; i++) {
                 RelationDetail relationDetail = relationDetails.get(i);
                 relationDetailResult.add(relationDetail);
                 if (relationDetail.getInfoType() == InfoTypeEnum.ACTIVITY.getCode()) {

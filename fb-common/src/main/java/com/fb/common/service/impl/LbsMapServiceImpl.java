@@ -55,6 +55,7 @@ public class LbsMapServiceImpl implements LbsMapService {
 
                 lbsMapBo.setAdCode(addressNode.get(ADCODE).asText());
                 lbsMapBo.setAdName(addressNode.get(DISTRICT).asText());
+                lbsMapBo.setProvince(addressNode.get(PROVINCE).asText());
                 log.info("getLbsMapInfo is location={},lbsNode ={},lbsMapBo={}", location, lbsNode, lbsMapBo);
 
             }

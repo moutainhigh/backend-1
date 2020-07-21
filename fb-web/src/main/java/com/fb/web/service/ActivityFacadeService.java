@@ -4,6 +4,10 @@ import com.fb.activity.dto.ActivityBO;
 import com.fb.activity.dto.TicketBO;
 import com.fb.activity.enums.ActivityTypeEnum;
 import com.fb.activity.service.IActivityService;
+import com.fb.addition.dto.LikeBO;
+import com.fb.addition.enums.InfoTypeEnum;
+import com.fb.addition.service.ICommentService;
+import com.fb.addition.service.ILikeService;
 import com.fb.common.model.LbsMapBo;
 import com.fb.common.service.LbsMapService;
 import com.fb.common.util.DateUtils;
@@ -16,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -29,6 +34,10 @@ public class ActivityFacadeService {
     private LbsMapService lbsMapService;
     @Autowired
     private IActivityService activityService;
+    @Autowired
+    private ILikeService likeService;
+    @Autowired
+    private ICommentService commentService;
 
     /**
      * 发布活动
@@ -72,21 +81,23 @@ public class ActivityFacadeService {
      * @param activityId
      * @return
      */
-    public Optional<ActivityDetailVO> queryActivityById(Long activityId) {
+    public Optional<ActivityDetailVO> queryActivityById(Long activityId, Long uid) {
         //请求活动
         Optional<ActivityBO> activityBO = activityService.queryActivityById(activityId);
+        Optional<List<LikeBO>> likeList = likeService.getLikeList(activityId, InfoTypeEnum.ACTIVITY);
+        int commentCount = commentService.getCommentCount(activityId, InfoTypeEnum.ACTIVITY);
         //TODO LX 请求 用户信息
         //TODO LX 请求 IM信息
         if (activityBO.isPresent()) {
 
-            return Optional.of(activityBOConvertToDetailVO(activityBO.get()));
+            return Optional.of(activityBOConvertToDetailVO(activityBO.get(), likeList, commentCount, uid));
         }
         return Optional.empty();
     }
 
     /**
-     *
      * 活动列表查询分页
+     *
      * @param activityType
      * @param pageSize
      * @param pageNum
@@ -104,19 +115,59 @@ public class ActivityFacadeService {
     }
 
     /**
-     * 根据偏移量查询活动
-     * @param limit
-     * @param offsetId
+     * 获取个人活动列表
+     *
+     * @param userId
+     * @param pageSize
+     * @param pageNum
      * @return
      */
-    public Optional<List<ActivityDetailVO>> queryActivityListFollow(List<Long> userIdList, int limit, Long offsetId) {
-        Optional<List<ActivityBO>> activityBO = activityService.queryActivityListByUid(userIdList, limit, offsetId);
+    public Optional<List<ActivityDetailVO>> queryActivityListByUserId(Long userId, int pageSize, int pageNum) {
+        //请求活动
+        Optional<List<ActivityBO>> activityBO = activityService.queryActivityListByUserId(userId, pageSize, pageNum);
+        //TODO LX 请求 用户信息
+        //TODO LX 请求 IM信息
+
         if (activityBO.isPresent()) {
-            return Optional.of(activityBO.get().stream().map(activity -> activityBOConvertToDetailVO(activity)).collect(Collectors.toList()));
+            return Optional.of(activityBO.get().stream().map(activity -> {
+                Optional<List<LikeBO>> likeList = likeService.getLikeList(activity.getId(), InfoTypeEnum.ACTIVITY);
+                int commentCount = commentService.getCommentCount(activity.getId(), InfoTypeEnum.ACTIVITY);
+                return activityBOConvertToDetailVO(activity, likeList, commentCount, userId);
+            }).collect(Collectors.toList()));
         }
         return Optional.empty();
     }
 
+    /**
+     * 删除活动
+     *
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    public boolean deleteActivity(Long activityId, Long userId) {
+        boolean result = activityService.deleteActivity(activityId, userId);
+        return result;
+    }
+
+    /**
+     * 根据偏移量查询活动
+     *
+     * @param limit
+     * @param offsetId
+     * @return
+     */
+    public Optional<List<ActivityDetailVO>> queryActivityListFollow(List<Long> userIdList, int limit, Long offsetId, Long userId) {
+        Optional<List<ActivityBO>> activityBO = activityService.queryActivityListByUid(userIdList, limit, offsetId);
+        if (activityBO.isPresent()) {
+            return Optional.of(activityBO.get().stream().map(activity -> {
+                Optional<List<LikeBO>> likeList = likeService.getLikeList(activity.getId(), InfoTypeEnum.ACTIVITY);
+                int commentCount = commentService.getCommentCount(activity.getId(), InfoTypeEnum.ACTIVITY);
+                return activityBOConvertToDetailVO(activity, likeList, commentCount, userId);
+            }).collect(Collectors.toList()));
+        }
+        return Optional.empty();
+    }
 
 
     private ActivityListVO activityBOConvertToListVO(ActivityBO activityBO) {
@@ -124,7 +175,7 @@ public class ActivityFacadeService {
 //        activityListVO.setJoinCount();
 //        activityListVO.setUserVO();
         if (!CollectionUtils.isEmpty(activityBO.getTicketBOList())) {
-            Optional<TicketBO> ticketBO = activityBO.getTicketBOList().stream().filter(Objects::nonNull).max(Comparator.comparing(TicketBO ::getAssemblePrice));
+            Optional<TicketBO> ticketBO = activityBO.getTicketBOList().stream().filter(Objects::nonNull).max(Comparator.comparing(TicketBO::getAssemblePrice));
             if (ticketBO.isPresent()) {
                 activityListVO.setAssemblePrice(ticketBO.get().getAssemblePrice());
                 activityListVO.setAssembleMemberCount(ticketBO.get().getAssembleMemberCount());
@@ -143,7 +194,7 @@ public class ActivityFacadeService {
         return activityListVO;
     }
 
-    private ActivityDetailVO activityBOConvertToDetailVO(ActivityBO activityBO) {
+    private ActivityDetailVO activityBOConvertToDetailVO(ActivityBO activityBO, Optional<List<LikeBO>> likeList, int commentNum, Long uid) {
         ActivityDetailVO activityDetailVO = new ActivityDetailVO();
         activityDetailVO.setId(activityBO.getId());
 //        activityDetailVO.setUserVO();
@@ -158,7 +209,10 @@ public class ActivityFacadeService {
         activityDetailVO.setEnrollEndTime(String.valueOf(activityBO.getEnrollEndTime()));
         activityDetailVO.setActivityAddress(activityBO.getActivityAddress());
         activityDetailVO.setActivityType(activityBO.getActivityType());
-        activityDetailVO.setActivityTypeName(ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()).getValue());
+        if (Objects.nonNull(ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()))) {
+            String activityTypeName = ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()).getValue();
+            activityDetailVO.setActivityTypeName(StringUtils.isEmpty(activityTypeName) ? "" : activityTypeName);
+        }
         activityDetailVO.setNeedInfo(activityBO.getNeedInfo());
         activityDetailVO.setRefundFlag(activityBO.getRefundFlag());
         activityDetailVO.setPicUrl(activityBO.getPicUrl());
@@ -170,8 +224,17 @@ public class ActivityFacadeService {
         if (!CollectionUtils.isEmpty(activityBO.getTicketBOList())) {
             activityDetailVO.setTicketVoList(activityBO.getTicketBOList().stream().map(ticketBO -> ticketBOConvertToVO(ticketBO)).collect(Collectors.toList()));
         }
+        activityDetailVO.setLikeNum(0);
+        if (likeList.isPresent()) {
+            activityDetailVO.setLikeNum(likeList.get().size());
+            activityDetailVO.setLike(likeList.get().stream().anyMatch(likeBO -> likeBO.getUserId().equals(uid)));
+        }
+        activityDetailVO.setCommentNum(commentNum);
+
         return activityDetailVO;
     }
+
+
     private ActivityVO activityBOConvertToVO(ActivityBO activityBO) {
         ActivityVO activityVO = new ActivityVO();
         activityVO.setId(activityBO.getId());

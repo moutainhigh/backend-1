@@ -2,18 +2,13 @@ package com.fb.user.domain;
 
 import com.fb.user.enums.SexEnum;
 import com.fb.user.enums.UserTypeEnum;
-import com.fb.user.repository.HobbyTagPO;
 import com.fb.user.repository.UserPO;
-import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 普通用户

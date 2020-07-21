@@ -38,10 +38,10 @@ public class FeedDetailVO extends CommonVO {
     @ApiModelProperty(value = "打卡标签")
     private String clockInTag;
 
-    @ApiModelProperty(value = "点赞")
+    @ApiModelProperty(value = "点赞数")
     private int likeNum;
 
-    @ApiModelProperty(value = "已评论")
+    @ApiModelProperty(value = "评论数")
     private int commentNum;
 
     @ApiModelProperty(value = "当前用户是否点赞")

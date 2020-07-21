@@ -68,14 +68,14 @@ public class FeedController {
         if (Objects.isNull(offsetId)) {
             offsetId = 0L;
         }
-        if (Objects.isNull(random)) {
-
+        if (random == 0) {
             random = new Random().nextInt(5);
         }
         if (Objects.isNull(limit) || limit > 20) {
             limit = 10;
         }
         boolean hasNext = false;
+
         Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.getLocationFeedList(location, limit, offsetId, random, userId);
         if (feedDetailVOList.isPresent()) {
             locationFeedVO.setFeedDetailVOList(feedDetailVOList.get());
@@ -87,5 +87,27 @@ public class FeedController {
         locationFeedVO.setRandom(random);
 
         return JsonObject.newCorrectJsonObject(locationFeedVO);
+    }
+
+    @ApiOperation(value = "我的-动态列表(三期)")
+    @RequestMapping(value = "/user", method = {RequestMethod.GET})
+    public JsonObject<FeedDetailVO> getFeedList(@ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+                                                  @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
+        Long userId = 123456L;
+
+        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryFeedListByUserId(userId, pageSize, pageNum);
+
+
+        return JsonObject.newCorrectJsonObject(feedDetailVOList);
+    }
+
+    @ApiOperation(value = "我的-动态删除(三期)")
+    @RequestMapping(value = "/delete", method = {RequestMethod.POST})
+    public JsonObject<Boolean> deleteActivity(@ApiParam(name = "id", value = "动态id") @RequestParam("id") Long id) {
+
+        //TODO LX 获取uid
+        Long userId = 123456L;
+        boolean flag = feedFacadeService.deleteFeed(id, userId);
+        return JsonObject.newCorrectJsonObject(flag);
     }
 }

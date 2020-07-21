@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class LbsMapBo {
+    /*省中文*/
+    private String province;
     /*城市编码*/
     private String cityCode;
     /*行政区编码*/

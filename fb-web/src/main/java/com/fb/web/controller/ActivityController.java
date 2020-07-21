@@ -57,7 +57,8 @@ public class ActivityController {
     @ApiOperation(value = "活动详情(二期)", notes = "")
     @RequestMapping(value = "/activity/detail", method = {RequestMethod.GET})
     public JsonObject<ActivityDetailVO> getActivityInfo(@ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
-        Optional<ActivityDetailVO> activityVO = activityFacadeService.queryActivityById(id);
+        Long uid = 123456L;
+        Optional<ActivityDetailVO> activityVO = activityFacadeService.queryActivityById(id, uid);
         if (activityVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityVO.get());
         }
@@ -68,12 +69,36 @@ public class ActivityController {
     @ApiOperation(value = "擦肩(二期)", notes = "传0的时候是全部")
     @RequestMapping(value = "/activities", method = {RequestMethod.GET})
     public JsonObject<List<ActivityListVO>> getActivityList(@ApiParam(name = "activityType", value = "活动类型") @RequestParam("activityType") Integer activityType,
-                                                            @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+                                                           @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                             @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
         Optional<List<ActivityListVO>> activityVO = activityFacadeService.queryActivityListByType(activityType, pageSize, pageNum);
         if (activityVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityVO.get());
         }
-            return JsonObject.newCorrectJsonObject("");
-        }
+        return JsonObject.newCorrectJsonObject("");
     }
+
+    @ApiOperation(value = "我的-活动列表(三期)")
+    @RequestMapping(value = "/user", method = {RequestMethod.GET})
+    public JsonObject<List<ActivityDetailVO>> getUserActivityList(@ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+                                                                @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
+        //TODO LX 获取uid
+        Long userId = 123456L;
+        Optional<List<ActivityDetailVO>> activityVO = activityFacadeService.queryActivityListByUserId(userId, pageSize, pageNum);
+        if (activityVO.isPresent()) {
+            return JsonObject.newCorrectJsonObject(activityVO.get());
+        }
+        return JsonObject.newCorrectJsonObject("");
+    }
+
+
+    @ApiOperation(value = "我的-活动删除(三期)")
+    @RequestMapping(value = "/delete", method = {RequestMethod.POST})
+    public JsonObject<Boolean> deleteActivity(@ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
+
+        //TODO LX 获取uid
+        Long userId = 123456L;
+        boolean flag = activityFacadeService.deleteActivity(id, userId);
+        return JsonObject.newCorrectJsonObject(flag);
+    }
+}
