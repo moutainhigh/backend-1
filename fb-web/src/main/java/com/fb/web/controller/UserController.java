@@ -11,6 +11,8 @@ import com.fb.user.service.IUserService;
 import com.fb.web.entity.BasicUserVO;
 import com.fb.web.entity.UserVO;
 import com.fb.web.exception.UserResponse;
+import com.fb.web.exception.valid.Create;
+import com.fb.web.exception.valid.Modify;
 import com.fb.web.utils.JsonObject;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,6 +51,7 @@ import static com.fb.common.util.DateUtils.dateTimeFormatterMin;
 import static com.fb.common.util.DateUtils.zoneId;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @RestController
@@ -99,7 +102,7 @@ public class UserController {
     //注册，注册之后也应该把详细信息返回到设备端
     @PostMapping("/signUp")
     @ApiOperation("新用户注册")
-    public JsonObject<BasicUserVO> signUp(@RequestBody UserReq userReq) {
+    public JsonObject<BasicUserVO> signUp(@RequestBody @Validated({Create.class}) UserReq userReq) {
         CommonUser user = userService.createUser(userReq);
         BasicUserVO userVO = new BasicUserVO(user);
         return new JsonObject<>(userVO);
@@ -114,12 +117,19 @@ public class UserController {
 
     @PutMapping("/modifyUser")
     @ApiOperation("修改用户信息")
-    public JsonObject<BasicUserVO> modifyUser(@RequestBody UserReq userReq,
+    public JsonObject<BasicUserVO> modifyUser(@RequestBody @Validated({Modify.class}) UserReq userReq,
                                               @ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser, @RequestHeader("token") String token) {
         userReq.setUid(sessionUser.getUid());
         userReq.setLoginToken(token);
         AbstractUser user = userService.modifyUser(userReq);
         return new JsonObject<>(new BasicUserVO(user));
+    }
+
+    @PutMapping("")
+    @ApiModelProperty("普通用户申请入驻接口")
+    // 普通用户申请入驻，并且返回入驻用户
+    public JsonObject<BasicUserVO> promote() {
+        return null;
     }
 
 

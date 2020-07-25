@@ -92,9 +92,8 @@ public class UserServiceImpl implements IUserService {
 
     private void buildUserByReq(UserReq userReq, AbstractUser lastUser) {
         if (Objects.nonNull(userReq.getLat()) && Objects.nonNull(userReq.getLng())) {
-            Optional<LbsMapBo> optional = lbsMapService.getLbsInfoByLocation(userReq.getLng().toPlainString()
-                    .concat(",")
-                    .concat( userReq.getLat().toPlainString()));
+            Optional<LbsMapBo> optional = lbsMapService.getLbsInfoByLonAndLat(userReq.getLng().toPlainString(),
+                    userReq.getLat().toPlainString());
 
             if (!optional.isPresent())
                 throw new RuntimeException("获取具体地址出错");

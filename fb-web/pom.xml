@@ -111,7 +111,6 @@
         </profile>
     </profiles>-->
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -133,7 +132,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.5.4.RELEASE</version>
+                <configuration>
+                    <mainClass>com.fb.web.SpringWebApplication</mainClass>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -156,7 +157,6 @@
                         <resourceBundle>com.fb:fb-feed:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-addition:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-common:1.0.0-SNAPSHOT</resourceBundle>
-
                     </resourceBundles>
                 </configuration>
                 <executions>

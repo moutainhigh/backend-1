@@ -55,7 +55,6 @@ public class LoginFilter implements Filter {
     }
 
     private boolean needCheck(String url) {
-        log.info("request url:{}", url);
         for (String s : excludeUrlList) {
             if (DEFAULT_PATH_MATCHER.match(s, url))
                 return false;

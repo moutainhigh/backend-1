@@ -2,13 +2,10 @@ package com.fb.web.entity;
 
 import com.fb.user.domain.AbstractUser;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.apache.velocity.app.event.EventCartridge;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,7 +25,7 @@ public class BasicUserVO {
             this.phoneNumber = abstractUser.getPhoneNumber();
             this.lat = abstractUser.getLat();
             this.lng = abstractUser.getLng();
-            this.birthday = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(abstractUser.getBirthday());
+            this.birthdayTimeStamp = abstractUser.getBirthday().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             this.sexDesc = abstractUser.getSex().getDesc();
             this.introduction = abstractUser.getIntroduction();
             this.headPicUrl = abstractUser.getHeadPicUrl();
@@ -36,6 +33,10 @@ public class BasicUserVO {
             this.token = abstractUser.getLoginToken();
             this.userType = abstractUser.getUserTypeEnum().getCode();
             this.userTypeDesc = abstractUser.getUserTypeEnum().getDesc();
+            this.sex = abstractUser.getSex().getCode();
+            this.province = abstractUser.getProvince();
+            this.adName = abstractUser.getAdName();
+            this.cityName = abstractUser.getCityName();
         }
 
         @ApiModelProperty(value = "用户名称")
@@ -62,14 +63,17 @@ public class BasicUserVO {
         @ApiModelProperty(value = "用户类型 0：普通用户；1：入驻用户")
         private Byte userType;
 
+        @ApiModelProperty(value = "用户类型描述")
         private String userTypeDesc;
 
+        @ApiModelProperty(value = "生日时间戳，单位：ms")
+        private Long birthdayTimeStamp;
 
-        @ApiModelProperty(value = "生日，格式yyyy-MM-dd")
-        private String birthday;
-
-        @ApiModelProperty(value = "用户性别")
+        @ApiModelProperty(value = "用户性别描述")
         private String sexDesc;
+
+        @ApiModelProperty(value = "用户性别，1：女，2：男")
+        private Byte sex;
 
         @ApiModelProperty(value = "用户简介")
         private String introduction;
