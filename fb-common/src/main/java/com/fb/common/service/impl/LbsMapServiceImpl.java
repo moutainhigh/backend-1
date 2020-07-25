@@ -27,13 +27,20 @@ public class LbsMapServiceImpl implements LbsMapService {
     private final static String PROVINCE = "province";
 
 
-
     @Value("${lbsKey}")
     public String lbsKey;
 
     @Value("${lbsUrl}")
     private String lbsUrl;
 
+    @Override
+    public Optional<LbsMapBo> getLbsInfoByLonAndLat(String lng, String lat) {
+        if (StringUtils.isNotEmpty(lng) && StringUtils.isNotEmpty(lat)) {
+            StringBuffer sb = new StringBuffer(lng).append(",").append(lat);
+            return getLbsInfoByLocation(sb.toString());
+        }
+        return Optional.empty();
+    }
 
     @Override
     public Optional<LbsMapBo> getLbsInfoByLocation(String location) {
@@ -51,7 +58,7 @@ public class LbsMapServiceImpl implements LbsMapService {
                 JsonNode lbsNode = JsonUtils.json2JsonNode(response);
                 JsonNode addressNode = lbsNode.get(REGEOCODE).get(ADDRESS_COMPONENT);
                 lbsMapBo.setCityCode(addressNode.get(CITYCODE).asText());
-                lbsMapBo.setCityName(StringUtils.isEmpty(addressNode.get(CITY).asText())? addressNode.get(PROVINCE).asText(): addressNode.get(CITY).asText());
+                lbsMapBo.setCityName(StringUtils.isEmpty(addressNode.get(CITY).asText()) ? addressNode.get(PROVINCE).asText() : addressNode.get(CITY).asText());
 
                 lbsMapBo.setAdCode(addressNode.get(ADCODE).asText());
                 lbsMapBo.setAdName(addressNode.get(DISTRICT).asText());
@@ -64,4 +71,6 @@ public class LbsMapServiceImpl implements LbsMapService {
         }
         return Optional.ofNullable(lbsMapBo);
     }
+
+
 }

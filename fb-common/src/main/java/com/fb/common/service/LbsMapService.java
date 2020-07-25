@@ -14,4 +14,14 @@ public interface LbsMapService {
      */
     public Optional<LbsMapBo> getLbsInfoByLocation(String location);
 
+    /**
+     * 获取地域信息根据经纬度
+     *
+     * @param lng
+     * @param lat
+     * @return
+     */
+    public Optional<LbsMapBo> getLbsInfoByLonAndLat(String lng, String lat);
+
+
 }
