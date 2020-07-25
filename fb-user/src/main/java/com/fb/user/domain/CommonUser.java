@@ -23,7 +23,7 @@ public class CommonUser extends AbstractUser {
     }
 
     public CommonUser(String name, String phoneNumber,
-                      BigDecimal lat, BigDecimal lng, Integer cityCode, Integer adCode,
+                      BigDecimal lat, BigDecimal lng, String cityCode, String adCode,
                       LocalDate birthday, byte sex, String introduction) {
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -43,6 +43,9 @@ public class CommonUser extends AbstractUser {
         userPO.setId(this.uid);
         userPO.setName(this.name);
         userPO.setAdCode(this.adCode);
+        userPO.setProvince(this.province);
+        userPO.setCityName(this.cityName);
+        userPO.setAdName(this.adName);
         userPO.setBirthday(this.birthday);
         userPO.setCityCode(this.cityCode);
         userPO.setLat(this.lat);
@@ -53,7 +56,7 @@ public class CommonUser extends AbstractUser {
         userPO.setSex(this.sex.getCode());
         userPO.setPhoneNumber(this.phoneNumber);
         userPO.setUserType(UserTypeEnum.COMMON_USER.getCode());
-        userPO.setCreateTime(LocalDateTime.now());
+        userPO.setCreateTime(this.createTime);
         if (CollectionUtils.isNotEmpty(this.hobbyTagList)) {
             userPO.setHobbyTagNameList(StringUtils.join(this.hobbyTagList, ","));
         }

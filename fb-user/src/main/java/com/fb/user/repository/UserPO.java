@@ -31,10 +31,19 @@ public class UserPO {
     private BigDecimal lng;
 
     @TableField("city_code")
-    private Integer cityCode;
+    private String cityCode;
 
     @TableField("ad_code")
-    private Integer adCode;
+    private  String adCode;
+
+    @TableField("province")
+    private String province;
+
+    @TableField("city_name")
+    private String cityName;
+
+    @TableField("ad_name")
+    private String adName;
 
     @TableField("location_str")
     private String locationStr;

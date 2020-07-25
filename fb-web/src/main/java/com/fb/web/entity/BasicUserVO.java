@@ -28,9 +28,6 @@ public class BasicUserVO {
             this.phoneNumber = abstractUser.getPhoneNumber();
             this.lat = abstractUser.getLat();
             this.lng = abstractUser.getLng();
-            this.cityCode = abstractUser.getCityCode();
-            this.adCode = abstractUser.getAdCode();
-            this.locationStr = abstractUser.getLocationStr();
             this.birthday = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(abstractUser.getBirthday());
             this.sexDesc = abstractUser.getSex().getDesc();
             this.introduction = abstractUser.getIntroduction();
@@ -53,17 +50,20 @@ public class BasicUserVO {
         @ApiModelProperty(value = "经度")
         private BigDecimal lng;
 
-        private Integer cityCode;
+        @ApiModelProperty("省")
+        private String province;
+
+        @ApiModelProperty("市")
+        private String cityName;
+
+        @ApiModelProperty("区县")
+        private String adName;
 
         @ApiModelProperty(value = "用户类型 0：普通用户；1：入驻用户")
         private Byte userType;
 
         private String userTypeDesc;
 
-        private Integer adCode;
-
-        @ApiModelProperty
-        private String locationStr;
 
         @ApiModelProperty(value = "生日，格式yyyy-MM-dd")
         private String birthday;

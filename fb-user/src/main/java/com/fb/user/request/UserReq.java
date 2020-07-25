@@ -33,10 +33,6 @@ public class UserReq {
     private BigDecimal lng;
 
 
-    private Integer cityCode;
-
-    private Integer adCode;
-
     private String locationStr;
 
     @ApiModelProperty(value = "用户生日, 格式yyyy-MM-dd")

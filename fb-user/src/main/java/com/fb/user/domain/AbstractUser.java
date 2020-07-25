@@ -1,8 +1,11 @@
 package com.fb.user.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fb.common.util.LocalDateConvert;
+import com.fb.common.util.LocalDateJsonDeserialize;
 import com.fb.common.util.LocalDateTimeConvert;
+import com.fb.common.util.LocalDateTimeJsonDeserialize;
 import com.fb.user.enums.SexEnum;
 import com.fb.user.enums.UserTypeEnum;
 import com.fb.user.repository.HobbyTagPO;
@@ -32,6 +35,9 @@ public abstract class AbstractUser {
         this.lng = userPO.getLng();
         this.cityCode = userPO.getCityCode();
         this.adCode = userPO.getAdCode();
+        this.cityName = userPO.getCityName();
+        this.province = userPO.getProvince();
+        this.adName = userPO.getAdName();
         this.birthday = userPO.getBirthday();
         this.sex = SexEnum.getSexEnumByCode(userPO.getSex());
         this.introduction = userPO.getIntroduction();
@@ -51,13 +57,20 @@ public abstract class AbstractUser {
 
     protected BigDecimal lng;
 
-    protected Integer cityCode;
+    protected String cityCode;
 
-    protected Integer adCode;
+    protected String adCode;
+
+    protected String province;
+
+    protected String cityName;
+
+    protected String adName;
 
     protected String locationStr;
 
     @JsonSerialize(using = LocalDateConvert.class)
+    @JsonDeserialize(using = LocalDateJsonDeserialize.class)
     protected LocalDate birthday;
 
     protected SexEnum sex;
@@ -69,6 +82,7 @@ public abstract class AbstractUser {
     protected List<String> hobbyTagList;
 
     @JsonSerialize(using = LocalDateTimeConvert.class)
+    @JsonDeserialize(using = LocalDateTimeJsonDeserialize.class)
     protected LocalDateTime createTime;
 
     private String loginToken;
