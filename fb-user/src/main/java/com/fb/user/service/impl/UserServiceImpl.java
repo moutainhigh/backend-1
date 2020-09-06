@@ -56,6 +56,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public AbstractUser getUserByToken(String token) {
+        return (AbstractUser)redisUtils.getCacheObject(token);
+    }
+
+    @Override
     public CommonUser createUser(UserReq userReq) {
         CommonUser commonUser = new CommonUser();
         buildUserByReq(userReq, commonUser);

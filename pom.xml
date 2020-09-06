@@ -18,6 +18,8 @@
         <module>fb-feed</module>
         <module>fb-common</module>
         <module>fb-addition</module>
+        <module>fb-pay</module>
+        <module>fb-order</module>
     </modules>
 
     <properties>
@@ -78,7 +80,11 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>2.11.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.12</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>

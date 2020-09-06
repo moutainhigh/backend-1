@@ -43,4 +43,8 @@ public interface IUserService {
      */
 
     String getUserNameByToken(String token);
-}
+
+
+    AbstractUser getUserByToken(String token);
+
+    }
