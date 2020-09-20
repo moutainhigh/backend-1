@@ -28,7 +28,11 @@ public class LoginFilter implements Filter {
             "/user/login/**",
             "/user/signUp",
             "/user/listHobbyTagName",
-            "/swagger-resources/**", "/webjars/**", "/swagger-ui.html/**", "/v2/api-docs");
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/swagger-ui.html/**",
+            "/common/**",
+            "/v2/api-docs");
 
 
 
@@ -40,7 +44,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String token = httpServletRequest.getHeader("token");
         AbstractUser user;
-        if (needCheck(httpServletRequest.getRequestURI())) {
+        /*if (needCheck(httpServletRequest.getRequestURI())) {
             if (StringUtils.isBlank(token) || Objects.isNull(user = userService.checkAndRefresh(token)))
                 responseError(servletResponse);
             else {
@@ -49,9 +53,9 @@ public class LoginFilter implements Filter {
                 CommonHttpRequest request = new CommonHttpRequest(httpServletRequest, map);
                 filterChain.doFilter(request, servletResponse);
             }
-        } else {
-            filterChain.doFilter(servletRequest, servletResponse);
-        }
+        }else {*/
+        filterChain.doFilter(servletRequest, servletResponse);
+//        }
     }
 
     private boolean needCheck(String url) {

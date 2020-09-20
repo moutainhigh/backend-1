@@ -5,10 +5,12 @@ import com.fb.web.entity.UserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Api(value = "动态模型")
 public class FeedDetailVO extends CommonVO {
     @ApiModelProperty(value = "id")

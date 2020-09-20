@@ -60,6 +60,12 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fb</groupId>
+            <artifactId>fb-order</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!--    其他三方依赖    -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -85,33 +91,6 @@
 
     </dependencies>
 
- <!--   <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <package.environment>dev</package.environment>
-            </properties>
-            &lt;!&ndash; 是否默认 true表示默认&ndash;&gt;
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-
-        <profile>
-            <id>test</id>
-            <properties>
-                <package.environment>test</package.environment>
-            </properties>
-        </profile>
-
-        <profile>
-            &lt;!&ndash; 生产环境 &ndash;&gt;
-            <id>prod</id>
-            <properties>
-                <package.environment>prod</package.environment>
-            </properties>
-        </profile>
-    </profiles>-->
     <build>
         <resources>
             <resource>
@@ -159,6 +138,8 @@
                         <resourceBundle>com.fb:fb-feed:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-addition:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-common:1.0.0-SNAPSHOT</resourceBundle>
+                        <resourceBundle>com.fb:fb-pay:1.0.0-SNAPSHOT</resourceBundle>
+
                     </resourceBundles>
                 </configuration>
                 <executions>

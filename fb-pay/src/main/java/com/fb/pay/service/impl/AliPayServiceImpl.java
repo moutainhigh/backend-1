@@ -56,14 +56,14 @@ public class AliPayServiceImpl implements IPayService {
         AlipayTradeAppPayRequest alipayRequest = new AlipayTradeAppPayRequest();
         AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
 //        model.setBody("XXX");
-        model.setSubject("活动门票");
+        model.setSubject("");
         // 唯一订单号 根据项目中实际需要获取相应的 FIXME
-        model.setOutTradeNo("test123"/*payParamBO.getOutTradeNo()*/);
+        model.setOutTradeNo(payParamBO.getOutTradeNo());
         // 支付超时时间（根据项目需要填写）
         model.setTimeoutExpress("30m");
-        // 支付金额（项目中实际订单的需要支付的金额，金额的获取与操作请放在服务端完成，相对安全） FIXME
-        model.setTotalAmount("1.11"/*payParamBO.getTotalAmount().toPlainString()*/);
-        model.setProductCode("QUICK_MSECURITY_PAY");
+        // 支付金额（项目中实际订单的需要支付的金额，金额的获取与操作请放在服务端完成，相对安全）
+        model.setTotalAmount(payParamBO.getTotalAmount().toPlainString());
+        model.setProductCode("");
         alipayRequest.setBizModel(model);
         // 支付成功后支付宝异步通知的接收地址url
         alipayRequest.setNotifyUrl(alipay_notifyUrl);
@@ -72,7 +72,10 @@ public class AliPayServiceImpl implements IPayService {
         AlipayTradeAppPayResponse alipayResponse = null;
         try {
             alipayResponse = alipayClient.sdkExecute(alipayRequest);
+            System.out.println("alipayRequest ={}" + JsonUtils.object2Json(alipayRequest));
+
             System.out.println("alipayResponse ={}" + JsonUtils.object2Json(alipayResponse));
+            log.info("pay alipayRequest={},alipayResponse={}",alipayRequest, alipayResponse);
         } catch (AlipayApiException e) {
             log.error("AliPayServiceImpl pay is error, alipayRequest={}", JsonUtils.object2Json(alipayRequest), e);
         }

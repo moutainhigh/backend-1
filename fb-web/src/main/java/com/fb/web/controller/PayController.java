@@ -1,10 +1,8 @@
 package com.fb.web.controller;
 
-import com.alipay.api.internal.util.AlipaySignature;
 import com.fb.pay.dto.PayParamBO;
 import com.fb.pay.enums.PayTypeEnum;
 import com.fb.pay.service.AbsPayService;
-import com.fb.web.entity.LikeVO;
 import com.fb.web.entity.PayRequestVO;
 import com.fb.web.utils.JsonObject;
 import io.swagger.annotations.Api;
@@ -31,17 +29,26 @@ public class PayController {
     @Autowired
     private AbsPayService absPayService;
 
+
     @ApiOperation(value = "支付", notes = "用户支付接口")
     @RequestMapping(value = "/info", method = {RequestMethod.POST})
     public JsonObject getPayInfo(@RequestBody @Validated PayRequestVO payRequestVO) {
         Long userId = 123456L;
+        /*生成订单并支付 FIXME*/
+
         PayParamBO payParamBO = new PayParamBO();
         return JsonObject.newCorrectJsonObject(absPayService.pay(payParamBO, PayTypeEnum.ALIPAY));
     }
 
 
+    /**
+     * 支付宝回调接口
+     * @param request
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
 
-    @ApiOperation(value = "支付回调接口", notes = "用户支付接口(仅供支付宝使用)")
     @RequestMapping(value = "/notify", method = {RequestMethod.POST})
     public String getNotifyInfo(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -66,16 +73,17 @@ public class PayController {
         }
 
         boolean signVerified = absPayService.aliNotify(params);
+        log.info("absPayService.aliNotify signVerified={}", signVerified);
             //调用SDK验证签名
             if (signVerified) {
 
                 //TODO LX 调用订单状态翻转
                 // 成功要返回success，不然支付宝会不断发送通知。
+
                 return "success";
             }
-
-            // 失败要返回fail，不然支付宝会不断发送通知。
         return "fail";
+        // 失败要返回fail，不然支付宝会不断发送通知。
 
     }
 }
