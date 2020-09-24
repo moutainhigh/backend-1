@@ -14,6 +14,7 @@ public class DateUtils {
 
     public static final DateTimeFormatter dateTimeFormatterMin = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public static final DateTimeFormatter dateTimeFormatterSed = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static final ZoneId zoneId = ZoneId.systemDefault();
 
     /**

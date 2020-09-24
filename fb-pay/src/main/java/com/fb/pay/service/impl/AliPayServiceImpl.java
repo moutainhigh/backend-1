@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,18 +56,23 @@ public class AliPayServiceImpl implements IPayService {
         // 注意：不同接口这里的请求对象是不同的，这个可以查看蚂蚁金服开放平台的API文档查看
         AlipayTradeAppPayRequest alipayRequest = new AlipayTradeAppPayRequest();
         AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-//        model.setBody("XXX");
-        model.setSubject("");
+        model.setBody("我是测试数据");
+        model.setSubject("App支付测试Java");
         // 唯一订单号 根据项目中实际需要获取相应的 FIXME
-        model.setOutTradeNo(payParamBO.getOutTradeNo());
+        model.setOutTradeNo("123456");
+
+//        model.setOutTradeNo(payParamBO.getOutTradeNo());
         // 支付超时时间（根据项目需要填写）
         model.setTimeoutExpress("30m");
         // 支付金额（项目中实际订单的需要支付的金额，金额的获取与操作请放在服务端完成，相对安全）
-        model.setTotalAmount(payParamBO.getTotalAmount().toPlainString());
-        model.setProductCode("");
+//        model.setTotalAmount(payParamBO.getTotalAmount().toPlainString());
+        model.setTotalAmount("0.01");
+
+        model.setProductCode("QUICK_MSECURITY_PAY");
         alipayRequest.setBizModel(model);
         // 支付成功后支付宝异步通知的接收地址url
         alipayRequest.setNotifyUrl(alipay_notifyUrl);
+
 
         // 注意：每个请求的相应对象不同，与请求对象是对应。
         AlipayTradeAppPayResponse alipayResponse = null;

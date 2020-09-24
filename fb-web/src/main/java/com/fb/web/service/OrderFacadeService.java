@@ -1,5 +1,6 @@
 package com.fb.web.service;
 
+import com.fb.common.util.DateUtils;
 import com.fb.order.dto.OrderInfoBO;
 import com.fb.order.dto.OrderUserInfoBO;
 import com.fb.order.service.OrderService;
@@ -8,9 +9,11 @@ import com.fb.web.entity.output.UserOrderInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,7 +27,10 @@ public class OrderFacadeService {
      */
     public List<UserOrderInfoVO> getUserOrderList(long userId, int pageNum,int pageSize) {
         List<OrderInfoBO> orderInfoBOS = orderService.queryUserOrderList(userId, pageNum, pageSize);
-
+        if (CollectionUtils.isEmpty(orderInfoBOS)) {
+            return null;
+        }
+       return orderInfoBOS.stream().map(orderInfoBO -> convertToUserVO(orderInfoBO)).collect(Collectors.toList());
     }
 
 
@@ -34,11 +40,12 @@ public class OrderFacadeService {
      */
     public List<OrderDetailInfoVO> getBizOrderList(long activityId, int pageNum,int pageSize) {
         List<OrderInfoBO> orderInfoBOS = orderService.queryBizOrderList(activityId, pageNum, pageSize);
-        if (orderInfoBOS.isEmpty()) {
-
+        if (CollectionUtils.isEmpty(orderInfoBOS)) {
+            return null;
         }
-        return null;
+        return orderInfoBOS.stream().map(orderInfoBO -> convertBOToVO(orderInfoBO)).collect(Collectors.toList());
     }
+
 
     /*订单详情*/
     public OrderDetailInfoVO getOrderDetail(long orderId) {
@@ -57,13 +64,25 @@ public class OrderFacadeService {
         orderDetailInfoVO.setUserName(orderUserInfoBO.getUserName());
         orderDetailInfoVO.setPhoneNum(orderUserInfoBO.getUserPhone());
         orderDetailInfoVO.setCardNo(orderUserInfoBO.getUserCardNo());
-        orderDetailInfoVO.setActivityTime(orderInfoBO.getActivityTime());
+        orderDetailInfoVO.setActivityTime(DateUtils.getDateFromLocalDateTime(orderInfoBO.getActivityTime(), DateUtils.dateTimeFormatterMin));
         orderDetailInfoVO.setTicketId(orderInfoBO.getTicketId());
         orderDetailInfoVO.setTicketName(orderInfoBO.getTicketName());
         orderDetailInfoVO.setPayMoney(orderInfoBO.getTotalAmount().toPlainString());
-        orderDetailInfoVO.setCreateTime(orderInfoBO.getCreateTime());
+        orderDetailInfoVO.setCreateTime(DateUtils.getDateFromLocalDateTime(orderInfoBO.getCreateTime(), DateUtils.dateTimeFormatterMin));
         return orderDetailInfoVO;
+    }
 
+    private UserOrderInfoVO convertToUserVO(OrderInfoBO orderInfoBO) {
+        if (Objects.isNull(orderInfoBO)) {
+            return null;
+        }
+        UserOrderInfoVO userOrderInfoVO = new UserOrderInfoVO();
+        userOrderInfoVO.setActivityName(orderInfoBO.getProductName());
+        userOrderInfoVO.setActivityTime(String.valueOf(orderInfoBO.getActivityTime()));
+        //FIXME
+//        userOrderInfoVO.setAddress(orderInfoBO.get);
+        userOrderInfoVO.setMoney(orderInfoBO.getTotalAmount().toPlainString());
+        return userOrderInfoVO;
 
     }
 

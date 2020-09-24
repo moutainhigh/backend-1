@@ -1,5 +1,6 @@
 package com.fb.pay.service;
 import java.math.BigDecimal;
+import java.net.URL;
 
 
 import com.fb.pay.dto.PayParamBO;
@@ -13,6 +14,7 @@ public class AbsPayServiceTest extends BaseTest{
 
     @Test
     public void pay() {
+
         PayParamBO payParamBO = new PayParamBO();
         payParamBO.setOutTradeNo("test123");
         payParamBO.setUserId(123L);
