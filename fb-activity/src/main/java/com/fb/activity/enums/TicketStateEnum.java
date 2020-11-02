@@ -5,20 +5,16 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ActivityStateEnum {
-    /*状态 0 删除 1 草稿 2 发布*/
-
-    STOP(-1, "停止报名"),
+public enum TicketStateEnum {
     DELETE(0, "删除"),
-    DRAFT(1, "草稿"),
-    PUBLISH(2, "发布");
+    PUBLISH(1, "发布");
 
     private int code;
 
     private String value;
 
     public static boolean isEffect(int code) {
-        if (code == ActivityStateEnum.PUBLISH.getCode()) {
+        if (code == TicketStateEnum.PUBLISH.getCode()) {
             return true;
         }
         return false;

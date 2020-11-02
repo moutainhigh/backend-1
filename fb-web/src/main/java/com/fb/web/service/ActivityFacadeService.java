@@ -14,6 +14,7 @@ import com.fb.common.util.DateUtils;
 import com.fb.feed.dto.FeedBO;
 import com.fb.web.entity.ActivityVO;
 import com.fb.web.entity.TicketVO;
+import com.fb.web.entity.UserVO;
 import com.fb.web.entity.output.ActivityDetailVO;
 import com.fb.web.entity.output.ActivityListVO;
 import lombok.extern.slf4j.Slf4j;
@@ -103,9 +104,9 @@ public class ActivityFacadeService {
      * @param pageNum
      * @return
      */
-    public Optional<List<ActivityListVO>> queryActivityListByType(int activityType, int pageSize, int pageNum) {
+    public Optional<List<ActivityListVO>> queryActivityListByType(int activityType, int activityValid, int pageSize, int pageNum) {
         //请求活动
-        Optional<List<ActivityBO>> activityBO = activityService.queryActivityListByType(activityType, pageSize, pageNum);
+        Optional<List<ActivityBO>> activityBO = activityService.queryActivityListByType(activityType, activityValid, pageSize, pageNum);
         //TODO LX 请求 用户信息
         //TODO LX 请求 IM信息
         if (activityBO.isPresent()) {
@@ -151,6 +152,17 @@ public class ActivityFacadeService {
     }
 
     /**
+     * 停止报名
+     * @param activityId
+     * @param userId
+     * @return
+     */
+    public boolean stopActivity(Long activityId, Long userId) {
+        boolean result = activityService.stopActivity(activityId, userId);
+        return result;
+    }
+
+    /**
      * 根据偏移量查询活动
      *
      * @param limit
@@ -183,7 +195,7 @@ public class ActivityFacadeService {
         }
         activityListVO.setId(activityBO.getId());
         activityListVO.setActivityTitle(activityBO.getActivityTitle());
-        activityListVO.setPicUrl(activityBO.getPicUrl());
+        activityListVO.setPicUrl(Objects.isNull(activityBO.getPicUrl()) ? "" : activityBO.getPicUrl());
         activityListVO.setPrice(activityBO.getFrontMoney());
         activityListVO.setPublishTime(DateUtils.getDateFromLocalDateTime(activityBO.getUpdateTime(), DateUtils.dateTimeFormatterMin));
         activityListVO.setCityName(activityBO.getCityName());
@@ -197,7 +209,10 @@ public class ActivityFacadeService {
     private ActivityDetailVO activityBOConvertToDetailVO(ActivityBO activityBO, Optional<List<LikeBO>> likeList, int commentNum, Long uid) {
         ActivityDetailVO activityDetailVO = new ActivityDetailVO();
         activityDetailVO.setId(activityBO.getId());
-//        activityDetailVO.setUserVO();
+        //FIXME
+        UserVO userVO = new UserVO();
+        userVO.setUserId(activityBO.getUserId());
+        activityDetailVO.setUserVO(userVO);
         activityDetailVO.setPublishTime(DateUtils.getDateFromLocalDateTime(activityBO.getUpdateTime(), DateUtils.dateTimeFormatterMin));
         activityDetailVO.setCityName(activityBO.getCityName());
         activityDetailVO.setActivityTime(String.valueOf(activityBO.getActivityTime()));
@@ -206,6 +221,7 @@ public class ActivityFacadeService {
         activityDetailVO.setActivityTitle(activityBO.getActivityTitle());
         activityDetailVO.setMemberCount(activityBO.getMemberCount());
         activityDetailVO.setActivityValid(activityBO.getActivityValid());
+        activityDetailVO.setActivityStatus(activityBO.getActivityState());
         activityDetailVO.setEnrollEndTime(String.valueOf(activityBO.getEnrollEndTime()));
         activityDetailVO.setActivityAddress(activityBO.getActivityAddress());
         activityDetailVO.setActivityType(activityBO.getActivityType());
@@ -215,8 +231,8 @@ public class ActivityFacadeService {
         }
         activityDetailVO.setNeedInfo(activityBO.getNeedInfo());
         activityDetailVO.setRefundFlag(activityBO.getRefundFlag());
-        activityDetailVO.setPicUrl(activityBO.getPicUrl());
-        activityDetailVO.setVideoUrl(activityBO.getVideoUrl());
+        activityDetailVO.setPicUrl(Objects.isNull(activityBO.getPicUrl())? "": activityBO.getPicUrl());
+        activityDetailVO.setVideoUrl(Objects.isNull(activityBO.getVideoUrl())? "": activityBO.getVideoUrl());
         activityDetailVO.setLocation(activityBO.getLocation());
         activityDetailVO.setContent(activityBO.getActivityContent());
 //        activityDetailVO.setGroupId();

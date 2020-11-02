@@ -70,8 +70,9 @@ public class ActivityController {
     @RequestMapping(value = "/activities", method = {RequestMethod.GET})
     public JsonObject<List<ActivityListVO>> getActivityList(@ApiParam(name = "activityType", value = "活动类型") @RequestParam("activityType") Integer activityType,
                                                            @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
-                                                            @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
-        Optional<List<ActivityListVO>> activityVO = activityFacadeService.queryActivityListByType(activityType, pageSize, pageNum);
+                                                            @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum,
+                                                            @ApiParam(name = "activityValid", value = "活动 0长期 1短期") @RequestParam("activityValid") Integer activityValid) {
+        Optional<List<ActivityListVO>> activityVO = activityFacadeService.queryActivityListByType(activityType, activityValid, pageSize, pageNum);
         if (activityVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityVO.get());
         }
@@ -92,7 +93,7 @@ public class ActivityController {
     }
 
 
-    @ApiOperation(value = "我的-活动删除(三期)")
+       @ApiOperation(value = "我的-活动删除(三期)")
     @RequestMapping(value = "/delete", method = {RequestMethod.POST})
     public JsonObject<Boolean> deleteActivity(@ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
 
@@ -101,4 +102,16 @@ public class ActivityController {
         boolean flag = activityFacadeService.deleteActivity(id, userId);
         return JsonObject.newCorrectJsonObject(flag);
     }
+
+    @ApiOperation(value = "我的-活动-停止报名(四期)")
+    @RequestMapping(value = "/stop", method = {RequestMethod.POST})
+    public JsonObject<Boolean> stopActivity(@ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
+
+        //TODO LX 获取uid
+        Long userId = 123456L;
+        boolean flag = activityFacadeService.deleteActivity(id, userId);
+        return JsonObject.newCorrectJsonObject(flag);
+    }
+
+
 }

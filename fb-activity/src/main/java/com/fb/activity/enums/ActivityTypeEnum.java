@@ -9,7 +9,7 @@ import java.util.Optional;
 @Getter
 @AllArgsConstructor
 public enum ActivityTypeEnum {
-    ZHOU_BIAN_YOU(1, "周边游", 1),
+    ZHOU_BIAN_YOU(1, "周边游", 0),
     HONG_PA_ZHUO_YOU(2, "轰趴桌游", 0),
     DIAN_YING_YAN_CHU(3, "电影演出", 0),
     HU_WAI_HUO_DONG(4, "户外活动", 0),

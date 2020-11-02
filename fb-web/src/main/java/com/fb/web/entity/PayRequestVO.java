@@ -25,4 +25,13 @@ public class PayRequestVO {
     @ApiModelProperty(value = "类型 0 支付宝, 1 微信支付", allowableValues = "0 alipay, 1 weipay", required = true)
     private Integer payType;
 
+    @ApiModelProperty(value = "用户姓名")
+    private String userName;
+
+    @ApiModelProperty(value = "用户电话")
+    private String userPhone;
+
+    @ApiModelProperty(value = "用户身份证")
+    private String userCardNo;
+
 }

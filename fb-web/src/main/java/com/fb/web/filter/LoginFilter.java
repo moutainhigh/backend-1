@@ -44,7 +44,7 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String token = httpServletRequest.getHeader("token");
         AbstractUser user;
-        /*if (needCheck(httpServletRequest.getRequestURI())) {
+        if (needCheck(httpServletRequest.getRequestURI())) {
             if (StringUtils.isBlank(token) || Objects.isNull(user = userService.checkAndRefresh(token)))
                 responseError(servletResponse);
             else {
@@ -53,9 +53,9 @@ public class LoginFilter implements Filter {
                 CommonHttpRequest request = new CommonHttpRequest(httpServletRequest, map);
                 filterChain.doFilter(request, servletResponse);
             }
-        }else {*/
+        }else {
         filterChain.doFilter(servletRequest, servletResponse);
-//        }
+        }
     }
 
     private boolean needCheck(String url) {

@@ -63,7 +63,7 @@
         <dependency>
             <groupId>com.fb</groupId>
             <artifactId>fb-order</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!--    其他三方依赖    -->
@@ -139,6 +139,7 @@
                         <resourceBundle>com.fb:fb-addition:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-common:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-pay:1.0.0-SNAPSHOT</resourceBundle>
+                        <resourceBundle>com.fb:fb-order:1.0.0-SNAPSHOT</resourceBundle>
 
                     </resourceBundles>
                 </configuration>
