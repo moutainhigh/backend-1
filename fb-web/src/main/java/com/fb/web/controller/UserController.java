@@ -68,6 +68,13 @@ public class UserController {
     @Qualifier("userRedis")
     private RedisUtils redisUtils;
 
+    @Autowired
+    private FeedFacadeService feedFacadeService;
+
+    @Autowired
+    private ActivityFacadeService activityFacadeService;
+
+
 
 
     //请求验证码接口, todo 验证手机号是否有效
@@ -143,13 +150,6 @@ public class UserController {
         userVO.setAllFriendsCount(0);
         return new JsonObject<>(userVO);
     }
-
-
-    @Autowired
-    private FeedFacadeService feedFacadeService;
-
-    @Autowired
-    private ActivityFacadeService activityFacadeService;
 
 
     //    TODO LX 二期
