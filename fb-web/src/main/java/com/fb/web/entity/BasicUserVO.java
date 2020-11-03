@@ -1,6 +1,7 @@
 package com.fb.web.entity;
 
 import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class BasicUserVO {
 
 
         public BasicUserVO() {};
-        public BasicUserVO(AbstractUser abstractUser) {
+        public BasicUserVO(UserDTO abstractUser) {
             this.name = abstractUser.getName();
             this.phoneNumber = abstractUser.getPhoneNumber();
             this.lat = abstractUser.getLat();

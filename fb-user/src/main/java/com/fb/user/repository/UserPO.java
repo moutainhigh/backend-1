@@ -52,7 +52,7 @@ public class UserPO {
     private LocalDate birthday;
 
     @TableField("sex")
-    private byte sex;
+    private Byte sex;
 
     @TableField("introduction")
     private String introduction;
@@ -61,7 +61,7 @@ public class UserPO {
     private String headPicUrl;
 
     @TableField("user_type")
-    private byte userType;
+    private Byte userType;
 
     @TableField("hobby_tag_list")
     private String hobbyTagNameList;

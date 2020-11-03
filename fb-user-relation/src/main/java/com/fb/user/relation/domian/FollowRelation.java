@@ -1,11 +1,13 @@
 package com.fb.user.relation.domian;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 /**
  * 关注关系
  */
-public class FocusRelation {
+public class FollowRelation {
 
     //关注者
     private Long userId1;

@@ -31,17 +31,12 @@ public class UserRepository {
      * @param user
      * @return
      */
-    public AbstractUser save(AbstractUser user) {
-        UserPO userPO = user.convert2PO();
-        if (Objects.nonNull(userPO.getId())) {
-            userDAO.updateById(userPO);
+    public UserPO save(UserPO user) {
+        if (Objects.nonNull(user.getId())) {
+            userDAO.updateById(user);
         } else {
-            userDAO.insert(userPO);
+            userDAO.insert(user);
         }
-        if (CollectionUtils.isNotEmpty(user.getHobbyTagList())) {
-            hobbyTagRepository.insertIgnore(user.getHobbyTagList());
-        }
-        user.setUid(userPO.getId());
         return user;
     }
 
@@ -49,25 +44,13 @@ public class UserRepository {
      * 通过条件获取单个user
      * @return
      */
-    public AbstractUser getOneUserById(Long id) {
-        UserPO userPO = new LambdaQueryChainWrapper<UserPO>(userDAO).eq(UserPO::getId, id).one();
-        return getAbstractUser(userPO);
+    public UserPO getOneUserById(Long id) {
+        return new LambdaQueryChainWrapper<UserPO>(userDAO).eq(UserPO::getId, id).one();
     }
 
-    private AbstractUser getAbstractUser(UserPO userPO) {
-        if (Objects.isNull(userPO)) return null;
-        if (UserTypeEnum.COMMON_USER.getCode() == userPO.getUserType()) {
-            return new CommonUser(userPO);
-        }
-        if (UserTypeEnum.MERCHANT_USER.getCode() == userPO.getUserType()) {
-            return new MerchantUser(userPO);
-        }
-        return null;
-    }
 
-    public AbstractUser getOneUserByPhoneNumber(String phoneNumber) {
-        UserPO userPO = new LambdaQueryChainWrapper<>(userDAO).eq(UserPO::getPhoneNumber, phoneNumber).one();
-        return getAbstractUser(userPO);
+    public UserPO getOneUserByPhoneNumber(String phoneNumber) {
+        return new LambdaQueryChainWrapper<>(userDAO).eq(UserPO::getPhoneNumber, phoneNumber).one();
     }
 
 

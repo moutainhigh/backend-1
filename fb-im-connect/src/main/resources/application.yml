@@ -1,0 +1,21 @@
+spring:
+  main:
+#    允许bean的定义覆盖，这个覆盖顺序是什么样子的呢？
+    allow-bean-definition-overriding: true
+
+logging:
+  level:
+    root: info
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+  path: "./logs/"
+  file: "./logs/im.log"
+
+#即时通讯的长链接协议的端口，当前只启动websocket
+im.port:
+  websocket:8090
+  tcp:8091
+  websockets:8092
+  tcp_ssl:8093
+

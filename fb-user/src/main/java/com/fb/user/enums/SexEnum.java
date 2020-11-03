@@ -9,15 +9,15 @@ public enum  SexEnum {
     BOY((byte)2, "男性")
     ;
 
-    SexEnum(byte code, String desc) {
+    SexEnum(Byte code, String desc) {
         this.code = code;
         this.desc = desc;
     }
-    private byte code;
+    private Byte code;
 
     private String desc;
 
-    public byte getCode() {
+    public Byte getCode() {
         return code;
     }
 
@@ -25,9 +25,9 @@ public enum  SexEnum {
         return desc;
     }
 
-    public static SexEnum getSexEnumByCode(byte code) {
+    public static SexEnum getSexEnumByCode(Byte code) {
         for (SexEnum enumConstant : SexEnum.class.getEnumConstants()) {
-            if (enumConstant.code == code) return enumConstant;
+            if (enumConstant.code.equals(code)) return enumConstant;
         }
         return null;
     }

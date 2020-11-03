@@ -3,6 +3,7 @@ package com.fb.web.filter;
 
 import com.fb.common.util.JsonUtils;
 import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
 import com.fb.user.service.IUserService;
 import com.fb.web.utils.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,8 @@ public class LoginFilter implements Filter {
         // 校验通过，把用户信息放在request里面
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String token = httpServletRequest.getHeader("token");
-        AbstractUser user;
-        /*if (needCheck(httpServletRequest.getRequestURI())) {
+        UserDTO user;
+        if (needCheck(httpServletRequest.getRequestURI())) {
             if (StringUtils.isBlank(token) || Objects.isNull(user = userService.checkAndRefresh(token)))
                 responseError(servletResponse);
             else {
@@ -53,9 +54,9 @@ public class LoginFilter implements Filter {
                 CommonHttpRequest request = new CommonHttpRequest(httpServletRequest, map);
                 filterChain.doFilter(request, servletResponse);
             }
-        }else {*/
-        filterChain.doFilter(servletRequest, servletResponse);
-//        }
+        }else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
     }
 
     private boolean needCheck(String url) {

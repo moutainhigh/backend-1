@@ -10,11 +10,11 @@ public enum  UserTypeEnum {
     COMMON_USER((byte) 0, "普通用户"),
     MERCHANT_USER((byte) 1, "入驻用户");
 
-    private byte code;
+    private Byte code;
 
     private String desc;
 
-    public byte getCode() {
+    public Byte getCode() {
         return code;
     }
 
@@ -22,9 +22,9 @@ public enum  UserTypeEnum {
         return desc;
     }
 
-    public static UserTypeEnum getUserTypeEnumByCode(byte code) {
+    public static UserTypeEnum getUserTypeEnumByCode(Byte code) {
         for (UserTypeEnum enumConstant : UserTypeEnum.class.getEnumConstants()) {
-            if (enumConstant.code == code) return enumConstant;
+            if (enumConstant.code.equals(code)) return enumConstant;
         }
         return null;
     }

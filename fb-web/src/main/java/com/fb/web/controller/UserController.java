@@ -6,6 +6,7 @@ import com.fb.user.domain.AbstractUser;
 import com.fb.user.domain.CommonUser;
 import com.fb.user.repository.HobbyTagPO;
 import com.fb.user.request.UserReq;
+import com.fb.user.response.UserDTO;
 import com.fb.user.service.IHobbyTagService;
 import com.fb.user.service.IUserService;
 import com.fb.web.entity.BasicUserVO;
@@ -88,7 +89,7 @@ public class UserController {
         //todo 手机验证码的校验
         boolean checkResult = CmsUtils.checkVerifyCode(redisUtils, phoneNumber, verifyCode);
         if (checkResult) {
-            AbstractUser user = userService.login(phoneNumber);
+            UserDTO user = userService.login(phoneNumber);
             if (Objects.isNull(user)) {
                 //返回不存在该用户，直接注册用户
                 return JsonObject.newErrorJsonObject(UserResponse.USER_NOT_EXIST);
@@ -103,7 +104,7 @@ public class UserController {
     @PostMapping("/signUp")
     @ApiOperation("新用户注册")
     public JsonObject<BasicUserVO> signUp(@RequestBody @Validated({Create.class}) UserReq userReq) {
-        CommonUser user = userService.createUser(userReq);
+        UserDTO user = userService.createUser(userReq);
         BasicUserVO userVO = new BasicUserVO(user);
         return new JsonObject<>(userVO);
     }
@@ -121,7 +122,7 @@ public class UserController {
                                               @ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser, @RequestHeader("token") String token) {
         userReq.setUid(sessionUser.getUid());
         userReq.setLoginToken(token);
-        AbstractUser user = userService.modifyUser(userReq);
+        UserDTO user = userService.modifyUser(userReq);
         return new JsonObject<>(new BasicUserVO(user));
     }
 
@@ -137,7 +138,7 @@ public class UserController {
     @GetMapping("/detail")
     @ApiOperation("通过token获取用户详细信息")
     @ApiImplicitParam(name = "token", value = "token",required = true, dataType = "String",paramType="header")
-    public JsonObject<BasicUserVO> getBasicInfoByToken(@RequestAttribute(name = "user") @ApiIgnore AbstractUser user) {
+    public JsonObject<BasicUserVO> getBasicInfoByToken(@RequestAttribute(name = "user") @ApiIgnore UserDTO user) {
         // 通过token获取用户的详细基本信息
         BasicUserVO userVO = new BasicUserVO(user);
         userVO.setAllFriendsCount(0);

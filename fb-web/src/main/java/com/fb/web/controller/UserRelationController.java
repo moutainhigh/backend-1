@@ -1,6 +1,10 @@
 package com.fb.web.controller;
 
+import com.fb.web.entity.UserVO;
+import com.fb.web.utils.JsonObject;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author: pangminpeng
@@ -8,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class UserRelationController {
-
-    //获取用户联系人
 
     //通过关系id获取关系属性
 }
