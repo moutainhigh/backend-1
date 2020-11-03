@@ -12,6 +12,7 @@ import com.fb.activity.dto.TicketBO;
 import com.fb.activity.entity.ActivityPO;
 import com.fb.activity.entity.TicketPO;
 import com.fb.activity.enums.ActivityStateEnum;
+import com.fb.activity.enums.TicketStateEnum;
 import com.fb.activity.service.IActivityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -101,13 +102,16 @@ public class ActivityServiceImpl implements IActivityService {
      * @return
      */
     @Override
-    public Optional<List<ActivityBO>> queryActivityListByType(int activityType, int pageSize, int pageNum) {
+    public Optional<List<ActivityBO>> queryActivityListByType(int activityType, int activityValid,int pageSize, int pageNum) {
         List<ActivityBO> activityBOS = new ArrayList<>(pageSize);
         QueryWrapper<ActivityPO> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(obj -> {
             if (activityType > 0) {
                 obj.eq(ActivityPO::getActivityType, activityType);
+                obj.eq(ActivityPO::getActivityState, ActivityStateEnum.PUBLISH.getCode());
+                obj.ge(ActivityPO::getActivityTime, new Date());
             }
+            obj.eq(ActivityPO::getActivityValid, activityValid);
             obj.eq(ActivityPO::getUserType, 0);
         }).orderByDesc(ActivityPO::getUpdateTime);
 
@@ -195,6 +199,34 @@ public class ActivityServiceImpl implements IActivityService {
         return true;
     }
 
+    @Override
+    public boolean stopActivity(Long activityId, Long userId) {
+
+        QueryWrapper<ActivityPO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(obj -> {
+            obj.eq(ActivityPO::getId, activityId);
+        });
+
+        ActivityPO activityPO = activityDao.selectOne(queryWrapper);
+        if (Objects.nonNull(activityPO) && activityPO.getUserId().equals(userId)) {
+            activityPO.setActivityState(ActivityStateEnum.STOP.getCode());
+            activityDao.updateById(activityPO);
+        }
+        return true;
+    }
+
+    @Override
+    public Optional<ActivityBO> queryActivityById(Long activityId, Long ticketId) {
+        ActivityPO activityPO = activityDao.selectById(activityId);
+
+        if (Objects.nonNull(activityPO) && ActivityStateEnum.isEffect(activityPO.getActivityState())) {
+           TicketPO ticketPO =  ticketDao.selectById(ticketId);
+           if (Objects.nonNull(ticketPO) && TicketStateEnum.isEffect(ticketPO.getTicketState())) {
+               return Optional.of(activityPOToBO(activityPO, Arrays.asList(ticketPO)));
+           }
+        }
+        return Optional.empty();
+    }
 
     private List<TicketPO> getTicketByActivityId(Long activityId) {
         QueryWrapper<TicketPO> queryWrapper = new QueryWrapper<TicketPO>();
@@ -280,6 +312,7 @@ public class ActivityServiceImpl implements IActivityService {
         ticketBO.setTicketState(activityPO.getTicketState());
         ticketBO.setIllustration(activityPO.getIllustration());
         return ticketBO;
-
     }
+
+
 }

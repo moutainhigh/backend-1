@@ -16,5 +16,12 @@ public class PayParamBO {
     /*付款金额*/
     private BigDecimal totalAmount;
 
+    /*主题*/
+    private String subject;
+
+    /*内容*/
+    private String body;
+
+
 
 }

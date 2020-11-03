@@ -58,7 +58,7 @@ public class ActivityBO {
     /*退票标识 0 不可退 1 可退*/
     private Integer refundFlag;
 
-    /*状态 0 删除 1 草稿 2 发布*/
+    /*状态 0 删除 1 草稿 2 发布 -1 停止报名*/
     private Integer activityState;
 
     /*定金*/

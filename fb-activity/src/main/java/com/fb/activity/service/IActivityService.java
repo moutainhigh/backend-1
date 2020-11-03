@@ -41,7 +41,7 @@ public interface IActivityService {
      * @param pageNum
      * @return
      */
-    Optional<List<ActivityBO>> queryActivityListByType(int activityType, int pageSize, int pageNum);
+    Optional<List<ActivityBO>> queryActivityListByType(int activityType, int activityValid, int pageSize, int pageNum);
 
     /**
      * 根据日期查询活动列表
@@ -69,5 +69,20 @@ public interface IActivityService {
      */
     boolean deleteActivity(Long activityId, Long userId);
 
+    /**
+     *
+     * @param activityId
+     * @param userId
+     * @return
+     */
+    boolean stopActivity(Long activityId, Long userId);
+
+    /**
+     * 查询详情
+     *
+     * @param
+     * @return
+     */
+    Optional<ActivityBO> queryActivityById(Long activityId, Long ticketId);
 
 }

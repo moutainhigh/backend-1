@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,12 +51,6 @@ public class PayBeanConfig {
     @Value("${alipay.root.cert.path}")
     public String alipay_root_cert_path;
 
-/*
-    @Value("${alipay.notifyUrl}")
-    private String alipay_notifyUrl;
-
-    @Value("${alipay.returnUrl}")
-    private Integer alipay_returnUrl;*/
 
     @Bean("alipayClient")
     public AlipayClient initAlipayClient() {
@@ -73,7 +68,6 @@ public class PayBeanConfig {
 //设置签名类型
         certAlipayRequest.setSignType(alipay_signType);
 //设置应用公钥证书路径
-
         certAlipayRequest.setCertPath(getPath(app_cert_path));
 //设置支付宝公钥证书路径
         certAlipayRequest.setAlipayPublicCertPath(getPath(alipay_cert_path));
@@ -91,9 +85,12 @@ public class PayBeanConfig {
 //        return new DefaultAlipayClient(alipay_gatewayUrl, alipay_appId, alipay_privateKey, alipay_format, alipay_charset, , alipay_signType);
     }
 
-    private String getPath(String file) {
-        URL cert =  getClass().getClassLoader().getResource("/root/t-bear/" + file);
-        if(Objects.isNull(cert)) {
+
+
+    public  String getPath(String file) {
+        File fileCert = new File("/root/t-bear/" + file);
+
+        if(!fileCert.exists()) {
             URL url =  getClass().getClassLoader().getResource(file);
             return url.getPath();
         }

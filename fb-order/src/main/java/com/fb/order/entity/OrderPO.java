@@ -59,6 +59,12 @@ public class OrderPO {
     @TableField("pay_type")
     private Integer payType;
 
+    /***
+     * 是否需要身份信息
+     */
+    @TableField("need_info")
+    private Integer needInfo;
+
     /**
      * 逻辑删除标识
      */

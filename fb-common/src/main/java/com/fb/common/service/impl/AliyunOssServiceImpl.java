@@ -29,9 +29,7 @@ public class AliyunOssServiceImpl implements OssService {
 
     // 文件允许格式
 
-    private static String[] ALLOW_FILES = { ".rar", ".doc", ".docx", ".zip",
-            ".pdf", ".txt", ".swf", ".xlsx", ".gif", ".png", ".jpg", ".jpeg",
-            ".bmp", ".xls", ".mp4", ".flv", ".ppt", ".avi", ".mpg", ".wmv",
+    private static String[] ALLOW_FILES = { ".mp4", ".flv", ".avi", ".mpg", ".wmv",
             ".3gp", ".mov", ".asf", ".asx", ".vob", ".wmv9", ".rm", ".rmvb" };
 
     private static final String[] IMAGE_TYPE = new String[]{".bmp", ".jpg", ".jpeg", ".gif", ".png"};

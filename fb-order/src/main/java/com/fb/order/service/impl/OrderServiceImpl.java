@@ -206,6 +206,7 @@ public class OrderServiceImpl implements OrderService {
         orderPO.setOrderState(OrderStateEnum.WAIT.getCode());
         orderPO.setPayType(orderProductParamBO.getPayType());
         orderPO.setEffectFlag(EffectFlagEnum.EFFECT.getCode());
+        orderPO.setNeedInfo(orderProductParamBO.getNeedInfo());
         orderPO.setActivityTime(orderProductParamBO.getActivityTime());
         return orderPO;
     }

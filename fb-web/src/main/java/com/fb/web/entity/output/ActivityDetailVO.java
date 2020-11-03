@@ -83,6 +83,9 @@ public class ActivityDetailVO extends CommonVO {
     @ApiModelProperty(value = "当前用户是否点赞")
     private boolean like;
 
+    @ApiModelProperty(value = "活动状态", notes = "-1 停止报名 0 删除 1 草稿 2发布")
+    private int activityStatus;
+
 //    @ApiModelProperty(value = "参加活动前群聊")
 //    private Long groupId;
 //

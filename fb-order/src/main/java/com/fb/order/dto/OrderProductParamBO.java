@@ -38,7 +38,7 @@ public class OrderProductParamBO {
     /*用户id*/
     private Long userId;
 
-    /*用户名称*/
+    /*用户姓名*/
     private String userName;
 
     /*用户电话*/
@@ -46,6 +46,9 @@ public class OrderProductParamBO {
 
     /*身份证号*/
     private String userCardNo;
+
+    /*需要购票信息*/
+    private Integer needInfo;
 
 
 }

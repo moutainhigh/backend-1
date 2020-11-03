@@ -16,7 +16,7 @@ CREATE TABLE `tb_activity` (
   `activity_type` tinyint(2) NOT NULL COMMENT '活动类型 可配置见同名枚举',
   `need_info` tinyint(2) NOT NULL COMMENT '需要购票信息 0 否 1 是',
   `refund_flag` tinyint(2) NOT NULL COMMENT '退票标识 0 不可退 1 可退',
-  `activity_state` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态 0 删除 1 草稿 2 发布',
+  `activity_state` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态 -1 停止报名 0 删除 1 草稿 2 发布 ' ,
   `front_money` decimal(10,2) DEFAULT NULL COMMENT '定金',
   `pic_url` varchar(255) DEFAULT NULL COMMENT '图片url',
   `video_url` varchar(255) DEFAULT NULL COMMENT '视频url',
