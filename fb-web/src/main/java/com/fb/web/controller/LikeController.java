@@ -26,7 +26,6 @@ public class LikeController {
     @RequestMapping(value = "/operate", method = {RequestMethod.POST})
     public JsonObject likeOrCancel(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
                                    @RequestBody @Validated LikeVO likeParamVO) {
-        Long userId = sessionUser.getUid();
-        return JsonObject.newCorrectJsonObject(likeFacadeService.operatorLike(likeParamVO, userId));
+        return JsonObject.newCorrectJsonObject(likeFacadeService.operatorLike(likeParamVO, sessionUser));
     }
 }

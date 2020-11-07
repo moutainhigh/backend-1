@@ -4,6 +4,7 @@ import com.fb.activity.enums.ActivityTypeEnum;
 import com.fb.common.model.UploadResult;
 import com.fb.common.service.OssService;
 import com.fb.common.util.JsonUtils;
+import com.fb.user.domain.AbstractUser;
 import com.fb.web.entity.output.UploadVo;
 import com.fb.web.utils.JsonObject;
 import io.swagger.annotations.Api;
@@ -18,6 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +48,11 @@ public class CommonController {
     @ResponseBody
     @ApiOperation(value = "图片上传云", notes = "图片上传云")
     @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})
-    public JsonObject<UploadVo> getUploadImage(@RequestParam @ApiParam("图片文件") MultipartFile imgFile) {
+    public JsonObject<UploadVo> getUploadImage(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                               @RequestParam @ApiParam("图片文件") MultipartFile imgFile) {
 
-        long uid = 123456L;
-        Optional<UploadResult> picUploadResult = aliyunOssServiceImpl.uploadPicture(imgFile, uid);
+        Long userId = sessionUser.getUid();
+        Optional<UploadResult> picUploadResult = aliyunOssServiceImpl.uploadPicture(imgFile, userId);
         UploadVo uploadVo = new UploadVo();
         BeanUtils.copyProperties(picUploadResult.get(), uploadVo);
         return JsonObject.newCorrectJsonObject(uploadVo);
@@ -57,10 +60,11 @@ public class CommonController {
     @ResponseBody
     @ApiOperation(value = "视频上传云", notes = "视频上传云")
     @RequestMapping(value = "/uploadVideo", method = {RequestMethod.POST})
-    public JsonObject<UploadVo> getUploadVideo(@RequestParam @ApiParam("视频文件") MultipartFile videoFile) {
+    public JsonObject<UploadVo> getUploadVideo(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                               @RequestParam @ApiParam("视频文件") MultipartFile videoFile) {
 
-        long uid = 123456L;
-        Optional<UploadResult> videoUploadResult = aliyunOssServiceImpl.uploadVideo(videoFile, uid);
+        Long userId = sessionUser.getUid();
+        Optional<UploadResult> videoUploadResult = aliyunOssServiceImpl.uploadVideo(videoFile, userId);
         UploadVo uploadVo = new UploadVo();
         BeanUtils.copyProperties(videoUploadResult.get(), uploadVo);
         return JsonObject.newCorrectJsonObject(uploadVo);
@@ -69,10 +73,11 @@ public class CommonController {
     @ResponseBody
     @ApiOperation(value = "图片删除", notes = "图片删除")
     @RequestMapping(value = "/deleteImage", method = {RequestMethod.POST})
-    public JsonObject<Boolean> deleteImage(@RequestParam @ApiParam("图片") String url) {
+    public JsonObject<Boolean> deleteImage(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                           @RequestParam @ApiParam("图片") String url) {
 
-        long uid = 123456L;
-        boolean deletePictureResult = aliyunOssServiceImpl.deleteFile(url, uid);
+        Long userId = sessionUser.getUid();
+        boolean deletePictureResult = aliyunOssServiceImpl.deleteFile(url, userId);
         return JsonObject.newCorrectJsonObject(deletePictureResult);
     }
     public static void sortColors(int[] nums) {

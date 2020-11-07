@@ -32,9 +32,8 @@ public class CommentController {
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     public JsonObject publishComment(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
                                      @RequestBody @Validated CommentVO commentParamVO) {
-        Long userId = sessionUser.getUid();
-        commentParamVO.setUserId(userId);
-        if (commentFacadeService.publishComment(commentParamVO)) {
+
+        if (commentFacadeService.publishComment(commentParamVO, sessionUser)) {
             return JsonObject.newCorrectJsonObject("");
         }
         return JsonObject.newErrorJsonObject("添加评论失败，请稍后重试！");

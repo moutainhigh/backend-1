@@ -4,6 +4,9 @@ import com.fb.addition.dto.CommentBO;
 import com.fb.addition.enums.InfoTypeEnum;
 import com.fb.addition.service.ICommentService;
 import com.fb.common.util.DateUtils;
+import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
+import com.fb.user.service.IUserService;
 import com.fb.web.entity.CommentVO;
 import com.fb.web.entity.output.CommentDetailVO;
 import com.google.common.collect.Lists;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -20,12 +24,15 @@ import java.util.stream.Collectors;
 public class CommentFacadeService {
     @Autowired
     private ICommentService commentService;
+    @Autowired
+    private IUserService userService;
 
-    public boolean publishComment(CommentVO commentParamVO) {
-        //TODO LX 根据uid查用户头像等
-
-        //TODO LX 根据to_uid查用户头像等
-        return commentService.addComment(convertToBO(commentParamVO));
+    public boolean publishComment(CommentVO commentParamVO, AbstractUser sessionUser) {
+        UserDTO toUserDTO = null;
+        if (Objects.nonNull(commentParamVO.getToUserId())) {
+            toUserDTO = userService.getUserByUid(commentParamVO.getToUserId());
+        }
+        return commentService.addComment(convertToBO(commentParamVO, sessionUser, toUserDTO));
     }
 
     public List<CommentDetailVO> getCommentListByPage(Long infoId, InfoTypeEnum infoType, Integer pageSize, Integer pageNum) {
@@ -37,17 +44,18 @@ public class CommentFacadeService {
         return result;
     }
 
-    private CommentBO convertToBO(CommentVO commentParamVO) {
+    private CommentBO convertToBO(CommentVO commentParamVO,AbstractUser sessionUser, UserDTO toUserDTO) {
         CommentBO commentBO = new CommentBO();
         commentBO.setInfoId(commentParamVO.getInfoId());
         commentBO.setInfoType(commentParamVO.getInfoType());
-        //TODO LX 补全
-        commentBO.setUserId(commentParamVO.getUserId());
-//        commentBO.setAvatar();
-//        commentBO.setNickname();
-        commentBO.setToUserId(commentParamVO.getToUserId());
-//        commentBO.setToAvatar();
-//        commentBO.setToNickname(commentParamVO.getToNickname());
+        commentBO.setUserId(sessionUser.getUid());
+        commentBO.setAvatar(sessionUser.getHeadPicUrl());
+        commentBO.setNickname(sessionUser.getName());
+        if (Objects.nonNull(toUserDTO)) {
+            commentBO.setToUserId(commentParamVO.getToUserId());
+            commentBO.setToAvatar(toUserDTO.getHeadPicUrl());
+            commentBO.setToNickname(toUserDTO.getName());
+        }
         commentBO.setContent(commentParamVO.getContent());
         return commentBO;
     }
@@ -63,7 +71,6 @@ public class CommentFacadeService {
         commentDetailVO.setToNickname(commentBO.getToNickname());
         commentDetailVO.setContent(commentBO.getContent());
         commentDetailVO.setCommentTime(commentBO.getCreateTime().getTime());
-
 //        commentDetailVO.setCommentTime(commentBO.getCreateTime().atZone(DateUtils.zoneId).toInstant().toEpochMilli());
         return commentDetailVO;
     }
