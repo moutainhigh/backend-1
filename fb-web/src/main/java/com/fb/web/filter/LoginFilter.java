@@ -32,7 +32,6 @@ public class LoginFilter implements Filter {
             "/swagger-resources/**",
             "/webjars/**",
             "/swagger-ui.html/**",
-            "/common/**",
             "/v2/api-docs");
 
 

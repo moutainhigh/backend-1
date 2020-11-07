@@ -80,34 +80,5 @@ public class CommonController {
         boolean deletePictureResult = aliyunOssServiceImpl.deleteFile(url, userId);
         return JsonObject.newCorrectJsonObject(deletePictureResult);
     }
-    public static void sortColors(int[] nums) {
-
-        int p = -1;
-        int q = nums.length;
-        int i = 0;
-        while(i < q) {
-
-             if (nums[i] == 0 ) {
-                swap(nums, i,  ++ p);
-            } if (nums[i] == 2) {
-                swap(nums, i,   -- q);
-            } if (nums[i] == 1 ) {
-                i ++;
-            }
-
-        }
-    }
-    public static void swap(int[] nums, int p, int q) {
-        int tmp=nums[p];
-        nums[p]= nums[q];
-        nums[q]= tmp;
-    }
-
-    public static void main(String[] args) {
-//        int[] nums = {1,2,0};
-        int[] nums = {2,0,2,1,1,0};
-        sortColors(nums);
-        System.out.println(JsonUtils.object2Json(nums));
-    }
 
 }
