@@ -47,5 +47,10 @@ public interface IUserService {
 
     String getUserNameByToken(String token);
 
+    /**
+     * 通过uid获取用户信息
+     * @param uid
+     * @return
+     */
     UserDTO getUserByUid(Long uid);
 }

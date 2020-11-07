@@ -21,7 +21,7 @@ public class CommentVO {
     @ApiModelProperty(value = "评论用户")
     private Long userId;
 
-    @NotNull(message = "toUserId is not null")
+    //如果被评论是null则是直接评论帖子
     @ApiModelProperty(value = "被评论用户", required = true)
     private Long toUserId;
 

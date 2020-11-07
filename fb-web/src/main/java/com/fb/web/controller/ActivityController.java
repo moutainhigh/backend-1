@@ -1,5 +1,6 @@
 package com.fb.web.controller;
 
+import com.fb.user.domain.AbstractUser;
 import com.fb.web.entity.output.ActivityDetailVO;
 import com.fb.web.entity.ActivityVO;
 import com.fb.web.entity.output.ActivityListVO;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,10 +31,10 @@ public class ActivityController {
 
     @ApiOperation(value = "发布活动", notes = "商家和用户")
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
-    public JsonObject publishActivity(@RequestBody @Validated ActivityVO activityVo) {
-        //TODO LX 获取uid
+    public JsonObject publishActivity(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                      @RequestBody @Validated ActivityVO activityVo) {
         //TODO 并校验发布人类型，只有商家才能发布带票种的，普通用户不可以
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
         Optional<Long> activityId = activityFacadeService.publishActivity(activityVo, userId);
         if (activityId.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityId.get());
@@ -43,9 +45,8 @@ public class ActivityController {
 
     @ApiOperation(value = "查询草稿", notes = "商家和用户")
     @RequestMapping(value = "/querydraft", method = {RequestMethod.GET})
-    public JsonObject<ActivityVO> getActivityDraft() {
-        //TODO LX 获取uid
-        Long userId = 123456L;
+    public JsonObject<ActivityVO> getActivityDraft(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser) {
+        Long userId = sessionUser.getUid();
         Optional<ActivityVO> activityVO = activityFacadeService.queryDraft(userId);
         if (activityVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityVO.get());
@@ -56,9 +57,10 @@ public class ActivityController {
 
     @ApiOperation(value = "活动详情(二期)", notes = "")
     @RequestMapping(value = "/activity/detail", method = {RequestMethod.GET})
-    public JsonObject<ActivityDetailVO> getActivityInfo(@ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
-        Long uid = 123456L;
-        Optional<ActivityDetailVO> activityVO = activityFacadeService.queryActivityById(id, uid);
+    public JsonObject<ActivityDetailVO> getActivityInfo(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                        @ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
+        Long userId = sessionUser.getUid();
+        Optional<ActivityDetailVO> activityVO = activityFacadeService.queryActivityById(id, userId);
         if (activityVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityVO.get());
         }
@@ -81,10 +83,10 @@ public class ActivityController {
 
     @ApiOperation(value = "我的-活动列表(三期)")
     @RequestMapping(value = "/user", method = {RequestMethod.GET})
-    public JsonObject<List<ActivityDetailVO>> getUserActivityList(@ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
-                                                                @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
-        //TODO LX 获取uid
-        Long userId = 123456L;
+    public JsonObject<List<ActivityDetailVO>> getUserActivityList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                                  @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+                                                                  @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
+        Long userId = sessionUser.getUid();
         Optional<List<ActivityDetailVO>> activityVO = activityFacadeService.queryActivityListByUserId(userId, pageSize, pageNum);
         if (activityVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityVO.get());
@@ -95,20 +97,20 @@ public class ActivityController {
 
        @ApiOperation(value = "我的-活动删除(三期)")
     @RequestMapping(value = "/delete", method = {RequestMethod.POST})
-    public JsonObject<Boolean> deleteActivity(@ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
+    public JsonObject<Boolean> deleteActivity(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                              @ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
 
-        //TODO LX 获取uid
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
         boolean flag = activityFacadeService.deleteActivity(id, userId);
         return JsonObject.newCorrectJsonObject(flag);
     }
 
     @ApiOperation(value = "我的-活动-停止报名(四期)")
     @RequestMapping(value = "/stop", method = {RequestMethod.POST})
-    public JsonObject<Boolean> stopActivity(@ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
+    public JsonObject<Boolean> stopActivity(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                            @ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
 
-        //TODO LX 获取uid
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
         boolean flag = activityFacadeService.deleteActivity(id, userId);
         return JsonObject.newCorrectJsonObject(flag);
     }

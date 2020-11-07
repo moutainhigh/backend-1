@@ -1,6 +1,7 @@
 package com.fb.web.controller;
 
 import com.fb.addition.enums.InfoTypeEnum;
+import com.fb.user.domain.AbstractUser;
 import com.fb.web.entity.CommentVO;
 import com.fb.web.entity.output.CommentDetailVO;
 import com.fb.web.service.CommentFacadeService;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,9 +30,10 @@ public class CommentController {
 
     @ApiOperation(value = "发布评论(二期)", notes = "")
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
-    public JsonObject publishComment(@RequestBody @Validated CommentVO commentParamVO) {
-        //TODO LX 查当前用户uid
-        Long uid = 123456L;
+    public JsonObject publishComment(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                     @RequestBody @Validated CommentVO commentParamVO) {
+        Long userId = sessionUser.getUid();
+        commentParamVO.setUserId(userId);
         if (commentFacadeService.publishComment(commentParamVO)) {
             return JsonObject.newCorrectJsonObject("");
         }
@@ -38,8 +41,9 @@ public class CommentController {
     }
 
     @ApiOperation(value = "分页查询评论(二期)", notes = "")
-    @RequestMapping(value = "/{infoId}", method = {RequestMethod.GET})
-    public JsonObject<List<CommentDetailVO>> getCommentByPage(@ApiParam(name = "infoId") @PathVariable("infoId") Long infoId,
+    @RequestMapping(value = "/query", method = {RequestMethod.GET})
+    public JsonObject<List<CommentDetailVO>> getCommentByPage(@ApiParam(name = "infoId") @RequestParam("infoId") long infoId,
+//                                                              @ApiParam(name = "infoId") @PathVariable("infoId") Long infoId,
                                                               @ApiParam(name = "infoType", value = "类型 1 活动, 2 动态", allowableValues = "1,2") @RequestParam int infoType,
                                                               @ApiParam(name = "limit", value = "页数") @RequestParam int limit,
                                                               @ApiParam(name = "page", value = "页码") @RequestParam int page) {

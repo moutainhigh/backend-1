@@ -42,7 +42,7 @@ public class CommentFacadeService {
         commentBO.setInfoId(commentParamVO.getInfoId());
         commentBO.setInfoType(commentParamVO.getInfoType());
         //TODO LX 补全
-//        commentBO.setUserId();
+        commentBO.setUserId(commentParamVO.getUserId());
 //        commentBO.setAvatar();
 //        commentBO.setNickname();
         commentBO.setToUserId(commentParamVO.getToUserId());

@@ -1,5 +1,6 @@
 package com.fb.web.controller;
 
+import com.fb.user.domain.AbstractUser;
 import com.google.common.collect.Lists;
 
 
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Objects;
@@ -33,9 +35,9 @@ public class FeedController {
 
     @ApiOperation(value = "发布动态", notes = "商家和用户")
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
-    public JsonObject publishFeed(@RequestBody @Validated FeedVO feedVo) {
-        //    TODO LX 二期
-        Long userId = 123456L;
+    public JsonObject publishFeed(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                  @RequestBody @Validated FeedVO feedVo) {
+        Long userId = sessionUser.getUid();
         Optional<Long> feedId = feedFacadeService.publishFeed(feedVo, userId);
         if (feedId.isPresent()) {
             return JsonObject.newCorrectJsonObject(feedId.get());
@@ -45,9 +47,9 @@ public class FeedController {
 
     @ApiOperation(value = "动态详情(二期)", notes = "")
     @RequestMapping(value = "/detail", method = {RequestMethod.GET})
-    public JsonObject<FeedDetailVO> getFeedInfo(@ApiParam(name = "id", value = "动态id") @RequestParam("id") Long id) {
-        Long userId = 123456L;
-
+    public JsonObject<FeedDetailVO> getFeedInfo(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                @ApiParam(name = "id", value = "动态id") @RequestParam("id") Long id) {
+        Long userId = sessionUser.getUid();
         Optional<FeedDetailVO> feedDetailVO = feedFacadeService.getFeedDetailById(id, userId);
         if (feedDetailVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(feedDetailVO.get());
@@ -91,9 +93,10 @@ public class FeedController {
 
     @ApiOperation(value = "我的-动态列表(三期)")
     @RequestMapping(value = "/user", method = {RequestMethod.GET})
-    public JsonObject<FeedDetailVO> getFeedList(@ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+    public JsonObject<FeedDetailVO> getFeedList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                   @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
 
         Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryFeedListByUserId(userId, pageSize, pageNum);
 
@@ -103,10 +106,10 @@ public class FeedController {
 
     @ApiOperation(value = "我的-动态删除(三期)")
     @RequestMapping(value = "/delete", method = {RequestMethod.POST})
-    public JsonObject<Boolean> deleteActivity(@ApiParam(name = "id", value = "动态id") @RequestParam("id") Long id) {
+    public JsonObject<Boolean> deleteActivity(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                              @ApiParam(name = "id", value = "动态id") @RequestParam("id") Long id) {
 
-        //TODO LX 获取uid
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
         boolean flag = feedFacadeService.deleteFeed(id, userId);
         return JsonObject.newCorrectJsonObject(flag);
     }

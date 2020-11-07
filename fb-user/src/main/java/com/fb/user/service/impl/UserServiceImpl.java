@@ -47,6 +47,7 @@ public class UserServiceImpl implements IUserService {
     private LbsMapService lbsMapService;
 
 
+    @Override
     public UserDTO checkAndRefresh(String token) {
         UserDTO user = (UserDTO) redisUtils.getCacheObject(token);
         if (Objects.isNull(user)) return null;

@@ -1,5 +1,6 @@
 package com.fb.web.controller;
 
+import com.fb.user.domain.AbstractUser;
 import com.fb.web.entity.output.ActivityDetailVO;
 import com.fb.web.entity.output.OrderDetailInfoVO;
 import com.fb.web.entity.output.UserOrderInfoVO;
@@ -12,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,9 +33,9 @@ public class OrderController {
 
     @ApiOperation(value = "订单详情", notes = "")
     @RequestMapping(value = "/detail", method = {RequestMethod.GET})
-    public JsonObject<OrderDetailInfoVO> queryOrderInfoById(@ApiParam(name = "orderId", value = "订单id") @RequestParam("orderId") long orderId) {
-        //TODO LX 获取uid
-        Long userId = 123456L;
+    public JsonObject<OrderDetailInfoVO> queryOrderInfoById(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                            @ApiParam(name = "orderId", value = "订单id") @RequestParam("orderId") long orderId) {
+        Long userId = sessionUser.getUid();
         OrderDetailInfoVO orderDetailInfoVO = orderFacadeService.getOrderDetail(orderId);
         if (Objects.isNull(orderDetailInfoVO)) {
             return JsonObject.newErrorJsonObject("订单不存在");
@@ -46,11 +48,11 @@ public class OrderController {
 
     @ApiOperation(value = "商家查询订单列表", notes = "")
     @RequestMapping(value = "/biz/orderlist", method = {RequestMethod.GET})
-    public JsonObject<List<OrderDetailInfoVO>> queryShopOrderList(@ApiParam(name = "activityId", value = "活动id") @RequestParam("activityId") long activityId,
+    public JsonObject<List<OrderDetailInfoVO>> queryShopOrderList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                                  @ApiParam(name = "activityId", value = "活动id") @RequestParam("activityId") long activityId,
                                                                   @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                                   @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
-        //TODO LX 获取uid
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
         Optional<ActivityDetailVO> activityDetailVO = activityFacadeService.queryActivityById(activityId, userId);
         /*查询活动的发布人是不是当前登录人*/
         if (activityDetailVO.isPresent() && activityDetailVO.get().getUserVO().getUserId().equals(userId)) {
@@ -63,10 +65,10 @@ public class OrderController {
 
     @ApiOperation(value = "用户查询订单列表", notes = "")
     @RequestMapping(value = "/user/orderlist", method = {RequestMethod.GET})
-    public JsonObject<UserOrderInfoVO> queryUserOrderList(@ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+    public JsonObject<UserOrderInfoVO> queryUserOrderList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                          @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                           @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
-        //TODO LX 获取uid
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
         List<UserOrderInfoVO>  userOrderDetailInfoVOS = orderFacadeService.getUserOrderList(userId, pageNum, pageSize);
         return JsonObject.newCorrectJsonObject(userOrderDetailInfoVOS);
     }

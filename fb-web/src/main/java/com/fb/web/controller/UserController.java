@@ -165,7 +165,8 @@ public class UserController {
     //    TODO LX 二期
     @ApiOperation(value = "关系网(二期)", notes = "")
     @RequestMapping(value = "/relationfeed", method = {RequestMethod.GET})
-    public JsonObject<FocusVO> getUserFocusList(@ApiParam(name = "limit", value = "展示条数") @RequestParam("limit") Integer limit,
+    public JsonObject<FocusVO> getUserFocusList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+                                                @ApiParam(name = "limit", value = "展示条数") @RequestParam("limit") Integer limit,
                                                 @ApiParam(name = "feedOffsetId", value = "动态偏移量 ") @RequestParam("feedOffsetId") Long feedOffsetId,
                                                 @ApiParam(name = "activityOffsetId", value = "活动偏移量 ") @RequestParam("activityOffsetId") Long activityOffsetId) {
 
@@ -179,7 +180,7 @@ public class UserController {
             limit = 10;
         }
 
-        Long userId = 123456L;
+        Long userId = sessionUser.getUid();
         //TODO LX 查好友
         List<Long> userIdList = null;
         FocusVO focusVO = new FocusVO();

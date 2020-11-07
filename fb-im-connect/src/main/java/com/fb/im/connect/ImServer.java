@@ -34,7 +34,7 @@ public class ImServer {
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(bossGroup, workerGroup).channel(serverSocketChannelClass)
-                .childHandler(new BaseChannelInitializer())
+                .childHandler(new BaseChannelInitializer());
     }
 
 
