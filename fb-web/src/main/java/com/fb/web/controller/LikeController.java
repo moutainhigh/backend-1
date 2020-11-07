@@ -1,6 +1,6 @@
 package com.fb.web.controller;
 
-import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
 import com.fb.web.entity.LikeVO;
 import com.fb.web.service.LikeFacadeService;
 import com.fb.web.utils.JsonObject;
@@ -24,7 +24,7 @@ public class LikeController {
 
     @ApiOperation(value = "点赞(二期)", notes = "")
     @RequestMapping(value = "/operate", method = {RequestMethod.POST})
-    public JsonObject likeOrCancel(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject likeOrCancel(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                    @RequestBody @Validated LikeVO likeParamVO) {
         return JsonObject.newCorrectJsonObject(likeFacadeService.operatorLike(likeParamVO, sessionUser));
     }

@@ -1,6 +1,6 @@
 package com.fb.web.controller;
 
-import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
 import com.fb.web.entity.output.ActivityDetailVO;
 import com.fb.web.entity.output.OrderDetailInfoVO;
 import com.fb.web.entity.output.UserOrderInfoVO;
@@ -33,7 +33,7 @@ public class OrderController {
 
     @ApiOperation(value = "订单详情", notes = "")
     @RequestMapping(value = "/detail", method = {RequestMethod.GET})
-    public JsonObject<OrderDetailInfoVO> queryOrderInfoById(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<OrderDetailInfoVO> queryOrderInfoById(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                             @ApiParam(name = "orderId", value = "订单id") @RequestParam("orderId") long orderId) {
         Long userId = sessionUser.getUid();
         OrderDetailInfoVO orderDetailInfoVO = orderFacadeService.getOrderDetail(orderId);
@@ -48,7 +48,7 @@ public class OrderController {
 
     @ApiOperation(value = "商家查询订单列表", notes = "")
     @RequestMapping(value = "/biz/orderlist", method = {RequestMethod.GET})
-    public JsonObject<List<OrderDetailInfoVO>> queryShopOrderList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<List<OrderDetailInfoVO>> queryShopOrderList(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                                   @ApiParam(name = "activityId", value = "活动id") @RequestParam("activityId") long activityId,
                                                                   @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                                   @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
@@ -65,7 +65,7 @@ public class OrderController {
 
     @ApiOperation(value = "用户查询订单列表", notes = "")
     @RequestMapping(value = "/user/orderlist", method = {RequestMethod.GET})
-    public JsonObject<UserOrderInfoVO> queryUserOrderList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<UserOrderInfoVO> queryUserOrderList(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                           @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                           @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
         Long userId = sessionUser.getUid();

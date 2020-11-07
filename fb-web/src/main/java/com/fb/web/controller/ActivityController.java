@@ -1,6 +1,6 @@
 package com.fb.web.controller;
 
-import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
 import com.fb.web.entity.output.ActivityDetailVO;
 import com.fb.web.entity.ActivityVO;
 import com.fb.web.entity.output.ActivityListVO;
@@ -31,7 +31,7 @@ public class ActivityController {
 
     @ApiOperation(value = "发布活动", notes = "商家和用户")
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
-    public JsonObject publishActivity(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject publishActivity(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                       @RequestBody @Validated ActivityVO activityVo) {
         //TODO 并校验发布人类型，只有商家才能发布带票种的，普通用户不可以
         Long userId = sessionUser.getUid();
@@ -45,7 +45,7 @@ public class ActivityController {
 
     @ApiOperation(value = "查询草稿", notes = "商家和用户")
     @RequestMapping(value = "/querydraft", method = {RequestMethod.GET})
-    public JsonObject<ActivityVO> getActivityDraft(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser) {
+    public JsonObject<ActivityVO> getActivityDraft(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser) {
         Long userId = sessionUser.getUid();
         Optional<ActivityVO> activityVO = activityFacadeService.queryDraft(userId);
         if (activityVO.isPresent()) {
@@ -57,7 +57,7 @@ public class ActivityController {
 
     @ApiOperation(value = "活动详情(二期)", notes = "")
     @RequestMapping(value = "/activity/detail", method = {RequestMethod.GET})
-    public JsonObject<ActivityDetailVO> getActivityInfo(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<ActivityDetailVO> getActivityInfo(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                         @ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
         Long userId = sessionUser.getUid();
         Optional<ActivityDetailVO> activityVO = activityFacadeService.queryActivityById(id, userId);
@@ -83,7 +83,7 @@ public class ActivityController {
 
     @ApiOperation(value = "我的-活动列表(三期)")
     @RequestMapping(value = "/user", method = {RequestMethod.GET})
-    public JsonObject<List<ActivityDetailVO>> getUserActivityList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<List<ActivityDetailVO>> getUserActivityList(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                                   @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                                   @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
         Long userId = sessionUser.getUid();
@@ -97,7 +97,7 @@ public class ActivityController {
 
        @ApiOperation(value = "我的-活动删除(三期)")
     @RequestMapping(value = "/delete", method = {RequestMethod.POST})
-    public JsonObject<Boolean> deleteActivity(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<Boolean> deleteActivity(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                               @ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
 
         Long userId = sessionUser.getUid();
@@ -107,7 +107,7 @@ public class ActivityController {
 
     @ApiOperation(value = "我的-活动-停止报名(四期)")
     @RequestMapping(value = "/stop", method = {RequestMethod.POST})
-    public JsonObject<Boolean> stopActivity(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<Boolean> stopActivity(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                             @ApiParam(name = "id", value = "活动id") @RequestParam("id") Long id) {
 
         Long userId = sessionUser.getUid();

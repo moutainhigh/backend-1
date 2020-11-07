@@ -3,8 +3,6 @@ package com.fb.web.service;
 import com.fb.addition.dto.CommentBO;
 import com.fb.addition.enums.InfoTypeEnum;
 import com.fb.addition.service.ICommentService;
-import com.fb.common.util.DateUtils;
-import com.fb.user.domain.AbstractUser;
 import com.fb.user.response.UserDTO;
 import com.fb.user.service.IUserService;
 import com.fb.web.entity.CommentVO;
@@ -27,7 +25,7 @@ public class CommentFacadeService {
     @Autowired
     private IUserService userService;
 
-    public boolean publishComment(CommentVO commentParamVO, AbstractUser sessionUser) {
+    public boolean publishComment(CommentVO commentParamVO, UserDTO sessionUser) {
         UserDTO toUserDTO = null;
         if (Objects.nonNull(commentParamVO.getToUserId())) {
             toUserDTO = userService.getUserByUid(commentParamVO.getToUserId());
@@ -44,7 +42,7 @@ public class CommentFacadeService {
         return result;
     }
 
-    private CommentBO convertToBO(CommentVO commentParamVO,AbstractUser sessionUser, UserDTO toUserDTO) {
+    private CommentBO convertToBO(CommentVO commentParamVO,UserDTO sessionUser, UserDTO toUserDTO) {
         CommentBO commentBO = new CommentBO();
         commentBO.setInfoId(commentParamVO.getInfoId());
         commentBO.setInfoType(commentParamVO.getInfoType());

@@ -1,9 +1,9 @@
 package com.fb.web.controller;
 
+import com.fb.addition.enums.InfoTypeEnum;
 import com.fb.common.util.CmsUtils;
+import com.fb.common.util.DateUtils;
 import com.fb.common.util.RedisUtils;
-import com.fb.user.domain.AbstractUser;
-import com.fb.user.domain.CommonUser;
 import com.fb.user.repository.HobbyTagPO;
 import com.fb.user.request.UserReq;
 import com.fb.user.response.UserDTO;
@@ -11,49 +11,37 @@ import com.fb.user.service.IHobbyTagService;
 import com.fb.user.service.IUserService;
 import com.fb.web.entity.BasicUserVO;
 import com.fb.web.entity.UserVO;
+import com.fb.web.entity.output.ActivityDetailVO;
+import com.fb.web.entity.output.FeedDetailVO;
+import com.fb.web.entity.output.FocusVO;
+import com.fb.web.entity.output.RelationDetail;
 import com.fb.web.exception.UserResponse;
 import com.fb.web.exception.valid.Create;
 import com.fb.web.exception.valid.Modify;
-import com.fb.web.utils.JsonObject;
-import io.swagger.annotations.*;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import com.fb.addition.enums.InfoTypeEnum;
-import com.fb.common.util.DateUtils;
-import com.fb.web.entity.output.*;
-import com.fb.web.entity.UserVO;
 import com.fb.web.service.ActivityFacadeService;
 import com.fb.web.service.FeedFacadeService;
 import com.fb.web.utils.JsonObject;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.fb.common.util.DateUtils.dateTimeFormatterMin;
 import static com.fb.common.util.DateUtils.zoneId;
-
-import javax.annotation.Resource;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping(value = "/user", produces = "application/json;charset=UTF-8")
@@ -126,7 +114,7 @@ public class UserController {
     @PutMapping("/modifyUser")
     @ApiOperation("修改用户信息")
     public JsonObject<BasicUserVO> modifyUser(@RequestBody @Validated({Modify.class}) UserReq userReq,
-                                              @ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser, @RequestHeader("token") String token) {
+                                              @ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser, @RequestHeader("token") String token) {
         userReq.setUid(sessionUser.getUid());
         userReq.setLoginToken(token);
         UserDTO user = userService.modifyUser(userReq);
@@ -165,7 +153,7 @@ public class UserController {
     //    TODO LX 二期
     @ApiOperation(value = "关系网(二期)", notes = "")
     @RequestMapping(value = "/relationfeed", method = {RequestMethod.GET})
-    public JsonObject<FocusVO> getUserFocusList(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<FocusVO> getUserFocusList(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                 @ApiParam(name = "limit", value = "展示条数") @RequestParam("limit") Integer limit,
                                                 @ApiParam(name = "feedOffsetId", value = "动态偏移量 ") @RequestParam("feedOffsetId") Long feedOffsetId,
                                                 @ApiParam(name = "activityOffsetId", value = "活动偏移量 ") @RequestParam("activityOffsetId") Long activityOffsetId) {

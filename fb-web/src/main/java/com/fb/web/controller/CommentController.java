@@ -1,7 +1,7 @@
 package com.fb.web.controller;
 
 import com.fb.addition.enums.InfoTypeEnum;
-import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
 import com.fb.web.entity.CommentVO;
 import com.fb.web.entity.output.CommentDetailVO;
 import com.fb.web.service.CommentFacadeService;
@@ -30,7 +30,7 @@ public class CommentController {
 
     @ApiOperation(value = "发布评论(二期)", notes = "")
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
-    public JsonObject publishComment(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject publishComment(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                      @RequestBody @Validated CommentVO commentParamVO) {
 
         if (commentFacadeService.publishComment(commentParamVO, sessionUser)) {

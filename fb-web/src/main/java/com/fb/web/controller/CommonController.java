@@ -4,7 +4,7 @@ import com.fb.activity.enums.ActivityTypeEnum;
 import com.fb.common.model.UploadResult;
 import com.fb.common.service.OssService;
 import com.fb.common.util.JsonUtils;
-import com.fb.user.domain.AbstractUser;
+import com.fb.user.response.UserDTO;
 import com.fb.web.entity.output.UploadVo;
 import com.fb.web.utils.JsonObject;
 import io.swagger.annotations.Api;
@@ -48,7 +48,7 @@ public class CommonController {
     @ResponseBody
     @ApiOperation(value = "图片上传云", notes = "图片上传云")
     @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})
-    public JsonObject<UploadVo> getUploadImage(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<UploadVo> getUploadImage(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                @RequestParam @ApiParam("图片文件") MultipartFile imgFile) {
 
         Long userId = sessionUser.getUid();
@@ -60,7 +60,7 @@ public class CommonController {
     @ResponseBody
     @ApiOperation(value = "视频上传云", notes = "视频上传云")
     @RequestMapping(value = "/uploadVideo", method = {RequestMethod.POST})
-    public JsonObject<UploadVo> getUploadVideo(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<UploadVo> getUploadVideo(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                @RequestParam @ApiParam("视频文件") MultipartFile videoFile) {
 
         Long userId = sessionUser.getUid();
@@ -73,7 +73,7 @@ public class CommonController {
     @ResponseBody
     @ApiOperation(value = "图片删除", notes = "图片删除")
     @RequestMapping(value = "/deleteImage", method = {RequestMethod.POST})
-    public JsonObject<Boolean> deleteImage(@ApiIgnore @RequestAttribute(name = "user") AbstractUser sessionUser,
+    public JsonObject<Boolean> deleteImage(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                            @RequestParam @ApiParam("图片") String url) {
 
         Long userId = sessionUser.getUid();
