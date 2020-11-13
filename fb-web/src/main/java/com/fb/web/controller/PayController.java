@@ -1,5 +1,6 @@
 package com.fb.web.controller;
 
+import com.fb.user.response.UserDTO;
 import com.fb.web.entity.PayRequestVO;
 import com.fb.web.service.OrderFacadeService;
 import com.fb.web.utils.JsonObject;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,9 +38,10 @@ public class PayController {
      */
     @ApiOperation(value = "支付", notes = "用户支付接口")
     @RequestMapping(value = "/info", method = {RequestMethod.POST})
-    public JsonObject getPayInfo(@RequestBody @Validated PayRequestVO payRequestVO) {
-        Long userId = 123456L;
-        /*生成订单并支付 FIXME*/
+    public JsonObject getPayInfo(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
+                                 @RequestBody @Validated PayRequestVO payRequestVO) {
+
+        Long userId = sessionUser.getUid();
          String signCode = orderFacadeService.orderBooking(payRequestVO, userId);
         if (StringUtils.isNotEmpty(signCode)) {
             return JsonObject.newCorrectJsonObject(signCode);

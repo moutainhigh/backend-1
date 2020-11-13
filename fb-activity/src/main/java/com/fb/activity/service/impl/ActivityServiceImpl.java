@@ -232,6 +232,7 @@ public class ActivityServiceImpl implements IActivityService {
         QueryWrapper<TicketPO> queryWrapper = new QueryWrapper<TicketPO>();
         queryWrapper.lambda().and(obj -> {
             obj.eq(TicketPO::getActivityId, activityId);
+            obj.eq(TicketPO::getTicketState, TicketStateEnum.PUBLISH.getCode());
         }).orderByDesc(TicketPO::getId);
 
         return ticketDao.selectList(queryWrapper);

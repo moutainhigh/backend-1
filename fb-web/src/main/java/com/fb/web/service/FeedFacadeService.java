@@ -117,9 +117,9 @@ public class FeedFacadeService {
      * @return
      */
     public Optional<List<FeedDetailVO>> getLocationFeedList(String location, int limit, Long offsetId, Integer random, Long uid) {
-//        Optional<LbsMapBo> lbsMapBo = lbsMapService.getLbsInfoByLocation(location);
+        Optional<LbsMapBo> lbsMapBo = lbsMapService.getLbsInfoByLocation(location);
 
-        Optional<List<FeedBO>> feedDetailVOS = feedService.queryLocationFeedList(/*lbsMapBo.get().getCityCode()*/location, limit, offsetId, random);
+        Optional<List<FeedBO>> feedDetailVOS = feedService.queryLocationFeedList(lbsMapBo.get().getCityCode(), limit, offsetId, random);
 
         return getFeedAndAddition(feedDetailVOS, uid);
     }

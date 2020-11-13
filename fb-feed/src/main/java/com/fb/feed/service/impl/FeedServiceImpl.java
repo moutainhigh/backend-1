@@ -73,8 +73,8 @@ public class FeedServiceImpl implements IFeedService {
             if (Objects.nonNull(offsetId) && offsetId > 0) {
                 obj.lt(FeedPO::getId, offsetId);
             }
-            //TODO LX
-//            obj.eq(FeedPO::getCityCode, cityCode);
+            //TODO 加上地区定位了
+            obj.eq(FeedPO::getCityCode, cityCode);
             obj.eq(FeedPO::getFeedState, FeedStateEnum.PUBLISH.getCode());
             obj.eq(FeedPO::getDisplayCity, 1);
 

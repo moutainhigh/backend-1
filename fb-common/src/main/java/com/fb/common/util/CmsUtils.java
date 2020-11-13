@@ -30,6 +30,34 @@ public class CmsUtils {
 
 
     private final static int TIME_OUT = 5;
+    //FIXME
+    public static String sendVerifyCodeTest( RedisUtils redisUtils, String phoneNumber) {
+        //有短信验证码，则返回；无短信验证码，则返回
+        String verifyCode = getRandomVerifyCode(6);
+
+        try {
+            if (Objects.nonNull(redisUtils.getCacheObject(CMS_CACHE_CATEGORY + phoneNumber))) {
+                return "";
+            }
+            CommonRequest request = new CommonRequest();
+            request.setSysDomain("dysmsapi.aliyuncs.com");
+            request.setSysVersion("2017-05-25");
+            request.setSysAction("SendSms");
+            // 接收短信的手机号码
+            request.putQueryParameter("PhoneNumbers", phoneNumber);
+            // 短信签名名称。请在控制台签名管理页面签名名称一列查看（必须是已添加、并通过审核的短信签名）。
+            request.putQueryParameter("SignName", "findbeer");
+            // 短信模板ID
+            request.putQueryParameter("TemplateCode", "SMS_196147415");
+            // 短信模板变量对应的实际值，JSON格式。
+            request.putQueryParameter("TemplateParam", "{\"code\":\"" + verifyCode + "\"}");
+            log.info("aliyun response:{}", client.getCommonResponse(request).getData());
+            redisUtils.setCacheObject(CMS_CACHE_CATEGORY + phoneNumber, verifyCode, TIME_OUT, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            log.error("send verifyCode to phoneNumber:{} exception", phoneNumber,  e);
+        }
+        return verifyCode;
+    }
 
     public static boolean sendVerifyCode( RedisUtils redisUtils, String phoneNumber) {
         //有短信验证码，则返回；无短信验证码，则返回

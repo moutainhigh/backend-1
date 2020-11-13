@@ -70,10 +70,13 @@ public class UserController {
     @GetMapping("/getVerifyCode/{phoneNumber}")
     @ApiOperation(value = "获取手机验证码")
     public JsonObject getVerifyCode(@NotBlank @ApiParam(name = "phoneNumber", value = "手机号", required = true) @PathVariable String phoneNumber) {
-        if (CmsUtils.sendVerifyCode(redisUtils, phoneNumber)){
-            return new JsonObject();
-        }
-        return JsonObject.newErrorJsonObject(UserResponse.SEND_VERIFYCODE_ERROR);
+
+        //FIXME
+        //        if (CmsUtils.sendVerifyCode(redisUtils, phoneNumber)){
+
+            return new JsonObject(CmsUtils.sendVerifyCodeTest(redisUtils, phoneNumber));
+//        }
+//        return JsonObject.newErrorJsonObject(UserResponse.SEND_VERIFYCODE_ERROR);
     }
 
     //验证码 + 手机号进行验证：登录成功，返回token值；用户未注册，前端进入注册页面
@@ -141,7 +144,6 @@ public class UserController {
     }
 
 
-    //    TODO LX 二期
     @ApiOperation(value = "人脉关系(二期)", notes = "查询人脉关系，3级")
     @RequestMapping(value =
             "/relation", method = {RequestMethod.GET})
@@ -150,7 +152,6 @@ public class UserController {
     }
 
 
-    //    TODO LX 二期
     @ApiOperation(value = "关系网(二期)", notes = "")
     @RequestMapping(value = "/relationfeed", method = {RequestMethod.GET})
     public JsonObject<FocusVO> getUserFocusList(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,

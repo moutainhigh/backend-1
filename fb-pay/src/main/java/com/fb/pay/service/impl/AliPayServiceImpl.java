@@ -95,7 +95,6 @@ public class AliPayServiceImpl implements IPayService {
 
     @Override
     public boolean notify(Map<String, String> params) {
-        //TODO LX
 
         boolean signVerified = false;
             //调用SDK验证签名

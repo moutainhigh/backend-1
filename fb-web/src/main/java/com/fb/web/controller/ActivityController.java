@@ -67,7 +67,6 @@ public class ActivityController {
         return JsonObject.newCorrectJsonObject("");
     }
 
-    //    TODO LX 二期
     @ApiOperation(value = "擦肩(二期)", notes = "传0的时候是全部")
     @RequestMapping(value = "/activities", method = {RequestMethod.GET})
     public JsonObject<List<ActivityListVO>> getActivityList(@ApiParam(name = "activityType", value = "活动类型") @RequestParam("activityType") Integer activityType,
