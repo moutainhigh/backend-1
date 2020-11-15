@@ -1,6 +1,7 @@
 package com.fb.user.relation.service;
 
 import com.fb.user.relation.domian.DirectFriendRelation;
+import com.fb.user.relation.service.DTO.UserDTOForRelation;
 
 import java.util.List;
 
@@ -13,7 +14,8 @@ public interface IUserRelationService {
      * @param userId1
      * @param userId2
      */
-    void addFriend(Long userId1, Long userId2);
+    void addFriend(UserDTOForRelation user1, UserDTOForRelation user2);
+
 
     /**
      * 删除好友
@@ -22,7 +24,7 @@ public interface IUserRelationService {
      * @param userId1
      * @param userId2
      */
-    void removeFriend(Long userId1, Long userId2);
+    void removeFriend(UserDTOForRelation user1, UserDTOForRelation user2);
 
     /**
      * 获取用户的所有直接好友，用于用户通讯录
@@ -49,7 +51,7 @@ public interface IUserRelationService {
      * @param followedUserId 被关注的用户id
      * @return
      */
-    boolean followUser(Long userId, Long followedUserId);
+    void followUser(Long userId, Long followedUserId);
 
     /**
      * 取消关注
@@ -57,9 +59,12 @@ public interface IUserRelationService {
      * @param followedUserId
      * @return
      */
-    boolean unFollowUser(Long userId, Long followedUserId);
+    void unFollowUser(Long userId, Long followedUserId);
 
-    //获取直接好友用户关系
+    List<Long> getAllRelation(UserDTOForRelation user);
+
+
+        //获取直接好友用户关系
     List<DirectFriendRelation> listDirectFriendRelation(Long userId);
 
     int countFriends(Long userId);
@@ -70,4 +75,6 @@ public interface IUserRelationService {
      * 获取同城的间接好友
      */
     List<Long> listSameCityAllFriends(Long userId);
+
+    List<Long> shortestPath(Long sourceUid, Long targetUid, String cityCode);
 }

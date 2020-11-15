@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -34,6 +35,13 @@ public class GraphFactory {
      */
     private final Map<String, TraverserManager> traverserManagerMap = new ConcurrentHashMap<>();
 
+    private final static Map<String, String> cityGraphMap = new ConcurrentHashMap<>();
+
+    static {
+        cityGraphMap.put("010", "beijing_010");
+        cityGraphMap.put("021", "shanghai_021");
+    }
+
 
     /**
      * 通过cityCode获取图管理器，如果Map中存在，则使用，不存在则new
@@ -41,14 +49,18 @@ public class GraphFactory {
      * @return
      */
     public GraphManager getGraphManagerByCityCode(String cityCode) {
-        return graphManagerMap.computeIfAbsent(cityCode, k -> {
+        String graphName = cityGraphMap.get(cityCode);
+        if (Objects.isNull(graphName)) return null;
+        return graphManagerMap.computeIfAbsent(graphName, k -> {
             HugeClient hugeClient = new HugeClient(graphUrl, k);
             return hugeClient.graph();
         });
     }
 
     public TraverserManager getTraverserManagerByCityCode(String cityCode) {
-        return traverserManagerMap.computeIfAbsent(cityCode, k -> {
+        String graphName = cityGraphMap.get(cityCode);
+        if (Objects.isNull(graphName)) return null;
+        return traverserManagerMap.computeIfAbsent(graphName, k -> {
             HugeClient hugeClient = new HugeClient(graphUrl, k);
             return hugeClient.traverser();
         });
@@ -61,7 +73,8 @@ public class GraphFactory {
      * @param cityCode
      */
     public void initGraphByCityCode(String cityCode) {
-        HugeClient hugeClient = new HugeClient(graphUrl, cityCode);
+        String graphName = cityGraphMap.get(cityCode);
+        HugeClient hugeClient = new HugeClient(graphUrl, graphName);
         SchemaManager schemaManager = hugeClient.schema();
 
         schemaManager.propertyKey("userId").asLong().ifNotExist().create();
@@ -69,6 +82,7 @@ public class GraphFactory {
         // 顶点叫做user，顶点只包含顶点id的属性
         schemaManager.vertexLabel("user")
                 .properties("userId")
+                //使用uid作为图的顶点的唯一标识
                 .useCustomizeNumberId()
                 .ifNotExist()
                 .create();

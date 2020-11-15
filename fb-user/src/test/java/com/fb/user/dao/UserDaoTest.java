@@ -16,12 +16,13 @@ public class UserDaoTest extends BaseTest {
 
     @Test
     public void testInsertUser() {
-        CommonUser user = new CommonUser("民朋", "13520053770",
-                new BigDecimal("12.22"), new BigDecimal("12.33"),
-                "1", "1", LocalDate.now(), (byte)1, "df");
-        UserPO userPO =  user.convert2PO();
+//        CommonUser user = new CommonUser("民朋", "13520053770",
+//                new BigDecimal("12.22"), new BigDecimal("12.33"),
+//                "1", "1", LocalDate.now(), (byte)1, "df");
+//        UserPO userPO =  user.convert2PO();
         System.out.println(userDao.selectById(1));
-        System.out.println(userPO.getId());
         System.out.println(userDao.selectById(1));
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.fb.user.repository;
 
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.extension.service.additional.query.impl.LambdaQueryChainWrapper;
 import com.fb.user.dao.UserDAO;
 import com.fb.user.domain.AbstractUser;
@@ -53,8 +54,8 @@ public class UserRepository {
         return new LambdaQueryChainWrapper<>(userDAO).eq(UserPO::getPhoneNumber, phoneNumber).one();
     }
 
-
-    public List<AbstractUser> listAbstractUser() {
-        return null;
+    public List<UserPO> listSimpleUserByUidList(List<Long> uidList) {
+        // TODO: 2020/11/15  明天要写这个
+        return new LambdaQueryChainWrapper<>(userDAO).in(UserPO::getId, uidList).list();
     }
 }

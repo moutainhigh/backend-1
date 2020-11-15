@@ -5,6 +5,8 @@ import com.fb.user.domain.CommonUser;
 import com.fb.user.request.UserReq;
 import com.fb.user.response.UserDTO;
 
+import java.util.List;
+
 public interface IUserService {
 
 
@@ -53,4 +55,6 @@ public interface IUserService {
      * @return
      */
     UserDTO getUserByUid(Long uid);
+
+    List<UserDTO> listSimpleUser(List<Long> uidList);
 }

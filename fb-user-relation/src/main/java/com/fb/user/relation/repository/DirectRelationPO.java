@@ -19,6 +19,10 @@ import java.time.LocalDateTime;
 @TableName("direct_relation")
 public class DirectRelationPO {
 
+    public DirectRelationPO(Long userId1, Long userId2) {
+        this.userId1 = userId1;
+        this.userId2 = userId2;
+    }
     public DirectRelationPO(Long userId1, Long userId2, LocalDateTime createTime) {
         this.userId1 = userId1;
         this.userId2 = userId2;

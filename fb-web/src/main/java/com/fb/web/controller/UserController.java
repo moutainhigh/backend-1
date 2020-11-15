@@ -69,7 +69,8 @@ public class UserController {
     //请求验证码接口, todo 验证手机号是否有效
     @GetMapping("/getVerifyCode/{phoneNumber}")
     @ApiOperation(value = "获取手机验证码")
-    public JsonObject getVerifyCode(@NotBlank @ApiParam(name = "phoneNumber", value = "手机号", required = true) @PathVariable String phoneNumber) {
+    public JsonObject getVerifyCode(@NotBlank @ApiParam(name = "phoneNumber", value = "手机号", required = true)
+                                        @PathVariable String phoneNumber) {
 
         //FIXME
         //        if (CmsUtils.sendVerifyCode(redisUtils, phoneNumber)){

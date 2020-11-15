@@ -192,4 +192,9 @@ public class UserServiceImpl implements IUserService {
         if (Objects.nonNull(userPO = userRepository.getOneUserById(uid))) return userPO2UserDTO(userPO);
         return null;
     }
+
+    @Override
+    public List<UserDTO> listSimpleUser(List<Long> uidList) {
+        return userRepository.listSimpleUserByUidList(uidList).stream().map(this::userPO2UserDTO).collect(Collectors.toList());
+    }
 }

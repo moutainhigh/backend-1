@@ -12,4 +12,5 @@ import java.util.List;
 
 @Repository
 public interface UserDAO extends BaseMapper<UserPO> {
+
 }

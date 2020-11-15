@@ -44,6 +44,7 @@
 
     <bean id="userRelationSqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
         <property name="dataSource" ref="userRelationDataSource"/>
+        <property name="mapperLocations" value="classpath:/mapper/*.xml"/>
     </bean>
     <bean id="userRelationMapperConfig" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.fb.user.relation.dao"/>
