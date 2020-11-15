@@ -18,8 +18,8 @@ public class PayRequestVO {
     @ApiModelProperty(value = "票种id", required = true)
     private Long ticketId;
 
-    @ApiModelProperty(value = "活动时间")
-    private Long activityTime;
+    @ApiModelProperty(value = "活动时间 yyyy-MM-dd HH:mm")
+    private String activityTime;
 
     @NotNull(message = "payType is not null")
     @ApiModelProperty(value = "类型 0 支付宝, 1 微信支付", allowableValues = "0 alipay, 1 weipay", required = true)

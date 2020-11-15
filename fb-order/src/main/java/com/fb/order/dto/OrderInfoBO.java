@@ -46,7 +46,8 @@ public class OrderInfoBO {
 
     /**
      * 支付渠道
-     * @see PayTypeEnum
+     *
+     *   @see  com.fb.pay.enums.PayTypeEnum
      */
     private Integer payType;
 

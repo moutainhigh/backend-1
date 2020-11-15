@@ -1,5 +1,6 @@
 package com.fb.web.controller;
 
+import com.fb.user.enums.UserTypeEnum;
 import com.fb.user.response.UserDTO;
 import com.fb.web.entity.output.ActivityDetailVO;
 import com.fb.web.entity.ActivityVO;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -33,8 +35,13 @@ public class ActivityController {
     @RequestMapping(value = "/publish", method = {RequestMethod.POST})
     public JsonObject publishActivity(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                       @RequestBody @Validated ActivityVO activityVo) {
-        //TODO 并校验发布人类型，只有商家才能发布带票种的，普通用户不可以
         Long userId = sessionUser.getUid();
+        //校验发布人类型，只有商家才能发布带票种的，普通用户不可以
+        if (UserTypeEnum.COMMON_USER.equals(sessionUser.getUserTypeEnum())) {
+            if (!CollectionUtils.isEmpty(activityVo.getTicketVoList())) {
+                return JsonObject.newErrorJsonObject("只有商家才能发布带票种的，普通用户不可以");
+            }
+        }
         Optional<Long> activityId = activityFacadeService.publishActivity(activityVo, userId);
         if (activityId.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityId.get());

@@ -61,7 +61,7 @@ public class OrderFacadeService {
             orderProductParamBO.setProductId(payRequestVO.getActivityId());
             orderProductParamBO.setQuantity(1);
             orderProductParamBO.setTotalAmount(activityBO.get().getTicketBOList().get(0).getTicketPrice());
-            orderProductParamBO.setActivityTime(new Date(payRequestVO.getActivityTime()));
+            orderProductParamBO.setActivityTime(DateUtils.getDateFromLocalDateTime(payRequestVO.getActivityTime(), DateUtils.dateTimeFormatterMin));
             orderProductParamBO.setPayType(payRequestVO.getPayType());
             orderProductParamBO.setUserId(userId);
             orderProductParamBO.setNeedInfo(activityBO.get().getNeedInfo());
@@ -74,7 +74,7 @@ public class OrderFacadeService {
             PayParamBO payParamBO = new PayParamBO();
             payParamBO.setOutTradeNo(outTradeNo);
             payParamBO.setUserId(userId);
-            payParamBO.setTotalAmount(new BigDecimal("0"));
+            payParamBO.setTotalAmount(activityBO.get().getTicketBOList().get(0).getTicketPrice());
             payParamBO.setSubject(orderProductParamBO.getProductName() + "(" + orderProductParamBO.getTicketName() + ")");
             payParamBO.setBody("");
 
@@ -131,7 +131,10 @@ public class OrderFacadeService {
         if (CollectionUtils.isEmpty(orderInfoBOS)) {
             return null;
         }
-       return orderInfoBOS.stream().map(orderInfoBO -> convertToUserVO(orderInfoBO)).collect(Collectors.toList());
+        return orderInfoBOS.stream().map(orderInfoBO -> {
+            Optional<ActivityBO> activityBO = activityService.queryActivityById(orderInfoBO.getProductId(), orderInfoBO.getTicketId());
+            return  convertToUserVO(orderInfoBO, activityBO.get());
+        }).collect(Collectors.toList());
     }
 
 
@@ -173,15 +176,14 @@ public class OrderFacadeService {
         return orderDetailInfoVO;
     }
 
-    private UserOrderInfoVO convertToUserVO(OrderInfoBO orderInfoBO) {
+    private UserOrderInfoVO convertToUserVO(OrderInfoBO orderInfoBO, ActivityBO activityBO) {
         if (Objects.isNull(orderInfoBO)) {
             return null;
         }
         UserOrderInfoVO userOrderInfoVO = new UserOrderInfoVO();
         userOrderInfoVO.setActivityName(orderInfoBO.getProductName());
         userOrderInfoVO.setActivityTime(String.valueOf(orderInfoBO.getActivityTime()));
-        //FIXME
-//        userOrderInfoVO.setAddress(orderInfoBO.get);
+        userOrderInfoVO.setAddress(activityBO.getActivityAddress());
         userOrderInfoVO.setMoney(orderInfoBO.getTotalAmount().toPlainString());
         return userOrderInfoVO;
 
