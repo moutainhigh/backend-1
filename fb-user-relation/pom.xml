@@ -44,27 +44,18 @@
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <properties>
-                <env>dev</env>
-            </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <env>prod</env>
-            </properties>
-        </profile>
-    </profiles>
-
-
     <build>
         <resources>
+            <!--            <resource>-->
+            <!--                <directory>src/main/resources</directory>-->
+            <!--                <excludes>-->
+            <!--                    <exclude>dev/*</exclude>-->
+            <!--                    <exclude>prod/*</exclude>-->
+            <!--                </excludes>-->
+            <!--                <filtering>true</filtering>-->
+            <!--            </resource>-->
+
+            <!--            这个resources为了满足resources的配置-->
             <resource>
                 <directory>src/main/profile/${env}</directory>
                 <includes>
@@ -114,5 +105,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

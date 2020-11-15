@@ -1,12 +1,10 @@
 package com.fb.web.controller;
 
-import cn.hutool.json.JSONObject;
-import com.fb.user.relation.service.DTO.UserDTOForRelation;
-import com.fb.user.relation.service.IUserRelationService;
+import com.fb.relation.service.DTO.UserDTOForRelation;
+import com.fb.relation.service.IUserRelationService;
 import com.fb.user.response.UserDTO;
 import com.fb.user.service.IUserService;
 import com.fb.web.entity.BasicUserVO;
-import com.fb.web.entity.UserVO;
 import com.fb.web.exception.UserResponse;
 import com.fb.web.utils.JsonObject;
 import io.swagger.annotations.Api;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
-import javax.json.Json;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;

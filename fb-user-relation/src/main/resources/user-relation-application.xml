@@ -10,7 +10,7 @@
                         http://www.springframework.org/schema/context    
                         http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
     <context:annotation-config />
-    <context:component-scan base-package="com.fb.user.relation" />
+    <context:component-scan base-package="com.fb.relation" />
     <!-- 引入配置文件 -->
     <context:property-placeholder location="classpath:user-relation-jdbc.properties" ignore-unresolvable="true"/>
 
@@ -47,7 +47,7 @@
         <property name="mapperLocations" value="classpath:/mapper/*.xml"/>
     </bean>
     <bean id="userRelationMapperConfig" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.fb.user.relation.dao"/>
+        <property name="basePackage" value="com.fb.relation.dao"/>
         <property name="sqlSessionFactoryBeanName" value="userRelationSqlSessionFactory"/>
     </bean>
 
