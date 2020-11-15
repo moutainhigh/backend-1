@@ -31,8 +31,7 @@ public class ActivityDataConfig {
 
     @Value("${activity.datasource.url}")
     private String url;
-    @Value("${activity.datasource.url.test}")
-    private String testUrl;
+
     @Value("${activity.datasource.driverClass}")
     private String driverClass;
 
