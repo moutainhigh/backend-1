@@ -27,10 +27,11 @@ import java.util.stream.Collectors;
 @Api(value = "用户关系", description = "用户关系相关接口")
 public class UserRelationController {
 
-    @Resource
-    private IUserService userService;
+
     @Resource
     private IUserRelationService userRelationService;
+    @Resource
+    private IUserService userService;
 
     //通过关系id获取关系属性
 

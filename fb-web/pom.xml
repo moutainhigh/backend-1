@@ -138,14 +138,14 @@
                 <configuration>
                     <resourceBundles>
                         <resourceBundle>com.fb:fb-user:1.0.0-SNAPSHOT</resourceBundle>
-                        <resourceBundle>com.fb:fb-user-relation:1.0.0</resourceBundle>
                         <resourceBundle>com.fb:fb-im-message:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-activity:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-feed:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-addition:1.0.0-SNAPSHOT</resourceBundle>
-                        <resourceBundle>com.fb:fb-common:1.0.0-SNAPSHOT</resourceBundle>
+                        <resourceBundle>com.fb:fb-common:1.0.0</resourceBundle>
                         <resourceBundle>com.fb:fb-pay:1.0.0-SNAPSHOT</resourceBundle>
                         <resourceBundle>com.fb:fb-order:1.0.0-SNAPSHOT</resourceBundle>
+                        <resourceBundle>com.fb:fb-user-relation:1.0.0</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>
