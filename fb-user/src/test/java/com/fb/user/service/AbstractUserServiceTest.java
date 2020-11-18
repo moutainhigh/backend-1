@@ -31,4 +31,9 @@ public class AbstractUserServiceTest extends BaseTest {
         System.out.println(selectUser.getName());
     }
 
+    @Test
+    public void testAddUser() {
+
+    }
+
 }

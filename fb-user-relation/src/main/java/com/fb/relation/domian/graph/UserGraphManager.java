@@ -4,6 +4,7 @@ import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.TraverserManager;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Path;
+import com.baidu.hugegraph.structure.graph.Vertex;
 import com.fb.relation.service.DTO.UserDTOForRelation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

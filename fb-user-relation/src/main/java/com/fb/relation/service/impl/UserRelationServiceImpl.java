@@ -87,6 +87,7 @@ public class UserRelationServiceImpl implements IUserRelationService {
 
     @Override
     public void followUser(Long userId, Long followUserId) {
+        if (followRelationDAO.countByUidAndTargetUid(userId, followUserId) > 0) return;
         FollowRelationPO followRelationPO = new FollowRelationPO();
         followRelationPO.setUserId(userId);
         followRelationPO.setFollowedUserId(followUserId);
@@ -99,9 +100,7 @@ public class UserRelationServiceImpl implements IUserRelationService {
         FollowRelationPO followRelationPO = new FollowRelationPO();
         followRelationPO.setUserId(userId);
         followRelationPO.setFollowedUserId(followUserId);
-        followRelationDAO.delete(new LambdaQueryChainWrapper<>(followRelationDAO)
-                .eq(FollowRelationPO::getUserId, userId)
-                .eq(FollowRelationPO::getFollowedUserId, followUserId));
+        followRelationDAO.unfollow(userId, followUserId);
     }
 
 

@@ -27,6 +27,7 @@
         <dependency>
             <groupId>com.fb</groupId>
             <artifactId>fb-user-relation</artifactId>
+
             <version>1.0.0</version>
         </dependency>
         <dependency>

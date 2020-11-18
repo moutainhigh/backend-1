@@ -8,7 +8,10 @@ public enum  UserResponse implements BaseResponse{
 
     SEND_VERIFYCODE_ERROR(10000, "发送验证码失败"),
     USER_NOT_EXIST(10001, "手机号不存在，请注册"),
-    VERIFY_FAIL(10002, "手机验证码验证失败");
+    VERIFY_FAIL(10002, "手机验证码验证失败"),
+    TARGET_USER_NOT_EXIST(10003, "目标用户不存在"),
+    USER_TYPE_NOT_VALID(10004, "用户类型非法")
+    ;
 
     private int code;
     private String desc;

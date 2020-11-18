@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -181,7 +178,7 @@ public class UserServiceImpl implements IUserService {
         userDTO.setSex(SexEnum.getSexEnumByCode(userPO.getSex()));
         userDTO.setIntroduction(userPO.getIntroduction());
         userDTO.setHeadPicUrl(userPO.getHeadPicUrl());
-        userDTO.setHobbyTagList(Arrays.asList(StringUtils.split(userPO.getHobbyTagNameList(), ",")));
+        userDTO.setHobbyTagList(StringUtils.isBlank(userPO.getHobbyTagNameList()) ? null : Arrays.asList(StringUtils.split(userPO.getHobbyTagNameList(), ",")));
         userDTO.setUserTypeEnum(UserTypeEnum.getUserTypeEnumByCode(userPO.getUserType()));
         return userDTO;
     }

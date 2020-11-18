@@ -1,5 +1,6 @@
 package com.fb.web.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fb.web.exception.BaseResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,7 +19,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class JsonObject<T> implements Serializable {
 
 
@@ -31,6 +32,7 @@ public class JsonObject<T> implements Serializable {
      * 业务数据
      */
     @ApiModelProperty(value = "业务数据")
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private T data;
 
     /**

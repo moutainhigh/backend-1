@@ -68,4 +68,10 @@ public class GraphTest extends BaseTest {
         graphManager.removeVertex(4L);
         graphManager.removeVertex(1L);
     }
+
+    @Test
+    public void initProdGraph() {
+        graphFactory.initGraphByCityCode("010");
+        graphFactory.initGraphByCityCode("021");
+    }
 }

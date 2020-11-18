@@ -42,7 +42,7 @@ public class RedisUtils {
      * @param operation
      * @return 缓存键值对应的数据
      */
-    public Object getCacheObject(String key/* ,ValueOperations<String,T> operation */) {
+      public Object  getCacheObject(String key/* ,ValueOperations<String,T> operation */) {
         return redisTemplate.opsForValue().get(key);
     }
 

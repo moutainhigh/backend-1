@@ -24,11 +24,12 @@ public class UserRelationServiceTest extends BaseTest {
 
     @Test
     public void testAddFriend() {
-        userRelationService.addFriend(user1, user2);
-        userRelationService.addFriend(user1, user4);
-        userRelationService.addFriend(user2, user3);
-        userRelationService.addFriend(user3, user4);
-        userRelationService.addFriend(user4, user5);
+//        userRelationService.addFriend(user1, user2);
+//        userRelationService.addFriend(user1, user4);
+//        userRelationService.addFriend(user2, user3);
+//        userRelationService.addFriend(user3, user4);
+//        userRelationService.addFriend(user4, user5);
+        userRelationService.addFriend(new UserDTOForRelation(12L, "010"), new UserDTOForRelation(13L, "010"));
     }
 
     @Test

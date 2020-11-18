@@ -1,15 +1,18 @@
 package com.fb.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fb.user.domain.AbstractUser;
 import com.fb.user.response.UserDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author: pangminpeng
@@ -17,31 +20,33 @@ import java.util.List;
  */
 @Data
 @Api("用户信息")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BasicUserVO {
 
-
         public BasicUserVO() {};
-        public BasicUserVO(UserDTO abstractUser) {
-            this.name = abstractUser.getName();
-            this.phoneNumber = abstractUser.getPhoneNumber();
-            this.lat = abstractUser.getLat();
-            this.lng = abstractUser.getLng();
-            this.birthdayTimeStamp = abstractUser.getBirthday().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            this.sexDesc = abstractUser.getSex().getDesc();
-            this.introduction = abstractUser.getIntroduction();
-            this.headPicUrl = abstractUser.getHeadPicUrl();
-            this.hobbyTagNameList = abstractUser.getHobbyTagList();
-            this.token = abstractUser.getLoginToken();
-            this.userType = abstractUser.getUserTypeEnum().getCode();
-            this.userTypeDesc = abstractUser.getUserTypeEnum().getDesc();
-            this.sex = abstractUser.getSex().getCode();
-            this.province = abstractUser.getProvince();
-            this.adName = abstractUser.getAdName();
-            this.cityName = abstractUser.getCityName();
+        public BasicUserVO(UserDTO userDTO) {
+            this.name = userDTO.getName();
+            this.phoneNumber = userDTO.getPhoneNumber();
+            this.lat = userDTO.getLat();
+            this.lng = userDTO.getLng();
+            this.birthdayTimeStamp = Objects.isNull(userDTO.getBirthday()) ? null : userDTO.getBirthday().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            this.sexDesc = userDTO.getSex().getDesc();
+            this.introduction = userDTO.getIntroduction();
+            this.headPicUrl = userDTO.getHeadPicUrl();
+            this.hobbyTagNameList = userDTO.getHobbyTagList();
+            this.token = userDTO.getLoginToken();
+            this.userType = Objects.isNull(userDTO.getUserTypeEnum()) ? null : userDTO.getUserTypeEnum().getCode();
+            this.userTypeDesc = Objects.isNull(userDTO.getUserTypeEnum()) ? null : userDTO.getUserTypeEnum().getDesc();
+            this.sex = userDTO.getSex().getCode();
+            this.province = userDTO.getProvince();
+            this.adName = userDTO.getAdName();
+            this.cityName = userDTO.getCityName();
         }
 
         @ApiModelProperty(value = "用户名称")
         private String name;
+
+        private String testNull;
 
         @ApiModelProperty(value = "用户手机号")
         private String phoneNumber;

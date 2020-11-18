@@ -11,6 +11,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,6 +57,7 @@ public class UserRepository {
 
     public List<UserPO> listSimpleUserByUidList(List<Long> uidList) {
         // TODO: 2020/11/15  明天要写这个
-        return new LambdaQueryChainWrapper<>(userDAO).in(UserPO::getId, uidList).list();
+        if (CollectionUtils.isEmpty(uidList)) return Collections.emptyList();
+        return new LambdaQueryChainWrapper<>(userDAO).select(UserPO::getName, UserPO::getHeadPicUrl, UserPO::getId, UserPO::getSex).in(UserPO::getId, uidList).list();
     }
 }
