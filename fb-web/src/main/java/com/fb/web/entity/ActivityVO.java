@@ -37,8 +37,7 @@ public class ActivityVO {
     @NotNull(message = "activityAddress is not null")
     @ApiModelProperty(value = "活动地址", required = true)
     private String activityAddress;
-    @NotNull(message = "activityType is not null")
-    @ApiModelProperty(value = "活动类型", required = true)
+    @ApiModelProperty(value = "活动类型")
     private Integer activityType;
     @ApiModelProperty(value = "活动类型中文")
     private String activityTypeName;
