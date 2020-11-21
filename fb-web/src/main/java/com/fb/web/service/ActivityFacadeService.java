@@ -3,6 +3,7 @@ package com.fb.web.service;
 import com.fb.activity.dto.ActivityBO;
 import com.fb.activity.dto.TicketBO;
 import com.fb.activity.enums.ActivityTypeEnum;
+import com.fb.activity.enums.ActivityValidEnum;
 import com.fb.activity.service.IActivityService;
 import com.fb.addition.dto.LikeBO;
 import com.fb.addition.enums.InfoTypeEnum;
@@ -11,7 +12,6 @@ import com.fb.addition.service.ILikeService;
 import com.fb.common.model.LbsMapBo;
 import com.fb.common.service.LbsMapService;
 import com.fb.common.util.DateUtils;
-import com.fb.feed.dto.FeedBO;
 import com.fb.user.response.UserDTO;
 import com.fb.user.service.IUserService;
 import com.fb.web.entity.ActivityVO;
@@ -25,8 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,7 +109,7 @@ public class ActivityFacadeService {
      * @param pageNum
      * @return
      */
-    public Optional<List<ActivityListVO>> queryActivityListByType(int activityType, int activityValid, int pageSize, int pageNum) {
+    public Optional<List<ActivityListVO>> queryActivityListByType(Integer activityType, Integer activityValid, int pageSize, int pageNum) {
         //请求活动
         Optional<List<ActivityBO>> activityBO = activityService.queryActivityListByType(activityType, activityValid, pageSize, pageNum);
 
@@ -238,7 +240,7 @@ public class ActivityFacadeService {
         activityDetailVO.setEnrollEndTime(String.valueOf(activityBO.getEnrollEndTime()));
         activityDetailVO.setActivityAddress(activityBO.getActivityAddress());
         activityDetailVO.setActivityType(activityBO.getActivityType());
-        if (Objects.nonNull(ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()))) {
+        if (Objects.nonNull(activityBO.getActivityType()) && Objects.nonNull(ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()))) {
             String activityTypeName = ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()).getValue();
             activityDetailVO.setActivityTypeName(StringUtils.isEmpty(activityTypeName) ? "" : activityTypeName);
         }
@@ -278,7 +280,9 @@ public class ActivityFacadeService {
         activityVO.setActivityAddress(activityBO.getActivityAddress());
         activityVO.setActivityType(activityBO.getActivityType());
         activityVO.setNeedInfo(activityBO.getNeedInfo());
-        activityVO.setActivityTypeName(ActivityTypeEnum.getValueByCode(activityBO.getActivityType()));
+        if (Objects.nonNull(activityBO.getActivityType())) {
+            activityVO.setActivityTypeName(ActivityTypeEnum.getValueByCode(activityBO.getActivityType()));
+        }
         activityVO.setRefundFlag(activityBO.getRefundFlag());
         activityVO.setState(activityBO.getActivityState());
         activityVO.setFrontMoney(activityBO.getFrontMoney());
@@ -313,7 +317,11 @@ public class ActivityFacadeService {
         activityBO.setId(activityVO.getId());
         activityBO.setUserId(userId);
         activityBO.setUserType(activityVO.getUserType());
-        activityBO.setActivityValid(activityVO.getActivityValid());
+        if (StringUtils.isEmpty(activityVO.getActivityTime())) {
+            activityBO.setActivityValid(ActivityValidEnum.LONG.getCode());
+        } else {
+            activityBO.setActivityValid(ActivityValidEnum.SHORT.getCode());
+        }
         activityBO.setActivityTitle(activityVO.getActivityTitle());
         activityBO.setMemberCount(activityVO.getMemberCount());
         activityBO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityVO.getActivityTime(), DateUtils.dateTimeFormatterMin));

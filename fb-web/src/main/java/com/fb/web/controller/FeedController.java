@@ -59,9 +59,9 @@ public class FeedController {
     @ApiOperation(value = "动态列表(二期)", notes = "{同城}动态")
     @RequestMapping(value = "/feeds", method = {RequestMethod.GET})
     public JsonObject<LocationFeedVO> getFeedList(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
-                                                  @ApiParam(name = "random", value = "随机数，初始给0，后面给出参的random") @RequestParam("random") Integer random,
+                                                  @ApiParam(name = "random 随机数，初始给0，后面给出参的random", value = "随机数，初始给0，后面给出参的random") @RequestParam("random") Integer random,
                                                   @ApiParam(name = "limit", value = "条数") @RequestParam("limit") Integer limit,
-                                                  @ApiParam(name = "offsetId", value = "偏移量,初始给0，后面给出参的offset") @RequestParam("offsetId") Long offsetId,
+                                                  @ApiParam(name = "offsetId 偏移量,初始给0，后面给出参的offset", value = "偏移量,初始给0，后面给出参的offset") @RequestParam("offsetId") Long offsetId,
                                                   @ApiParam(name = "location", value = "经纬度") @RequestParam("location") String location) {
 
 
@@ -101,7 +101,6 @@ public class FeedController {
         Long userId = sessionUser.getUid();
 
         Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryFeedListByUserId(userId, pageSize, pageNum);
-
 
         return JsonObject.newCorrectJsonObject(feedDetailVOList);
     }

@@ -9,7 +9,10 @@ import com.fb.common.service.LbsMapService;
 import com.fb.feed.dto.FeedBO;
 import com.fb.feed.enums.FeedStateEnum;
 import com.fb.feed.service.IFeedService;
+import com.fb.user.response.UserDTO;
+import com.fb.user.service.IUserService;
 import com.fb.web.entity.FeedVO;
+import com.fb.web.entity.UserVO;
 import com.fb.web.entity.output.FeedDetailVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +35,8 @@ public class FeedFacadeService {
     private ICommentService commentService;
     @Autowired
     private LbsMapService lbsMapService;
-
+    @Autowired
+    private IUserService userService;
     /**
      * 发布动态
      *
@@ -64,7 +68,9 @@ public class FeedFacadeService {
         if (feedBO.isPresent()) {
             Optional<List<LikeBO>> likeList = likeService.getLikeList(feedId, InfoTypeEnum.FEED);
             int commentCount = commentService.getCommentCount(feedId, InfoTypeEnum.FEED);
-            return Optional.ofNullable(boToConvertVO(feedBO.get(), likeList, commentCount, uid));
+            UserDTO userDTO = userService.getUserByUid(feedBO.get().getUserId());
+
+            return Optional.ofNullable(boToConvertVO(feedBO.get(), likeList, commentCount, userDTO, uid));
         }
         return Optional.empty();
     }
@@ -145,7 +151,8 @@ public class FeedFacadeService {
                     Long count = commentMapResult.get().get(feedBO.getId());
                     commentCount = count == null ? 0 : count.intValue();
                 }
-                return boToConvertVO(feedBO, Optional.ofNullable(finalLikeMap.get(feedBO.getId())), commentCount, uid);
+                UserDTO userDTO = userService.getUserByUid(feedBO.getUserId());
+                return boToConvertVO(feedBO, Optional.ofNullable(finalLikeMap.get(feedBO.getId())), commentCount, userDTO, uid);
             }).collect(Collectors.toList()));
         }
 
@@ -153,9 +160,15 @@ public class FeedFacadeService {
     }
 
 
-    private FeedDetailVO boToConvertVO(FeedBO feedBO, Optional<List<LikeBO>> likeList, int commentNum, Long uid) {
+    private FeedDetailVO boToConvertVO(FeedBO feedBO, Optional<List<LikeBO>> likeList, int commentNum, UserDTO userDTO, long uid) {
         FeedDetailVO feedDetailVO = new FeedDetailVO();
-//        feedDetailVO.setUserVO();
+        if (Objects.nonNull(userDTO)) {
+            UserVO userVO = new UserVO();
+            userVO.setUserId(userDTO.getUid());
+            userVO.setUserName(userDTO.getName());
+            userVO.setPic(userDTO.getHeadPicUrl());
+           feedDetailVO.setUserVO(userVO);
+        }
         feedDetailVO.setPublishTime(feedBO.getCreateTime().getTime());
         feedDetailVO.setCityName(feedBO.getCityName());
         feedDetailVO.setContent(feedBO.getFeedContent());
@@ -168,7 +181,7 @@ public class FeedFacadeService {
 
         feedDetailVO.setLikeNum(likeList.isPresent() ? likeList.get().size() : 0);
         feedDetailVO.setLike(false);
-        if (likeList.isPresent() && Objects.nonNull(uid)) {
+        if (likeList.isPresent() && Objects.nonNull(userDTO)) {
             feedDetailVO.setLike(likeList.get().stream().anyMatch(likeBO -> likeBO.getUserId().equals(uid)));
         }
         feedDetailVO.setCommentNum(commentNum);

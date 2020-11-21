@@ -74,12 +74,12 @@ public class ActivityController {
         return JsonObject.newCorrectJsonObject("");
     }
 
-    @ApiOperation(value = "擦肩(二期)", notes = "传0的时候是全部")
+    @ApiOperation(value = "擦肩(二期)", notes = "activityType activityValid 都传-1的时候是全部")
     @RequestMapping(value = "/activities", method = {RequestMethod.GET})
     public JsonObject<List<ActivityListVO>> getActivityList(@ApiParam(name = "activityType", value = "活动类型") @RequestParam("activityType") Integer activityType,
-                                                           @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+                                                            @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
                                                             @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum,
-                                                            @ApiParam(name = "activityValid", value = "活动 0长期 1短期") @RequestParam("activityValid") Integer activityValid) {
+                                                            @ApiParam(name = "activityValid", value = "活动 0长期 1短期 ") @RequestParam("activityValid") Integer activityValid) {
         Optional<List<ActivityListVO>> activityVO = activityFacadeService.queryActivityListByType(activityType, activityValid, pageSize, pageNum);
         if (activityVO.isPresent()) {
             return JsonObject.newCorrectJsonObject(activityVO.get());

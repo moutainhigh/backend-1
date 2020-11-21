@@ -27,10 +27,12 @@ public enum ActivityTypeEnum {
     private int activityValid;
 
 
-    public static ActivityTypeEnum getActivityTypeEnumByCode(int code) {
-        for (ActivityTypeEnum activityTypeEnum : ActivityTypeEnum.values()) {
-            if (activityTypeEnum.getCode() == code) {
-                return activityTypeEnum;
+    public static ActivityTypeEnum getActivityTypeEnumByCode(Integer code) {
+        if (Objects.nonNull(code)) {
+            for (ActivityTypeEnum activityTypeEnum : ActivityTypeEnum.values()) {
+                if (activityTypeEnum.getCode() == code) {
+                    return activityTypeEnum;
+                }
             }
         }
         return null;

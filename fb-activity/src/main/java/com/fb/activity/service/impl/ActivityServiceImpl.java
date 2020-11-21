@@ -12,6 +12,7 @@ import com.fb.activity.dto.TicketBO;
 import com.fb.activity.entity.ActivityPO;
 import com.fb.activity.entity.TicketPO;
 import com.fb.activity.enums.ActivityStateEnum;
+import com.fb.activity.enums.ActivityValidEnum;
 import com.fb.activity.enums.TicketStateEnum;
 import com.fb.activity.service.IActivityService;
 import lombok.extern.slf4j.Slf4j;
@@ -102,17 +103,22 @@ public class ActivityServiceImpl implements IActivityService {
      * @return
      */
     @Override
-    public Optional<List<ActivityBO>> queryActivityListByType(int activityType, int activityValid,int pageSize, int pageNum) {
+    public Optional<List<ActivityBO>> queryActivityListByType(Integer activityType, Integer activityValid, int pageSize, int pageNum) {
         List<ActivityBO> activityBOS = new ArrayList<>(pageSize);
         QueryWrapper<ActivityPO> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(obj -> {
-            if (activityType > 0) {
+            if (Objects.nonNull(activityType) && activityType >= 0) {
                 obj.eq(ActivityPO::getActivityType, activityType);
-                obj.eq(ActivityPO::getActivityState, ActivityStateEnum.PUBLISH.getCode());
-                obj.ge(ActivityPO::getActivityTime, new Date());
             }
-            obj.eq(ActivityPO::getActivityValid, activityValid);
-            obj.eq(ActivityPO::getUserType, 0);
+            if (Objects.nonNull(activityValid) && activityValid >= 0) {
+                obj.eq(ActivityPO::getActivityValid, activityValid);
+                /*短期活动，展示大于当前活动时间的活动*/
+                if (activityValid == ActivityValidEnum.SHORT.getCode()) {
+                    obj.ge(ActivityPO::getActivityTime, new Date());
+                }
+            }
+            obj.eq(ActivityPO::getActivityState, ActivityStateEnum.PUBLISH.getCode());
+            obj.eq(ActivityPO::getUserType, 1);
         }).orderByDesc(ActivityPO::getUpdateTime);
 
         IPage<ActivityPO> activityList = activityDao.selectPage(new Page(pageNum, pageSize), queryWrapper);

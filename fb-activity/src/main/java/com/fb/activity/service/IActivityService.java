@@ -41,7 +41,7 @@ public interface IActivityService {
      * @param pageNum
      * @return
      */
-    Optional<List<ActivityBO>> queryActivityListByType(int activityType, int activityValid, int pageSize, int pageNum);
+    Optional<List<ActivityBO>> queryActivityListByType(Integer activityType, Integer activityValid, int pageSize, int pageNum);
 
     /**
      * 根据日期查询活动列表

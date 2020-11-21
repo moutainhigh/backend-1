@@ -145,13 +145,45 @@ public class UserController {
     }
 
 
+    @ApiOperation(value = "查询陌生人主页(新)", notes = "查询陌生人信息")
+    @RequestMapping(value = "/userInfo", method = {RequestMethod.GET})
+    public JsonObject<BasicUserVO> getUserInfoByUid(@ApiParam(name = "userId", value = "userId") @RequestParam("userId") long userId) {
+        UserDTO userDTO = userService.getUserByUid(userId);
+        BasicUserVO userVO = new BasicUserVO(userDTO);
+        return JsonObject.newCorrectJsonObject(userVO);
+    }
+
+    @ApiOperation(value = "查询陌生人动态(新)", notes = "查询陌生人动态")
+    @RequestMapping(value = "/feedList", method = {RequestMethod.GET})
+    public JsonObject<List<FeedDetailVO>> getFeedListByUid(@ApiParam(name = "userId", value = "userId") @RequestParam("userId") long userId,
+                                                    @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+                                                    @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
+
+        Optional<List<FeedDetailVO>> feedDetailVOList = feedFacadeService.queryFeedListByUserId(userId, pageSize, pageNum);
+        if (feedDetailVOList.isPresent()) {
+            return JsonObject.newCorrectJsonObject(feedDetailVOList.get());
+        }
+        return JsonObject.newCorrectJsonObject("");
+    }
+
+    @ApiOperation(value = "查询陌生人活动(新)", notes = "查询陌生人活动")
+    @RequestMapping(value = "/activityList", method = {RequestMethod.GET})
+    public JsonObject<List<ActivityDetailVO>> getActivityListByUid(@ApiParam(name = "userId", value = "userId") @RequestParam("userId") long userId,
+                                                    @ApiParam(name = "pageSize", value = "页数") @RequestParam("pageSize") Integer pageSize,
+                                                    @ApiParam(name = "pageNum", value = "页码") @RequestParam("pageNum") Integer pageNum) {
+        Optional<List<ActivityDetailVO>> activityVO = activityFacadeService.queryActivityListByUserId(userId, pageSize, pageNum);
+        if (activityVO.isPresent()) {
+            return JsonObject.newCorrectJsonObject(activityVO.get());
+        }
+        return JsonObject.newCorrectJsonObject("");
+    }
+
     @ApiOperation(value = "人脉关系(二期)", notes = "查询人脉关系，3级")
     @RequestMapping(value =
             "/relation", method = {RequestMethod.GET})
     public JsonObject<List<UserVO>> getUserRelation() {
         return JsonObject.newCorrectJsonObject("");
     }
-
 
     @ApiOperation(value = "关系网(二期)", notes = "")
     @RequestMapping(value = "/relationfeed", method = {RequestMethod.GET})
