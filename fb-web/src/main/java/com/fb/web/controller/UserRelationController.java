@@ -94,7 +94,7 @@ public class UserRelationController {
     public JsonObject followUser(@PathVariable Long targetUid, @ApiIgnore @RequestAttribute("user") UserDTO sessionUser) {
         UserDTO userDTO = userService.getUserByUid(targetUid);
         if (Objects.isNull(userDTO)) return JsonObject.newErrorJsonObject(UserResponse.TARGET_USER_NOT_EXIST);
-        if (UserTypeEnum.COMMON_USER != sessionUser.getUserTypeEnum() && UserTypeEnum.MERCHANT_USER != userDTO.getUserTypeEnum())
+        if (UserTypeEnum.COMMON_USER != sessionUser.getUserTypeEnum() || UserTypeEnum.MERCHANT_USER != userDTO.getUserTypeEnum())
             return JsonObject.newErrorJsonObject(UserResponse.USER_TYPE_NOT_VALID);
         userRelationService.followUser(sessionUser.getUid(), targetUid);
         return new JsonObject();
