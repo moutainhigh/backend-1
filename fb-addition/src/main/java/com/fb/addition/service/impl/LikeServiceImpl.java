@@ -5,6 +5,7 @@ import com.fb.addition.dao.LikeDAO;
 import com.fb.addition.dto.LikeBO;
 import com.fb.addition.entity.LikePO;
 import com.fb.addition.enums.InfoTypeEnum;
+import com.fb.addition.enums.LikeStateEnum;
 import com.fb.addition.service.ILikeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -55,7 +56,6 @@ public class LikeServiceImpl implements ILikeService {
             obj.eq(LikePO::getInfoId, infoId);
             obj.eq(LikePO::getInfoType, infoType);
             obj.eq(LikePO::getUserId, userId);
-
         });
         return likeDao.selectOne(queryWrapper);
     }
@@ -74,7 +74,7 @@ public class LikeServiceImpl implements ILikeService {
         queryWrapper.lambda().and(obj -> {
             obj.eq(LikePO::getInfoId, infoId);
             obj.eq(LikePO::getInfoType, infoType.getCode());
-            obj.eq(LikePO::getLikeState, 1);
+            obj.eq(LikePO::getLikeState, LikeStateEnum.LIKE.getCode());
 
         });
         List<LikePO> likeOList = likeDao.selectList(queryWrapper);
@@ -96,6 +96,7 @@ public class LikeServiceImpl implements ILikeService {
         queryWrapper.lambda().and(obj -> {
             obj.in(LikePO::getInfoId, infoIdList);
             obj.eq(LikePO::getInfoType, infoType.getCode());
+            obj.eq(LikePO::getLikeState, LikeStateEnum.LIKE.getCode());
         });
         List<LikePO> likeOList = likeDao.selectList(queryWrapper);
         List<LikeBO> likeBOList = null;
