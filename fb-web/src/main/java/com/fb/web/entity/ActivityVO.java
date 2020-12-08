@@ -26,7 +26,6 @@ public class ActivityVO {
     private String activityTitle;
     @ApiModelProperty(value = "活动人数")
     private Integer memberCount;
-    @NotNull(message = "activityValid is not null")
     @ApiModelProperty(value = "有效期", allowableValues = "0 长期 1 短期")
     private Integer activityValid;
     @ApiModelProperty(value = "活动时间，格式yyyy-MM-dd HH:mm")

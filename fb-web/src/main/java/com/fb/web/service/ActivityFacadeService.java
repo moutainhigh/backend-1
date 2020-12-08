@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,7 +80,7 @@ public class ActivityFacadeService {
     }
 
     /**
-     * 查询详情
+     * 页面展示查询详情
      *
      * @param activityId
      * @return
@@ -102,6 +99,15 @@ public class ActivityFacadeService {
     }
 
     /**
+     * 查询活动详情
+     * @param activityId
+     * @return
+     */
+    public Optional<ActivityBO> queryActivityById(Long activityId) {
+        return activityService.queryActivityById(activityId);
+    }
+
+    /**
      * 活动列表查询分页
      *
      * @param activityType
@@ -114,7 +120,9 @@ public class ActivityFacadeService {
         Optional<List<ActivityBO>> activityBO = activityService.queryActivityListByType(activityType, activityValid, pageSize, pageNum);
 
         if (activityBO.isPresent()) {
-            return Optional.of(activityBO.get().stream().map(activity -> {
+            return Optional.of(activityBO.get().stream().filter(activityBO1->{
+                return activityBO1.getActivityTime().after(new Date());
+            }).map(activity -> {
                 UserDTO userDTO = userService.getUserByUid(activity.getUserId());
                return activityBOConvertToListVO(activity, userDTO);
             }).collect(Collectors.toList()));
@@ -194,9 +202,12 @@ public class ActivityFacadeService {
         //FIXME IM参加人数
 //        activityListVO.setJoinCount();
         activityListVO.setUserVO(userDTOConvertUserVO(userDTO));
+        activityListVO.setPrice(activityBO.getFrontMoney());
+
         if (!CollectionUtils.isEmpty(activityBO.getTicketBOList())) {
-            Optional<TicketBO> ticketBO = activityBO.getTicketBOList().stream().filter(Objects::nonNull).max(Comparator.comparing(TicketBO::getAssemblePrice));
+            Optional<TicketBO> ticketBO = activityBO.getTicketBOList().stream().filter(Objects::nonNull).min(Comparator.comparing(TicketBO::getAssemblePrice));
             if (ticketBO.isPresent()) {
+                activityListVO.setPrice(ticketBO.get().getTicketPrice());
                 activityListVO.setAssemblePrice(ticketBO.get().getAssemblePrice());
                 activityListVO.setAssembleMemberCount(ticketBO.get().getAssembleMemberCount());
             }
@@ -204,7 +215,6 @@ public class ActivityFacadeService {
         activityListVO.setId(activityBO.getId());
         activityListVO.setActivityTitle(activityBO.getActivityTitle());
         activityListVO.setPicUrl(Objects.isNull(activityBO.getPicUrl()) ? "" : activityBO.getPicUrl());
-        activityListVO.setPrice(activityBO.getFrontMoney());
         activityListVO.setPublishTime(DateUtils.getDateFromLocalDateTime(activityBO.getUpdateTime(), DateUtils.dateTimeFormatterMin));
         activityListVO.setCityName(activityBO.getCityName());
         activityListVO.setActivityTime(String.valueOf(activityBO.getActivityTime()));
@@ -240,6 +250,7 @@ public class ActivityFacadeService {
         activityDetailVO.setEnrollEndTime(String.valueOf(activityBO.getEnrollEndTime()));
         activityDetailVO.setActivityAddress(activityBO.getActivityAddress());
         activityDetailVO.setActivityType(activityBO.getActivityType());
+        activityDetailVO.setUserType(activityBO.getUserType());
         if (Objects.nonNull(activityBO.getActivityType()) && Objects.nonNull(ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()))) {
             String activityTypeName = ActivityTypeEnum.getActivityTypeEnumByCode(activityBO.getActivityType()).getValue();
             activityDetailVO.setActivityTypeName(StringUtils.isEmpty(activityTypeName) ? "" : activityTypeName);

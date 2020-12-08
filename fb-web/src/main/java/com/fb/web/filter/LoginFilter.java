@@ -27,6 +27,7 @@ public class LoginFilter implements Filter {
 
     private final static List<String> excludeUrlList = Arrays.asList("/user/getVerifyCode/**",
             "/user/login/**",
+            "/pay/notify",
             "/user/signUp",
             "/user/listHobbyTagName",
             "/swagger-resources/**",

@@ -4,6 +4,8 @@ import com.fb.addition.enums.InfoTypeEnum;
 import com.fb.common.util.CmsUtils;
 import com.fb.common.util.DateUtils;
 import com.fb.common.util.RedisUtils;
+import com.fb.relation.service.DTO.UserDTOForRelation;
+import com.fb.relation.service.IUserRelationService;
 import com.fb.user.repository.HobbyTagPO;
 import com.fb.user.request.UserReq;
 import com.fb.user.response.UserDTO;
@@ -21,6 +23,7 @@ import com.fb.web.exception.valid.Modify;
 import com.fb.web.service.ActivityFacadeService;
 import com.fb.web.service.FeedFacadeService;
 import com.fb.web.utils.JsonObject;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,9 @@ public class UserController {
     @Resource
     @Qualifier("userRedis")
     private RedisUtils redisUtils;
+
+    @Resource
+    private IUserRelationService userRelationService;
 
     @Autowired
     private FeedFacadeService feedFacadeService;
@@ -185,6 +191,7 @@ public class UserController {
         return JsonObject.newCorrectJsonObject("");
     }
 
+
     @ApiOperation(value = "关系网(二期)", notes = "")
     @RequestMapping(value = "/relationfeed", method = {RequestMethod.GET})
     public JsonObject<FocusVO> getUserFocusList(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
@@ -203,10 +210,11 @@ public class UserController {
         }
 
         Long userId = sessionUser.getUid();
-        //TODO LX 查好友
-        List<Long> userIdList = null;
+        //TODO 待替换查关注的好友
+        List<Long> userIdList = userRelationService.getAllRelation(new UserDTOForRelation(userId,sessionUser.getCityCode()));
+        userIdList.add(userId);
         FocusVO focusVO = new FocusVO();
-        List<RelationDetail> relationDetails = new ArrayList<>(2 * limit);
+        List<RelationDetail> relationDetails = Lists.newArrayListWithExpectedSize(2 * limit);
         List<RelationDetail> relationDetailResult = new ArrayList<>(limit);
 
         Optional<List<ActivityDetailVO>> activityListVOList = activityFacadeService.queryActivityListFollow(userIdList, limit, activityOffsetId, userId);

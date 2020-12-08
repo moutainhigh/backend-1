@@ -12,6 +12,7 @@ import com.fb.order.dto.OrderUserInfoBO;
 import com.fb.order.enums.OrderStateEnum;
 import com.fb.order.service.OrderService;
 import com.fb.pay.dto.PayParamBO;
+import com.fb.pay.enums.PayStatusEnum;
 import com.fb.pay.enums.PayTypeEnum;
 import com.fb.pay.service.AbsPayService;
 import com.fb.web.entity.PayRequestVO;
@@ -93,10 +94,22 @@ public class OrderFacadeService {
         log.info("absPayService.aliNotify params={} , signVerified={}", params, signVerified);
         //调用SDK验证签名
         String outTradeNo = params.get("out_trade_no");
-        OrderDetailInfoVO order = getOrderDetail(Long.valueOf(outTradeNo));
-        if (checkParam(params, order) && signVerified) {
+        String tradeStatus = params.get("trade_status");
+
+        OrderDetailInfoVO order = getOrderDetailByOutTradeNo(outTradeNo);
+        if (signVerified && checkParam(params, order)) {
             //调用订单状态翻转
-           boolean flag = orderService.updateOrderState(outTradeNo, OrderStateEnum.SUCCESS);
+            boolean flag = true;
+            OrderStateEnum orderStateEnum = null;
+            if (PayStatusEnum.TRADE_FINISHED.getValue().equals(tradeStatus) || PayStatusEnum.TRADE_SUCCESS.getValue().equals(tradeStatus)) {
+                orderStateEnum = OrderStateEnum.SUCCESS;
+            }if (PayStatusEnum.TRADE_CLOSED.getValue().equals(tradeStatus)) {
+                orderStateEnum = OrderStateEnum.CLOSE;
+            }
+
+            if (Objects.nonNull(orderStateEnum)) {
+                flag = orderService.updateOrderState(outTradeNo, orderStateEnum);
+            }
             // 成功要返回success，不然支付宝会不断发送通知。
             if (flag) {
                 return SUCCESS;
@@ -112,8 +125,8 @@ public class OrderFacadeService {
             return false;
         }
         // 2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
-        long total_amount = new BigDecimal(params.get("total_amount")).multiply(new BigDecimal(100)).longValue();
-        if (String.valueOf(total_amount ).equals(order.getPayMoney())) {
+        long total_amount = new BigDecimal(params.get("total_amount"))/*.multiply(new BigDecimal(100))*/.longValue();
+        if (String.valueOf(total_amount).equals(order.getPayMoney())) {
             log.error("notify total_amount params={}", params);
             return false;
         }
@@ -121,13 +134,16 @@ public class OrderFacadeService {
     }
 
 
+    public boolean cancelPay(String outTradeNo){
+       return orderService.updateOrderState(outTradeNo, OrderStateEnum.FAILURE);
+    }
 
     /**
      * 用户订单列表
      * @return
      */
-    public List<UserOrderInfoVO> getUserOrderList(long userId, int pageNum,int pageSize) {
-        List<OrderInfoBO> orderInfoBOS = orderService.queryUserOrderList(userId, pageNum, pageSize);
+    public List<UserOrderInfoVO> getUserOrderList(Long userId, int limit, long offsetId) {
+        List<OrderInfoBO> orderInfoBOS = orderService.queryUserOrderList(userId, limit, offsetId);
         if (CollectionUtils.isEmpty(orderInfoBOS)) {
             return null;
         }
@@ -157,6 +173,13 @@ public class OrderFacadeService {
         return convertBOToVO(orderUserInfoBO);
     }
 
+
+    /*订单详情*/
+    public OrderDetailInfoVO getOrderDetailByOutTradeNo(String outTradeNo) {
+        OrderInfoBO orderUserInfoBO = orderService.queryOrderUserByOutTradeNo(outTradeNo);
+        return convertBOToVO(orderUserInfoBO);
+    }
+
     private OrderDetailInfoVO convertBOToVO(OrderInfoBO orderInfoBO) {
         if (Objects.isNull(orderInfoBO)) {
             return null;
@@ -181,10 +204,13 @@ public class OrderFacadeService {
             return null;
         }
         UserOrderInfoVO userOrderInfoVO = new UserOrderInfoVO();
+        userOrderInfoVO.setId(orderInfoBO.getId());
+        userOrderInfoVO.setActivityId(orderInfoBO.getProductId());
         userOrderInfoVO.setActivityName(orderInfoBO.getProductName());
-        userOrderInfoVO.setActivityTime(String.valueOf(orderInfoBO.getActivityTime()));
+        userOrderInfoVO.setActivityTime(orderInfoBO.getActivityTime());
         userOrderInfoVO.setAddress(activityBO.getActivityAddress());
         userOrderInfoVO.setMoney(orderInfoBO.getTotalAmount().toPlainString());
+        userOrderInfoVO.setStatus(orderInfoBO.getOrderState());
         return userOrderInfoVO;
 
     }

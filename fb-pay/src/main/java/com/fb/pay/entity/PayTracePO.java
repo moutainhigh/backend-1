@@ -1,6 +1,10 @@
 package com.fb.pay.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -31,6 +35,7 @@ public class PayTracePO {
     @TableField("buyer_logon_id")
     private String buyerLogonId; // 买家支付宝账号
 
+//    @JsonProperty("seller_id")
     @TableField("seller_id")
     private String sellerId; // 卖家支付宝用户号
 

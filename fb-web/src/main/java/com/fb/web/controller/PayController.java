@@ -2,10 +2,12 @@ package com.fb.web.controller;
 
 import com.fb.user.response.UserDTO;
 import com.fb.web.entity.PayRequestVO;
+import com.fb.web.entity.output.OrderDetailInfoVO;
 import com.fb.web.service.OrderFacadeService;
 import com.fb.web.utils.JsonObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/pay", produces = "application/json;charset=UTF-8")
@@ -43,10 +46,26 @@ public class PayController {
 
         Long userId = sessionUser.getUid();
          String signCode = orderFacadeService.orderBooking(payRequestVO, userId);
+         log.info("PayController signCode={}", signCode);
         if (StringUtils.isNotEmpty(signCode)) {
             return JsonObject.newCorrectJsonObject(signCode);
         }
         return JsonObject.newErrorJsonObject("网络不好请重试！");
+    }
+
+
+    @ApiOperation(value = "取消支付", notes = "6001 6002取消支付专用")
+    @RequestMapping(value = "/cancel", method = {RequestMethod.POST})
+    public JsonObject cancelPay(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
+                                @ApiParam(name = "outTradeNo", value = "outTradeNo") @RequestBody String outTradeNo) {
+
+        Long userId = sessionUser.getUid();
+        OrderDetailInfoVO orderDetailInfoVO = orderFacadeService.getOrderDetailByOutTradeNo(outTradeNo);
+        if (Objects.nonNull(orderDetailInfoVO) && orderDetailInfoVO.getUserId() == userId.longValue()) {
+        orderFacadeService.cancelPay(outTradeNo);
+        return JsonObject.newCorrectJsonObject("success");
+        }
+        return JsonObject.newErrorJsonObject("不可取消他人订单");
     }
 
 

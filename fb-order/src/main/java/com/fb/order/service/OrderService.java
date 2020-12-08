@@ -2,7 +2,6 @@ package com.fb.order.service;
 
 import com.fb.order.dto.OrderInfoBO;
 import com.fb.order.dto.OrderProductParamBO;
-import com.fb.order.dto.OrderUserInfoBO;
 import com.fb.order.enums.OrderStateEnum;
 
 import java.util.List;
@@ -25,6 +24,13 @@ public interface OrderService {
     OrderInfoBO queryOrderUserByOrderId(long orderId);
 
     /**
+     * 根据订单号获取订单信息
+     * @param outTradeNo
+     * @return
+     */
+    OrderInfoBO queryOrderUserByOutTradeNo(String outTradeNo);
+
+    /**
      * 翻转订单状态
      * @param outTradeNo
      * @param orderStateEnum
@@ -35,11 +41,11 @@ public interface OrderService {
     /**
      * 查询订单列表
      * @param userId
-     * @param pageNum
-     * @param pageSize
+     * @param limit
+     * @param offsetId
      * @return
      */
-    List<OrderInfoBO> queryUserOrderList(Long userId, int pageNum, int pageSize);
+    List<OrderInfoBO> queryUserOrderList(Long userId, int limit, long offsetId);
 
     /**
      * 查询商家订单列表

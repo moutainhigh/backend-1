@@ -64,6 +64,24 @@ public class OrderServiceImpl implements OrderService {
         return convertPOToBO(orderDAO.selectById(orderId),orderUserPO);
     }
 
+
+    /**
+     * 根据外部订单号查询订单信息
+     *
+     * @param outTradeNo
+     * @return
+     */
+    @Override
+    public OrderInfoBO queryOrderUserByOutTradeNo(String outTradeNo) {
+        QueryWrapper<OrderUserPO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().and(obj -> {
+            obj.eq(OrderUserPO::getOutTradeNo, outTradeNo);
+        });
+
+        OrderUserPO orderUserPO = orderUserDAO.selectOne(queryWrapper);
+        return convertPOToBO(orderDAO.selectById(orderUserPO.getOrderId()),orderUserPO);
+    }
+
     /**
      * 更新订单状态
      *
@@ -87,19 +105,22 @@ public class OrderServiceImpl implements OrderService {
      * 用户查看个人的订单列表，所以不限制状态
      *
      * @param userId
-     * @param pageNum
-     * @param pageSize
+     * @param limit
+     * @param offsetId
      * @return
      */
     @Override
-    public List<OrderInfoBO> queryUserOrderList(Long userId, int pageNum, int pageSize) {
-        List<OrderInfoBO> orderInfoBOS = new ArrayList<>(pageSize);
+    public List<OrderInfoBO> queryUserOrderList(Long userId, int limit, long offsetId) {
+        List<OrderInfoBO> orderInfoBOS = new ArrayList<>(limit);
         QueryWrapper<OrderPO> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().and(obj -> {
             obj.eq(OrderPO::getUserId, userId);
+            if (offsetId > 0) {
+                obj.lt(OrderPO::getId, offsetId);
+            }
         }).orderByDesc(OrderPO::getCreateTime);
 
-        IPage<OrderPO> orderList = orderDAO.selectPage(new Page(pageNum, pageSize), queryWrapper);
+        IPage<OrderPO> orderList = orderDAO.selectPage(new Page(1, limit), queryWrapper);
         if (!CollectionUtils.isEmpty(orderList.getRecords())) {
             Map<Long, OrderUserPO> orderIdUserPoMap = getOrderIdUserPOMap(orderList.getRecords().stream().map(OrderPO::getId).collect(Collectors.toList()));
             orderInfoBOS = orderList.getRecords().stream().map(orderPO -> convertPOToBO(orderPO, orderIdUserPoMap.get(orderPO.getId()))).collect(Collectors.toList());

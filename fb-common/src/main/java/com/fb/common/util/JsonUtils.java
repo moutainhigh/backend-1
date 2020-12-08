@@ -33,7 +33,8 @@ public final class JsonUtils {
         try {
             return objectMapper.readValue(json, clazz);
         } catch (IOException e) {
-            log.error("JsonUtils.json2Object  json = " + json, e);
+            System.out.println("JsonUtils.json2Object  json = " + json + e.getMessage());
+            log.error("JsonUtils.json2Object  json = {}", json, e);
             return null;
         }
     }

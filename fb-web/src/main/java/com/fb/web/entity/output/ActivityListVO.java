@@ -53,4 +53,8 @@ public class ActivityListVO {
     @ApiModelProperty(value = "活动地址")
     private String activityAddress;
 
+    @ApiModelProperty(value = "发布人类型")
+    private Integer userType;
+
+
 }

@@ -17,4 +17,6 @@ public enum OrderStateEnum {
     private int code;
 
     private String value;
+
+
 }

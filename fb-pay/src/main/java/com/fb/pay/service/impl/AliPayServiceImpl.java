@@ -1,17 +1,24 @@
 package com.fb.pay.service.impl;
+import java.io.File;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.Date;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.internal.util.StringUtils;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.fb.common.util.DateUtils;
 import com.fb.common.util.JsonUtils;
 import com.fb.pay.dao.PayTraceDAO;
 import com.fb.pay.dto.PayParamBO;
 import com.fb.pay.entity.PayTracePO;
+import com.fb.pay.enums.PayStatusEnum;
 import com.fb.pay.service.IPayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +27,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import static com.fb.common.util.DateUtils.dateTimeFormatterSed;
 
 
 @Service
@@ -46,6 +56,9 @@ public class AliPayServiceImpl implements IPayService {
 
     @Value("${alipay.format}")
     private String alipay_format;
+
+    @Value("${alipay.cert.path}")
+    public String alipay_cert_path;
 
     @Autowired
     private AlipayClient alipayClient;
@@ -84,8 +97,6 @@ public class AliPayServiceImpl implements IPayService {
         AlipayTradeAppPayResponse alipayResponse = null;
         try {
             alipayResponse = alipayClient.sdkExecute(alipayRequest);
-//            System.out.println("alipayRequest ={}" + JsonUtils.object2Json(alipayRequest));
-//            System.out.println("alipayResponse ={}" + JsonUtils.object2Json(alipayResponse));
             log.info("pay alipayRequest={},alipayResponse={}",alipayRequest, alipayResponse);
         } catch (AlipayApiException e) {
             log.error("AliPayServiceImpl pay is error, alipayRequest={}", JsonUtils.object2Json(alipayRequest), e);
@@ -101,7 +112,7 @@ public class AliPayServiceImpl implements IPayService {
             try {
                 // 更严谨一些还可以判断 1.appid 2.sellerId 3.out_trade_no 4.total_amount 等是否正确，正确之后再进行相关业务操作。
                 check(params);
-                signVerified = AlipaySignature.rsaCheckV1(params, alipay_publicKey, alipay_charset, alipay_signType);
+                signVerified = AlipaySignature.rsaCertCheckV1(params, getPath(alipay_cert_path), alipay_charset, alipay_signType);
                 // 记录交易流水
                 payTraceDAO.insert(buildAlipayNotifyParam(params));
             } catch (AlipayApiException e) {
@@ -119,8 +130,46 @@ public class AliPayServiceImpl implements IPayService {
 
     private PayTracePO buildAlipayNotifyParam(Map<String, String> params) {
         String json = JsonUtils.object2Json(params);
-        return JsonUtils.json2Object(json, PayTracePO.class);
+        log.info("AliPayServiceImpl buildAlipayNotifyParam={}", json);
+        ;
+        PayTracePO payTracePO = new PayTracePO();
+        payTracePO.setAppId(params.get("app_id"));
+        payTracePO.setTradeNo(params.get("trade_no"));
+        payTracePO.setOutTradeNo(params.get("out_trade_no"));
+        payTracePO.setOutBizNo(params.get("out_biz_no"));
+        payTracePO.setBuyerId(params.get("buyer_id"));
+        payTracePO.setBuyerLogonId(params.get("buyer_logon_id"));
+        payTracePO.setSellerId(params.get("seller_id"));
+        payTracePO.setSellerEmail(params.get("seller_email"));
+        payTracePO.setTradeStatus(params.get("trade_status"));
+        payTracePO.setTotalAmount(new BigDecimal(params.get("total_amount")));
+        payTracePO.setReceiptAmount(new BigDecimal(params.get("receipt_amount")));
+        payTracePO.setBuyerPayAmount(new BigDecimal(params.get("buyer_pay_amount")));
+        if (Objects.nonNull(params.get("refund_Fee"))) {
+            payTracePO.setRefundFee(new BigDecimal(params.get("refund_Fee")));
+        }
+        payTracePO.setSubject(params.get("subject"));
+        payTracePO.setBody(params.get("body"));
+        if (!StringUtils.isEmpty(params.get("gmt_create"))) {
+            payTracePO.setGmtCreate(DateUtils.getDateFromLocalDateTime(params.get("gmt_create"), dateTimeFormatterSed));
+        }
+        if (!StringUtils.isEmpty(params.get("gmt_payment"))) {
+            payTracePO.setGmtPayment(DateUtils.getDateFromLocalDateTime(params.get("gmt_payment"), dateTimeFormatterSed));
+        }
+        if (!StringUtils.isEmpty(params.get("gmt_refund"))) {
+            payTracePO.setGmtRefund(DateUtils.getDateFromLocalDateTime(params.get("gmt_refund"), dateTimeFormatterSed));
+        }
+        if (!StringUtils.isEmpty(params.get("gmt_close"))) {
+            payTracePO.setGmtClose(DateUtils.getDateFromLocalDateTime(params.get("gmt_close"), dateTimeFormatterSed));
+        }
+        payTracePO.setFundBillList(params.get("fund_bill_list"));
+        payTracePO.setPassbackParams("");
+
+        log.info("AliPayServiceImpl payTracePO={}", payTracePO);
+        return payTracePO;
     }
+
+
     /**
      * 1、商户需要验证该通知数据中的out_trade_no是否为商户系统中创建的订单号，
      * 2、判断total_amount是否确实为该订单的实际金额（即商户订单创建时的金额），
@@ -134,7 +183,8 @@ public class AliPayServiceImpl implements IPayService {
      */
     private void check(Map<String, String> params) throws AlipayApiException {
         //只有交易通知状态为TRADE_SUCCESS或TRADE_FINISHED时，支付宝才会认定为买家付款成功
-        if (params.get("trade_status").equals("TRADE_SUCCESS") || params.get("trade_status").equals("TRADE_FINISHED")) {
+        String tradeStatus = params.get("trade_status");
+        if (PayStatusEnum.check(tradeStatus)) {
             // 验证app_id是否为该商户本身。
             if (!params.get("app_id").equals(alipay_appId)) {
                 throw new AlipayApiException("app_id不一致");
@@ -168,5 +218,14 @@ public class AliPayServiceImpl implements IPayService {
         log.warn("AliPayServiceImpl refund failure，");
 
         return false;
+    }
+    public  String getPath(String file) {
+        File fileCert = new File("/root/t-bear/" + file);
+
+        if(!fileCert.exists()) {
+            URL url =  getClass().getClassLoader().getResource(file);
+            return url.getPath();
+        }
+        return "/root/t-bear/" + file;
     }
 }
