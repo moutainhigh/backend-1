@@ -121,7 +121,7 @@ public class ActivityFacadeService {
 
         if (activityBO.isPresent()) {
             return Optional.of(activityBO.get().stream().filter(activityBO1->{
-                return activityBO1.getActivityTime().after(new Date());
+                return Objects.isNull(activityBO1.getActivityTime()) || activityBO1.getActivityTime().after(new Date());
             }).map(activity -> {
                 UserDTO userDTO = userService.getUserByUid(activity.getUserId());
                return activityBOConvertToListVO(activity, userDTO);
@@ -217,7 +217,9 @@ public class ActivityFacadeService {
         activityListVO.setPicUrl(Objects.isNull(activityBO.getPicUrl()) ? "" : activityBO.getPicUrl());
         activityListVO.setPublishTime(DateUtils.getDateFromLocalDateTime(activityBO.getUpdateTime(), DateUtils.dateTimeFormatterMin));
         activityListVO.setCityName(activityBO.getCityName());
-        activityListVO.setActivityTime(String.valueOf(activityBO.getActivityTime()));
+        if (Objects.nonNull(activityBO.getActivityTime())) {
+            activityListVO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityBO.getActivityTime(), DateUtils.dateTimeFormatterMin));
+        }
         activityListVO.setMemberCount(activityBO.getMemberCount());
         activityListVO.setActivityAddress(activityBO.getActivityAddress());
 
@@ -240,14 +242,18 @@ public class ActivityFacadeService {
         activityDetailVO.setUserVO(userDTOConvertUserVO(userDTO));
         activityDetailVO.setPublishTime(DateUtils.getDateFromLocalDateTime(activityBO.getUpdateTime(), DateUtils.dateTimeFormatterMin));
         activityDetailVO.setCityName(activityBO.getCityName());
-        activityDetailVO.setActivityTime(String.valueOf(activityBO.getActivityTime()));
+        if (Objects.nonNull(activityBO.getActivityTime())) {
+            activityDetailVO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityBO.getActivityTime(), DateUtils.dateTimeFormatterMin));
+        }
         activityDetailVO.setUserType(activityBO.getUserType());
         activityDetailVO.setFrontMoney(activityBO.getFrontMoney());
         activityDetailVO.setActivityTitle(activityBO.getActivityTitle());
         activityDetailVO.setMemberCount(activityBO.getMemberCount());
         activityDetailVO.setActivityValid(activityBO.getActivityValid());
         activityDetailVO.setActivityStatus(activityBO.getActivityState());
-        activityDetailVO.setEnrollEndTime(String.valueOf(activityBO.getEnrollEndTime()));
+        if (Objects.nonNull(activityBO.getEnrollEndTime())) {
+            activityDetailVO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityBO.getEnrollEndTime(), DateUtils.dateTimeFormatterMin));
+        }
         activityDetailVO.setActivityAddress(activityBO.getActivityAddress());
         activityDetailVO.setActivityType(activityBO.getActivityType());
         activityDetailVO.setUserType(activityBO.getUserType());
@@ -286,8 +292,12 @@ public class ActivityFacadeService {
         activityVO.setActivityTitle(activityBO.getActivityTitle());
         activityVO.setMemberCount(activityBO.getMemberCount());
         activityVO.setActivityValid(activityBO.getActivityValid());
-        activityVO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityBO.getActivityTime(), DateUtils.dateTimeFormatterMin));
-        activityVO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityBO.getEnrollEndTime(), DateUtils.dateTimeFormatterMin));
+        if (Objects.nonNull(activityVO.getActivityTime())) {
+            activityVO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityBO.getActivityTime(), DateUtils.dateTimeFormatterMin));
+        }
+        if (Objects.nonNull(activityVO.getEnrollEndTime())) {
+            activityVO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityBO.getEnrollEndTime(), DateUtils.dateTimeFormatterMin));
+        }
         activityVO.setActivityAddress(activityBO.getActivityAddress());
         activityVO.setActivityType(activityBO.getActivityType());
         activityVO.setNeedInfo(activityBO.getNeedInfo());
@@ -335,8 +345,12 @@ public class ActivityFacadeService {
         }
         activityBO.setActivityTitle(activityVO.getActivityTitle());
         activityBO.setMemberCount(activityVO.getMemberCount());
-        activityBO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityVO.getActivityTime(), DateUtils.dateTimeFormatterMin));
-        activityBO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityVO.getEnrollEndTime(), DateUtils.dateTimeFormatterMin));
+        if (!StringUtils.isEmpty(activityVO.getActivityTime())) {
+            activityBO.setActivityTime(DateUtils.getDateFromLocalDateTime(activityVO.getActivityTime(), DateUtils.dateTimeFormatterMin));
+        }
+        if (!StringUtils.isEmpty(activityVO.getEnrollEndTime())) {
+            activityBO.setEnrollEndTime(DateUtils.getDateFromLocalDateTime(activityVO.getEnrollEndTime(), DateUtils.dateTimeFormatterMin));
+        }
         activityBO.setActivityAddress(activityVO.getActivityAddress());
         activityBO.setActivityType(activityVO.getActivityType());
         activityBO.setNeedInfo(activityVO.getNeedInfo());

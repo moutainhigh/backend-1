@@ -3,6 +3,7 @@ package com.fb.web.controller;
 import com.fb.user.response.UserDTO;
 
 
+import com.fb.web.entity.IdVO;
 import com.fb.web.entity.output.FeedDetailVO;
 import com.fb.web.entity.FeedVO;
 import com.fb.web.entity.output.LocationFeedVO;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -27,6 +29,7 @@ import java.util.Random;
 @Api(value = "动态", description = "动态相关接口")
 @ResponseBody
 @Slf4j
+@Validated
 public class FeedController {
     @Autowired
     private FeedFacadeService feedFacadeService;
@@ -108,10 +111,10 @@ public class FeedController {
     @ApiOperation(value = "我的-动态删除(三期)")
     @RequestMapping(value = "/delete", method = {RequestMethod.POST})
     public JsonObject<Boolean> deleteActivity(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
-                                              @ApiParam(name = "id", value = "动态id") @RequestParam("id") Long id) {
+                                              @RequestBody @NotNull IdVO id) {
 
         Long userId = sessionUser.getUid();
-        boolean flag = feedFacadeService.deleteFeed(id, userId);
+        boolean flag = feedFacadeService.deleteFeed(id.getId(), userId);
         return JsonObject.newCorrectJsonObject(flag);
     }
 }
