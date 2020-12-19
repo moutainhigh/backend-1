@@ -96,21 +96,11 @@ public class OrderController {
         if (orderOffsetId != -1) {
             userOrderInfoVOS = orderFacadeService.getUserOrderList(userId, limit, orderOffsetId);
         } if (enrollOffsetId != -1) {
-            enrollVOS = enrollFacadeService.queryEnrollList(userId, limit, orderOffsetId);
+            enrollVOS = enrollFacadeService.queryEnrollList(userId, limit, enrollOffsetId);
         }
 
-        /*没有报名商家活动*/
-        if (CollectionUtils.isEmpty(userOrderDetailInfoVOS)) {
-            userOrderDetailInfoVOS = enrollVOS.stream().map(enrollVO -> convertToOrderInfo(enrollVO)).limit(limit).collect(Collectors.toList());
-            callBackEnrollOffsetId = userOrderDetailInfoVOS.get(userOrderDetailInfoVOS.size() - 1).getActivityId();
-        }
-        /*没有报名普通活动*/
-        if (CollectionUtils.isEmpty(enrollVOS)) {
-            userOrderDetailInfoVOS = userOrderInfoVOS.stream().map(userOrderInfoVO -> convertToOrderInfo(userOrderInfoVO)).limit(limit).collect(Collectors.toList());
-            callBackOrderOffsetId = userOrderDetailInfoVOS.get(userOrderDetailInfoVOS.size() - 1).getActivityId();
-        }
         /*混排*/
-        if (!CollectionUtils.isEmpty(userOrderDetailInfoVOS) && !CollectionUtils.isEmpty(enrollVOS)) {
+        if (!CollectionUtils.isEmpty(userOrderInfoVOS) && !CollectionUtils.isEmpty(enrollVOS)) {
             int enrollIndex = 0;
             int orderIndex = 0;
 
@@ -129,10 +119,21 @@ public class OrderController {
                 }
             }
         }
+            /*没有报名商家活动*/
+            if (CollectionUtils.isEmpty(userOrderInfoVOS) && !CollectionUtils.isEmpty(enrollVOS)) {
+                userOrderDetailInfoVOS = enrollVOS.stream().map(enrollVO -> convertToOrderInfo(enrollVO)).limit(limit).collect(Collectors.toList());
+                callBackEnrollOffsetId = userOrderDetailInfoVOS.get(userOrderDetailInfoVOS.size() - 1).getActivityId();
+            }
+            /*没有报名普通活动*/
+            if (CollectionUtils.isEmpty(enrollVOS) && !CollectionUtils.isEmpty(userOrderInfoVOS)) {
+                userOrderDetailInfoVOS = userOrderInfoVOS.stream().map(userOrderInfoVO -> convertToOrderInfo(userOrderInfoVO)).limit(limit).collect(Collectors.toList());
+                callBackOrderOffsetId = userOrderDetailInfoVOS.get(userOrderDetailInfoVOS.size() - 1).getActivityId();
+            }
+
+
         joinListVO.setOrderInfoVOList(userOrderDetailInfoVOS);
         joinListVO.setOrderOffsetId(callBackOrderOffsetId);
         joinListVO.setEnrollOffsetId(callBackEnrollOffsetId);
-
         return JsonObject.newCorrectJsonObject(joinListVO);
     }
 
