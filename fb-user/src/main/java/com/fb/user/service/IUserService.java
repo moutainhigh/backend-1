@@ -57,4 +57,6 @@ public interface IUserService {
     UserDTO getUserByUid(Long uid);
 
     List<UserDTO> listSimpleUser(List<Long> uidList);
+
+    UserDTO getUserByPhoneNumber(String phoneNumber);
 }

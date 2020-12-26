@@ -194,4 +194,9 @@ public class UserServiceImpl implements IUserService {
     public List<UserDTO> listSimpleUser(List<Long> uidList) {
         return userRepository.listSimpleUserByUidList(uidList).stream().map(this::userPO2UserDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public UserDTO getUserByPhoneNumber(String phoneNumber) {
+        return null;
+    }
 }

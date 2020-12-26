@@ -62,4 +62,6 @@ public class UserDTO {
     private LocalDateTime createTime;
 
     private String loginToken;
+
+    private IMAccount imAccount;
 }

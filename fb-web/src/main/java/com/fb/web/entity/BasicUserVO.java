@@ -41,6 +41,7 @@ public class BasicUserVO {
             this.province = userDTO.getProvince();
             this.adName = userDTO.getAdName();
             this.cityName = userDTO.getCityName();
+            this.uid = userDTO.getUid();
         }
 
         @ApiModelProperty(value = "用户名称")
@@ -95,4 +96,7 @@ public class BasicUserVO {
 
         @ApiModelProperty(value = "关系网人数")
         private int allFriendsCount;
+
+        @ApiModelProperty(value = "用户id")
+        private Long uid;
 }

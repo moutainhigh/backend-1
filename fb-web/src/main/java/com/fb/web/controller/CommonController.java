@@ -50,13 +50,23 @@ public class CommonController {
     @RequestMapping(value = "/uploadImage", method = {RequestMethod.POST})
     public JsonObject<UploadVo> getUploadImage(@ApiIgnore @RequestAttribute(name = "user") UserDTO sessionUser,
                                                @RequestParam @ApiParam("图片文件") MultipartFile imgFile) {
-
         Long userId = sessionUser.getUid();
         Optional<UploadResult> picUploadResult = aliyunOssServiceImpl.uploadPicture(imgFile, userId);
         UploadVo uploadVo = new UploadVo();
         BeanUtils.copyProperties(picUploadResult.get(), uploadVo);
         return JsonObject.newCorrectJsonObject(uploadVo);
     }
+
+    @ResponseBody
+    @ApiOperation(value = "图片上传云", notes = "图片上传云，注册前调用的上传接口")
+    @PostMapping(value = "/uploadImageNoAuth")
+    public JsonObject<UploadVo> uploadImageNoAuth(@RequestParam @ApiParam("图片文件") MultipartFile imgFile) {
+        Optional<UploadResult> picUploadResult = aliyunOssServiceImpl.uploadPicture(imgFile, Thread.currentThread().getId());
+        UploadVo uploadVo = new UploadVo();
+        BeanUtils.copyProperties(picUploadResult.get(), uploadVo);
+        return JsonObject.newCorrectJsonObject(uploadVo);
+    }
+
     @ResponseBody
     @ApiOperation(value = "视频上传云", notes = "视频上传云")
     @RequestMapping(value = "/uploadVideo", method = {RequestMethod.POST})
