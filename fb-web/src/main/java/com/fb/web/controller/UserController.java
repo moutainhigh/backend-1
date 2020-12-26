@@ -38,10 +38,7 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.fb.common.util.DateUtils.zoneId;
@@ -226,7 +223,7 @@ public class UserController {
 
                 RelationDetail detail = new RelationDetail();
                 detail.setActivityDetailVO(activityDetailVO);
-                detail.setTime(LocalDate.parse(activityDetailVO.getPublishTime(), DateUtils.dateTimeFormatterMin));
+                detail.setTime(DateUtils.getDateFromLocalDateTime(activityDetailVO.getPublishTime(), DateUtils.dateTimeFormatterMin).getTime());
                 detail.setInfoType(InfoTypeEnum.ACTIVITY.getCode());
                 relationDetails.add(detail);
             });
@@ -236,7 +233,7 @@ public class UserController {
             feedDetailVOList.get().forEach(feedDetailVO -> {
                 RelationDetail detail = new RelationDetail();
                 detail.setFeedDetailVO(feedDetailVO);
-                detail.setTime(LocalDateTime.ofInstant(Instant.ofEpochMilli(feedDetailVO.getPublishTime()), zoneId).toLocalDate());
+                detail.setTime(feedDetailVO.getPublishTime());
                 detail.setInfoType(InfoTypeEnum.FEED.getCode());
                 relationDetails.add(detail);
             });
@@ -244,8 +241,9 @@ public class UserController {
         boolean hasNext = false;
         //日期降序
         if (!CollectionUtils.isEmpty(relationDetails)) {
-            relationDetails.sort((a, b) -> b.getTime().compareTo(a.getTime()));
+            Collections.sort(relationDetails, (a, b) -> b.getTime().compareTo(a.getTime()));
             //遍历找到offset
+            log.info("relationDetails={}", relationDetails);
             if (relationDetails.size() > limit) {
                 hasNext = true;
             }
