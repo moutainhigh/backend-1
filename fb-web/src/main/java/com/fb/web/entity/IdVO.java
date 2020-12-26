@@ -7,7 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Api(value = "活动模型")
+@Api(value = "通用id模型")
 public class IdVO {
 
     @NotNull(message = "id is not null")
