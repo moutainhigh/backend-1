@@ -33,6 +33,7 @@ public class LoginFilter implements Filter {
             "/swagger-resources/**",
             "/webjars/**",
             "/swagger-ui.html/**",
+            "/common/uploadImageNoAuth",
             "/v2/api-docs");
 
 

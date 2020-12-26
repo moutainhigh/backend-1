@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface OssService {
 
-    Optional<UploadResult> uploadPicture(MultipartFile multipartFile, long uid);
+    Optional<UploadResult> uploadPicture(MultipartFile multipartFile, long uid, String flag);
 
     Optional<UploadResult> uploadVideo(MultipartFile multipartFile, long uid);
 

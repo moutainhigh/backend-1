@@ -56,7 +56,7 @@ public class AliyunOssServiceImpl implements OssService {
      * @return
      */
 
-    private String getFilePath(String fileName, long uid, String fileType) {
+    private String getFilePath(String fileName, long uid, String fileType, String flag) {
         LocalDateTime dateTime = LocalDateTime.now();
         StringBuffer sb = new StringBuffer();
         sb.append(fileType);
@@ -67,6 +67,7 @@ public class AliyunOssServiceImpl implements OssService {
         sb.append(dateTime.getDayOfMonth());
         sb.append(FILE_SEPARATOR);
         sb.append(uid);
+        sb.append(NAME_SEPARATOR).append(flag);
         sb.append(NAME_SEPARATOR);
         sb.append(System.currentTimeMillis());
         sb.append(NAME_SEPARATOR);
@@ -94,7 +95,7 @@ public class AliyunOssServiceImpl implements OssService {
     }
 
     @Override
-    public Optional<UploadResult> uploadPicture(MultipartFile multipartFile, long uid) {
+    public Optional<UploadResult> uploadPicture(MultipartFile multipartFile, long uid, String flag) {
         // 1. 对上传的图片进行校验: 这里简单校验后缀名
         // 另外可通过ImageIO读取图片的长宽来判断是否是图片,校验图片的大小等。
         boolean isLegal = false;
@@ -113,7 +114,7 @@ public class AliyunOssServiceImpl implements OssService {
 
         // 2. 准备上传API的参数
         String fileName = multipartFile.getOriginalFilename();
-        String filePath = this.getFilePath(fileName, uid, PIC_PRE_URL);
+        String filePath = this.getFilePath(fileName, uid, PIC_PRE_URL, flag);
 
         // 3. 上传至阿里OSS
         try {
@@ -154,7 +155,7 @@ public class AliyunOssServiceImpl implements OssService {
         }
         // 2. 准备上传API的参数
         String fileName = multipartFile.getOriginalFilename();
-        String filePath = this.getFilePath(fileName, uid, VIDEO_PRE_URL);
+        String filePath = this.getFilePath(fileName, uid, VIDEO_PRE_URL, "");
 
         // 3. 上传至阿里OSS
         try {
